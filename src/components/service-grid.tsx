@@ -1,6 +1,7 @@
 import { ExternalLink } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import servicesData from "@/data/services.json"
 
 type Service = {
     id: string
@@ -9,82 +10,10 @@ type Service = {
     ip?: string
     port?: number
     domain: string
+    logo: string
 }
 
-const services: Service[] = [
-    {
-        id: "grafana",
-        name: "Grafana",
-        description: "Monitoramento e dashboards",
-        ip: "10.0.0.15",
-        port: 3000,
-        domain: "http://grafana.nexus.local",
-    },
-    {
-        id: "glpi",
-        name: "GLPI",
-        description: "Gestão de chamados TI",
-        ip: "10.0.0.20",
-        port: 80,
-        domain: "http://glpi.nexus.local",
-    },
-    {
-        id: "glpi",
-        name: "GLPI",
-        description: "Gestão de chamados TI",
-        ip: "10.0.0.20",
-        port: 80,
-        domain: "http://glpi.nexus.local",
-    },
-    {
-        id: "glpi",
-        name: "GLPI",
-        description: "Gestão de chamados TI",
-        ip: "10.0.0.20",
-        port: 80,
-        domain: "http://glpi.nexus.local",
-    },
-    {
-        id: "glpi",
-        name: "GLPI",
-        description: "Gestão de chamados TI",
-        ip: "10.0.0.20",
-        port: 80,
-        domain: "http://glpi.nexus.local",
-    },
-    {
-        id: "glpi",
-        name: "GLPI",
-        description: "Gestão de chamados TI",
-        ip: "10.0.0.20",
-        port: 80,
-        domain: "http://glpi.nexus.local",
-    },
-    {
-        id: "glpi",
-        name: "GLPI",
-        description: "Gestão de chamados TI",
-        ip: "10.0.0.20",
-        port: 80,
-        domain: "http://glpi.nexus.local",
-    },
-    {
-        id: "glpi",
-        name: "GLPI",
-        description: "Gestão de chamados TI",
-        ip: "10.0.0.20",
-        port: 80,
-        domain: "http://glpi.nexus.local",
-    },
-    {
-        id: "glpi",
-        name: "GLPI",
-        description: "Gestão de chamados TI",
-        ip: "10.0.0.20",
-        port: 80,
-        domain: "http://glpi.nexus.local",
-    },
-]
+const services: Service[] = servicesData as Service[]
 
 interface ServiceGridProps {
     fullDetails?: boolean
@@ -104,7 +33,8 @@ export function ServiceGrid({ fullDetails, filtering }: ServiceGridProps) {
                 <Card
                     key={`${service.id}-${service.domain}`}
                     className="
-                        rounded-2xl px-0 py-4 shadow-lg
+                        flex-1
+                        rounded-2xl px-0 pt-0 shadow-lg
                         border border-transparent
                         hover:border-blue-500/60
                         transition-all duration-300
@@ -112,13 +42,13 @@ export function ServiceGrid({ fullDetails, filtering }: ServiceGridProps) {
                         hover:shadow-xl hover:shadow-blue-200/40
                     "
                 >
-                    <CardHeader className="flex flex-row items-center gap-2 py-0 px-4 border-b border-zinc-200">
+                    <CardHeader className="flex flex-row items-center gap-2 pt-4 px-4 border-zinc-200">
 
-                        <div className="w-12 h-12 border border-zinc-300 rounded-md overflow-hidden flex items-center justify-center bg-white">
+                        <div className="w-10 h-10 border border-zinc-300 rounded-md overflow-hidden flex items-center justify-center bg-white">
                             <img
-                                src="./logo-grafana.png"
+                                src={`./logos/${service.logo}`}
                                 alt={service.name}
-                                className="w-10 h-10 object-contain"
+                                className="w-8 h-8 object-contain"
                             />
                         </div>
 
@@ -133,7 +63,7 @@ export function ServiceGrid({ fullDetails, filtering }: ServiceGridProps) {
                         </div>
                     </CardHeader>
 
-                    <CardContent className="space-y-2 px-4">
+                    <CardContent className="space-y-2 mt-0 pt-0 px-4">
                         {fullDetails && (
                             <>
                                 <div className="grid grid-cols-2 gap-2 text-sm">
