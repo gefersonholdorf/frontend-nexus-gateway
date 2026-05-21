@@ -1,0 +1,14 @@
+[
+    {
+        "id": 1,
+        "serverName": "SERVER BRA APP",
+        "serverId": 9,
+        "networkId": "26cb169c2ad7aef2a952ebf1034bee48608a75245d43f3411fef49deea1b96b0"
+    },
+    {
+        "id": 2,
+        "serverName": "SERVER BRA INFRA",
+        "serverId": 2,
+        "networkId": "7621836cfc9075563a15989a02ab8c8b3d9898f676ff2a3b6c8cfd4ab251f676"
+    }
+]

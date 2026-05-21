@@ -26,7 +26,7 @@ export function WelcomePage() {
                     <Card
                         className="
                         w-90
-                        h-70
+                        h-50
                         flex flex-col justify-between
                         rounded-2xl px-0 pt-0 shadow-lg
                         border border-transparent
@@ -50,16 +50,6 @@ export function WelcomePage() {
                             </div>
                         </CardHeader>
                         <CardContent className="space-y-4 mt-0 pt-0 px-4 flex flex-col justify-center items-center">
-                            <div className="flex gap-8">
-                                <div className="flex flex-col justify-center items-center">
-                                    <span className="text-blue-500 font-semibold text-[1rem]">6</span>
-                                    <p className="text-[.8rem] text-gray-500">Serviços</p>
-                                </div>
-                                <div className="flex flex-col justify-center items-center">
-                                    <span className="text-blue-500 font-semibold text-[1rem]">2</span>
-                                    <p className="text-[.8rem] text-gray-500">Sistemas</p>
-                                </div>
-                            </div>
                             <Button
                                 className="
                                 cursor-pointer w-full gap-2
@@ -84,9 +74,8 @@ export function WelcomePage() {
                 <div className="w-full flex justify-center items-center">
                     <Card
                         className="
-                        cursor-not-allowed
                         w-90
-                        h-70
+                        h-50
                         flex flex-col justify-between
                         rounded-2xl px-0 pt-0 shadow-lg
                         border border-transparent
@@ -110,19 +99,9 @@ export function WelcomePage() {
                             </div>
                         </CardHeader>
                         <CardContent className="space-y-4 mt-0 pt-0 px-4 flex flex-col justify-center items-center">
-                            <div className="flex gap-8">
-                                <div className="flex flex-col justify-center items-center">
-                                    <span className="text-blue-500 font-semibold text-[1rem]">6</span>
-                                    <p className="text-[.8rem] text-gray-500">Serviços</p>
-                                </div>
-                                <div className="flex flex-col justify-center items-center">
-                                    <span className="text-blue-500 font-semibold text-[1rem]">2</span>
-                                    <p className="text-[.8rem] text-gray-500">Sistemas</p>
-                                </div>
-                            </div>
                             <Button
                                 className="
-                                cursor-not-allowed w-full gap-2
+                                cursor-pointer w-full gap-2
                                 px-0
                                 bg-transparent
                                 text-blue-500
@@ -131,7 +110,7 @@ export function WelcomePage() {
                                 flex justify-center
                                 transition-all duration-300
                             "
-                            // onClick={() => window.open("/", "_blank")}
+                                onClick={() => navigate('/ipmap')}
                             >
                                 Acessar módulo
                                 <MoveRight size={16} />
@@ -143,9 +122,8 @@ export function WelcomePage() {
                 <div className="w-full flex justify-center items-center">
                     <Card
                         className="
-                        cursor-not-allowed
                         w-90
-                        h-70
+                        h-50
                         flex flex-col justify-between
                         rounded-2xl px-0 pt-0 shadow-lg
                         border border-transparent
@@ -164,24 +142,14 @@ export function WelcomePage() {
                                 </CardTitle>
 
                                 <p className="text-xs text-muted-foreground text-center">
-                                    Acesse o repositório central de documentos, arquivos e informações da empresa.
+                                    Acesse o repositório central de documentos e arquivos da empresa.
                                 </p>
                             </div>
                         </CardHeader>
                         <CardContent className="space-y-4 mt-0 pt-0 px-4 flex flex-col justify-center items-center">
-                            <div className="flex gap-8">
-                                <div className="flex flex-col justify-center items-center">
-                                    <span className="text-blue-500 font-semibold text-[1rem]">6</span>
-                                    <p className="text-[.8rem] text-gray-500">Serviços</p>
-                                </div>
-                                <div className="flex flex-col justify-center items-center">
-                                    <span className="text-blue-500 font-semibold text-[1rem]">2</span>
-                                    <p className="text-[.8rem] text-gray-500">Sistemas</p>
-                                </div>
-                            </div>
                             <Button
                                 className="
-                                cursor-not-allowed w-full gap-2
+                                cursor-pointer w-full gap-2
                                 px-0
                                 bg-transparent
                                 text-blue-500
@@ -190,7 +158,7 @@ export function WelcomePage() {
                                 flex justify-center
                                 transition-all duration-300
                             "
-                            // onClick={() => window.open("/", "_blank")}
+                                onClick={() => window.open("https://lusati.sharepoint.com/_layouts/15/sharepoint.aspx", "_blank")}
                             >
                                 Acessar módulo
                                 <MoveRight size={16} />

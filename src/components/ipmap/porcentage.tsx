@@ -1,6 +1,4 @@
-export function Porcentage() {
-    const percentage = 60
-
+export function Porcentage({ percentage, quantityUsed, quantityTotal }: { percentage: number; quantityUsed: number; quantityTotal: number }) {
     return (
         <div
             className="
@@ -31,11 +29,11 @@ export function Porcentage() {
             <div className="flex items-center gap-4 mt-2">
                 <div className="flex gap-2 items-center">
                     <div className="w-2 h-2 rounded-full bg-amber-400"></div>
-                    <span className="text-[.7rem] text-gray-500">Em uso (18)</span>
+                    <span className="text-[.8rem] text-gray-600">Em uso ({quantityUsed} IPs)</span>
                 </div>
                 <div className="flex gap-2 items-center">
                     <div className="w-2 h-2 rounded-full bg-zinc-300"></div>
-                    <span className="text-[.7rem] text-gray-500">Livre (18)</span>
+                    <span className="text-[.8rem] text-gray-600">Livre ({quantityTotal - quantityUsed} IPs)</span>
                 </div>
             </div>
         </div>
