@@ -1,10 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LayoutDashboard, MoveRight, Network, Share2 } from "lucide-react";
+import { useNavigate } from "react-router";
 
-export function Welcome() {
+export function WelcomePage() {
+    const navigate = useNavigate()
     return (
-        <div className="flex flex-col justify-center items-center px-70">
+        <div className="flex flex-col justify-center items-center lg:px-70">
             <div className="flex justify-end">
                 <img
                     src="./logo-nexus.png"
@@ -12,7 +14,7 @@ export function Welcome() {
                     className="w-14 h-14 object-contain"
                 />
             </div>
-            <div className="flex flex-col items-center gap-4 mt-6 max-w-2xl text-center">
+            <div className="flex flex-col items-center gap-4 mt-6 w-full lg:max-w-2xl text-center">
                 <h2 className="text-4xl font-bold">Bem-vindo ao</h2>
                 <h2 className="text-4xl font-extrabold text-blue-500">Nexus Gateway</h2>
                 <p className="text-center text-zinc-500 text-sm">
@@ -69,7 +71,7 @@ export function Welcome() {
                                 flex justify-center
                                 transition-all duration-300
                             "
-                                onClick={() => window.open("/", "_blank")}
+                                onClick={() => navigate('/services')}
                             >
                                 Acessar módulo
                                 <MoveRight size={16} />
@@ -82,6 +84,7 @@ export function Welcome() {
                 <div className="w-full flex justify-center items-center">
                     <Card
                         className="
+                        cursor-not-allowed
                         w-90
                         h-70
                         flex flex-col justify-between
@@ -92,13 +95,13 @@ export function Welcome() {
                         hover:shadow-lg
                     ">
                         <CardHeader className="flex flex-col items-center justify-center gap-2 pt-4 px-4 space-y-1 border-zinc-200">
-                            <div className="w-10 h-10 border border-purple-300 rounded-md overflow-hidden flex items-center justify-center bg-purple-50">
-                                <Network className="text-purple-500" />
+                            <div className="w-10 h-10 border border-blue-300 rounded-md overflow-hidden flex items-center justify-center bg-blue-50">
+                                <Network className="text-blue-500" />
                             </div>
 
                             <div className="flex flex-col justify-center items-center gap-2">
                                 <CardTitle className="text-base font-semibold leading-tight">
-                                    API Map
+                                    IP Map
                                 </CardTitle>
 
                                 <p className="text-xs text-muted-foreground text-center">
@@ -109,26 +112,26 @@ export function Welcome() {
                         <CardContent className="space-y-4 mt-0 pt-0 px-4 flex flex-col justify-center items-center">
                             <div className="flex gap-8">
                                 <div className="flex flex-col justify-center items-center">
-                                    <span className="text-purple-500 font-semibold text-[1rem]">6</span>
+                                    <span className="text-blue-500 font-semibold text-[1rem]">6</span>
                                     <p className="text-[.8rem] text-gray-500">Serviços</p>
                                 </div>
                                 <div className="flex flex-col justify-center items-center">
-                                    <span className="text-purple-500 font-semibold text-[1rem]">2</span>
+                                    <span className="text-blue-500 font-semibold text-[1rem]">2</span>
                                     <p className="text-[.8rem] text-gray-500">Sistemas</p>
                                 </div>
                             </div>
                             <Button
                                 className="
-                                cursor-pointer w-full gap-2
+                                cursor-not-allowed w-full gap-2
                                 px-0
                                 bg-transparent
-                                text-purple-500
-                                hover:text-purple-500
+                                text-blue-500
+                                hover:text-blue-500
                                 hover:bg-transparent
                                 flex justify-center
                                 transition-all duration-300
                             "
-                                onClick={() => window.open("/", "_blank")}
+                            // onClick={() => window.open("/", "_blank")}
                             >
                                 Acessar módulo
                                 <MoveRight size={16} />
@@ -140,6 +143,7 @@ export function Welcome() {
                 <div className="w-full flex justify-center items-center">
                     <Card
                         className="
+                        cursor-not-allowed
                         w-90
                         h-70
                         flex flex-col justify-between
@@ -150,8 +154,8 @@ export function Welcome() {
                         hover:shadow-lg
                     ">
                         <CardHeader className="flex flex-col items-center justify-center gap-2 pt-4 px-4 space-y-1 border-zinc-200">
-                            <div className="w-10 h-10 border border-emerald-300 rounded-md overflow-hidden flex items-center justify-center bg-emerald-50">
-                                <Share2 className="text-emerald-500" />
+                            <div className="w-10 h-10 border border-blue-300 rounded-md overflow-hidden flex items-center justify-center bg-blue-50">
+                                <Share2 className="text-blue-500" />
                             </div>
 
                             <div className="flex flex-col justify-center items-center gap-2">
@@ -167,26 +171,26 @@ export function Welcome() {
                         <CardContent className="space-y-4 mt-0 pt-0 px-4 flex flex-col justify-center items-center">
                             <div className="flex gap-8">
                                 <div className="flex flex-col justify-center items-center">
-                                    <span className="text-emerald-500 font-semibold text-[1rem]">6</span>
+                                    <span className="text-blue-500 font-semibold text-[1rem]">6</span>
                                     <p className="text-[.8rem] text-gray-500">Serviços</p>
                                 </div>
                                 <div className="flex flex-col justify-center items-center">
-                                    <span className="text-emerald-500 font-semibold text-[1rem]">2</span>
+                                    <span className="text-blue-500 font-semibold text-[1rem]">2</span>
                                     <p className="text-[.8rem] text-gray-500">Sistemas</p>
                                 </div>
                             </div>
                             <Button
                                 className="
-                                cursor-pointer w-full gap-2
+                                cursor-not-allowed w-full gap-2
                                 px-0
                                 bg-transparent
-                                text-emerald-500
-                                hover:text-emerald-500
+                                text-blue-500
+                                hover:text-blue-500
                                 hover:bg-transparent
                                 flex justify-center
                                 transition-all duration-300
                             "
-                                onClick={() => window.open("/", "_blank")}
+                            // onClick={() => window.open("/", "_blank")}
                             >
                                 Acessar módulo
                                 <MoveRight size={16} />
