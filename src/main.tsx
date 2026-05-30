@@ -8,6 +8,8 @@ import { LayoutPages } from './layout-pages.tsx'
 import { WelcomePage } from './pages/welcome.tsx'
 import { IpMapPage } from './pages/ip-map.tsx'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { LoginPage } from './pages/login.tsx'
+import { SecurityCenterPage } from './pages/security-center.tsx'
 
 const queryClient = new QueryClient()
 
@@ -17,9 +19,11 @@ createRoot(document.getElementById('root')!).render(
       <BrowserRouter>
         <RootLayout>
           <Routes>
+            <Route path="/" element={<LoginPage />} />
             <Route element={<LayoutPages />}>
-              <Route path="/" element={<WelcomePage />} />
+              <Route path="/welcome" element={<WelcomePage />} />
               <Route path="/ipmap" element={<IpMapPage />} />
+              <Route path="/security-center" element={<SecurityCenterPage />} />
             </Route>
             <Route path="/services" element={<ServicesPage />} />
           </Routes>

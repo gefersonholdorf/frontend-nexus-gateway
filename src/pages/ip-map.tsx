@@ -1,3 +1,4 @@
+import { BackComponent } from "@/components/back-component";
 import { IpMapComponent } from "@/components/ipmap";
 import { Porcentage } from "@/components/ipmap/porcentage";
 import {
@@ -59,14 +60,17 @@ export function IpMapPage() {
     const percentageUsed = quantityTotal > 0 ? (quantityUsed / quantityTotal) * 100 : 0
 
     return (
-        <div className="px-10 space-y-4">
-            <div className="flex gap-3 items-center">
-                <div className="flex justify-end">
-                    <Network className="text-blue-500 size-8" />
-                </div>
-                <div>
-                    <h1 className="text-lg font-bold">IP MAP</h1>
-                    <p className="text-zinc-500 text-sm">Visualize o mapeamento completo de IPs da rede interna, e encontre IPs livres.</p>
+        <div className="space-y-4">
+            <div className="px-10 flex justify-between items-center border-b border-zinc-100 bg-white p-4 rounded-lg">
+                <div className="flex gap-3 items-center">
+                    <BackComponent />
+                    <div className="w-10 h-10 border border-blue-600 rounded-md overflow-hidden flex items-center justify-center bg-blue-100">
+                        <Network className="text-blue-600 size-4" />
+                    </div>
+                    <div>
+                        <h1 className="text-lg font-bold">IP Map</h1>
+                        <p className="text-gray-600 text-[.8rem]">Visualize o mapeamento completo de IPs da rede interna, e encontre IPs livres.</p>
+                    </div>
                 </div>
             </div>
             <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-4 justify-between">

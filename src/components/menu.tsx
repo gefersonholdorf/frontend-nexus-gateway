@@ -6,8 +6,8 @@ export function MenuComponent({ onSetFiltering }: { onSetFiltering?: (value: str
 
     const isWelcomePage = window.location.pathname !== "/gateway"
     return (
-        <div className="w-full grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6 justify-between px-10 py-2 min-h-20 bg-white items-center border-b border-zinc-200 shadow-sm">
-            <img src="./logo.png" className="w-50 p-2 cursor-pointer" onClick={() => navigate('/')} />
+        <div className="w-full grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6 justify-between px-10 py-2 min-h-20 bg-linear-to-br from-[#367BF4] via-[#1D5FE0] to-[#0D47C9] items-center border-b border-blue-500 shadow-lg">
+            <img src="./logo.png" className="w-50 p-2 cursor-pointer" onClick={() => navigate('/welcome')} />
             <div>
                 {!isWelcomePage && (
                     <Input
@@ -17,8 +17,14 @@ export function MenuComponent({ onSetFiltering }: { onSetFiltering?: (value: str
                     />
                 )}
             </div>
-            <div className="w-fit justify-self-end px-2 border border-zinc-200 bg-zinc-100 rounded-sm">
-                <span className="text-zinc-400 text-[.8rem] font-medium">v1.3.0</span>
+            <div className="flex gap-5 items-center w-fit justify-self-end px-2">
+                <div className="flex gap-1 items-center">
+                    <div className="w-2 h-2 rounded-full bg-emerald-400"></div>
+                    <span className="text-gray-200 text-[.8rem]">Online</span>
+                </div>
+                <div className="px-2 border border-blue-500 bg-blue-500 rounded-sm">
+                    <span className="text-gray-200 text-[.8rem] font-medium">v1.4.0</span>
+                </div>
             </div>
         </div>
     )

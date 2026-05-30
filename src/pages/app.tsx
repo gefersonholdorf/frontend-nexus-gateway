@@ -1,13 +1,14 @@
+import { BackComponent } from "@/components/back-component";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Expand, LayoutDashboard, Minimize } from "lucide-react";
 import { useState } from "react";
 import { FooterComponent } from "../components/footer";
 import { MenuComponent } from "../components/menu";
 import { ServiceGrid } from "../components/service-grid";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
 
 export function ServicesPage() {
   const [fullDetails, setFullDetails] = useState(false)
@@ -23,16 +24,17 @@ export function ServicesPage() {
   }
 
   return (
-    <div className="bg-zinc-100 flex flex-col min-h-screen justify-between space-y-4">
+    <div className="bg-[url('5570869.jpg')] bg-cover bg-center flex flex-col min-h-screen justify-between">
       <MenuComponent onSetFiltering={handleFilterChange} />
-      <div className="px-10 flex justify-between items-center border-b border-zinc-100">
+      <div className="px-10 flex justify-between items-center border-b border-zinc-100 bg-white p-4 rounded-lg">
         <div className="flex gap-3 items-center">
-          <div className="flex justify-end">
-            <LayoutDashboard className="text-blue-500 size-8" />
+          <BackComponent />
+          <div className="w-10 h-10 border border-blue-600 rounded-md overflow-hidden flex items-center justify-center bg-blue-100">
+            <LayoutDashboard className="text-blue-600 size-4" />
           </div>
           <div>
             <h1 className="text-lg font-bold">Serviços e Sistemas</h1>
-            <p className="text-zinc-500 text-sm">Acesso centralizado aos serviços e sistemas internos.</p>
+            <p className="text-gray-600 text-[.8rem]">Acesso centralizado aos serviços e sistemas internos.</p>
           </div>
         </div>
         <Tooltip>
@@ -52,7 +54,7 @@ export function ServicesPage() {
           </TooltipContent>
         </Tooltip>
       </div>
-      <div className="flex-1">
+      <div className="flex-1 py-4">
         <ServiceGrid fullDetails={fullDetails} filtering={filtering} />
       </div>
       <FooterComponent />
