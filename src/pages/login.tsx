@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Network, Server, Shield } from "lucide-react";
+import { LogIn, Network, Server, Shield } from "lucide-react";
 
 export function LoginPage() {
     return (
@@ -69,6 +69,7 @@ export function LoginPage() {
                     </div>
                 </div>
                 <Button className="w-full shadow-sm shadow-blue-200 p-5 font-bold cursor-pointer bg-linear-to-br from-[#367BF4] via-[#1D5FE0] to-[#0D47C9] hover:bg-blue-800 text-white">
+                    <LogIn />
                     Entrar na plataforma
                 </Button>
                 <div className="w-full text-center pt-8">

@@ -10,6 +10,20 @@ export function WelcomeCard() {
         return () => clearInterval(timer);
     }, []);
 
+    const getSaudacao = () => {
+        const hora = tempo.getHours();
+
+        if (hora >= 5 && hora < 12) {
+            return "Bom dia";
+        }
+
+        if (hora >= 12 && hora < 18) {
+            return "Boa tarde";
+        }
+
+        return "Boa noite";
+    };
+
     return (
         <Card
             className="
@@ -20,7 +34,9 @@ export function WelcomeCard() {
                 <div className="w-10 h-10 border border-blue-500 rounded-md overflow-hidden flex items-center justify-center bg-blue-400">
                     <Network className="text-white size-4" />
                 </div>
-                <h2 className="text-white font-extrabold text-3xl">Boa tarde, Geferson</h2>
+                <h2 className="text-white font-extrabold text-3xl">
+                    {getSaudacao()}, Geferson
+                </h2>
                 <p className="text-gray-200 font-normal text-sm">Bem-vindo ao <span className="font-bold">Nexus Gateway</span> — Plataforma centralizada de Intranet da Lusati</p>
                 <div className="flex items-center gap-2 pt-2">
                     <Clock className="text-white size-5" />
