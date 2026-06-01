@@ -28,7 +28,7 @@ export function WelcomeCard() {
         <Card
             className="
                 h-55 flex flex-col items-start rounded-2xl px-4 py-4 border transition-all duration-300 transform hover:scale-[1.01]
-                hover:shadow-lg bg-linear-to-br from-[#367BF4] via-[#1D5FE0] to-[#0D47C9] border-b border-blue-500 shadow-lg
+                hover:shadow-lg bg-linear-to-br from-[#001B66] via-[#00185C] to-[#00144D] border-b border-blue-900 shadow-lg
             ">
             <CardContent className="flex flex-col gap-2">
                 <div className="w-10 h-10 border border-blue-500 rounded-md overflow-hidden flex items-center justify-center bg-blue-400">

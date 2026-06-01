@@ -4,9 +4,14 @@ import { MenuComponent } from "./components/menu";
 
 export function LayoutPages() {
     return (
-        <div className="bg-zinc-100 flex flex-col min-h-screen justify-between">
+        <div className="bg-[url('/5570869.jpg')]
+                bg-cover
+                bg-center
+                bg-fixed bg-no-repeat flex flex-col min-h-screen justify-between">
             <MenuComponent />
-            <Outlet />
+            <main className="flex-1">
+                <Outlet />
+            </main>
             <FooterComponent />
         </div>
     )

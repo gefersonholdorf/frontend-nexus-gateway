@@ -18,7 +18,7 @@ export function SecurityCenterPage() {
                 </div>
             </div>
             <div className="flex-1 px-16 py-8 space-y-6">
-                <div className="flex items-center gap-2 p-5 bg-linear-to-br from-[#367BF4] via-[#1D5FE0] to-[#0D47C9] rounded-lg shadow-sm shadow-blue-500 transition-all duration-300 transform hover:scale-[1.01]">
+                <div className="flex items-center gap-2 p-5 bg-linear-to-br from-[#001B66] via-[#00185C] to-[#00144D] rounded-lg shadow-sm shadow-blue-900 transition-all duration-300 transform hover:scale-[1.01]">
                     <div className="w-12 h-12 border border-blue-500 rounded-md overflow-hidden flex items-center justify-center bg-blue-400">
                         <Shield className="text-gray-100 size-6" />
                     </div>
@@ -31,10 +31,10 @@ export function SecurityCenterPage() {
                     <SecurityCard typeColor="black" title="Sistema de Câmeras" ip="192.168.1.5" description="Visualize em tempo real as câmeras de segurança instaladas no escritório.">
                         <Cctv className="text-blue-500 size-5" />
                     </SecurityCard>
-                    <SecurityCard typeColor="blue" title="Sistema de Porta Interno" ip="192.168.1.5" description="Controle de acesso das portas internas e áreas restritas do escritório.">
+                    <SecurityCard typeColor="blue" title="Sistema de Porta Interna" ip="192.168.1.3" description="Controle de acesso da porta interna e área restrita do escritório.">
                         <DoorClosed className="text-blue-500 size-5" />
                     </SecurityCard>
-                    <SecurityCard typeColor="blue" title="Sistema de Porta Externo" ip="192.168.1.5" description="Controle de acesso da porta principal do escritório. Gerencie entradas e saídas.">
+                    <SecurityCard typeColor="blue" title="Sistema de Porta Externa" ip="192.168.1.2" description="Controle de acesso da porta principal do escritório. Gerencie entradas e saídas.">
                         <DoorClosed className="text-blue-500 size-5" />
                     </SecurityCard>
                 </div>

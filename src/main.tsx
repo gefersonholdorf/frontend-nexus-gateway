@@ -10,6 +10,7 @@ import { IpMapPage } from './pages/ip-map.tsx'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { LoginPage } from './pages/login.tsx'
 import { SecurityCenterPage } from './pages/security-center.tsx'
+import { Toaster } from "@/components/ui/sonner"
 
 const queryClient = new QueryClient()
 
@@ -30,5 +31,6 @@ createRoot(document.getElementById('root')!).render(
         </RootLayout>
       </BrowserRouter>
     </QueryClientProvider>
+    <Toaster />
   </StrictMode>,
 )

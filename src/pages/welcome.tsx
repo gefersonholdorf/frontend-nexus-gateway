@@ -10,12 +10,12 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from "@/components/ui/carousel"
-import { Calendar, Cctv, LayoutDashboard, Network, Share2 } from "lucide-react";
+import { Calendar, Cctv, LayoutDashboard, Network, Package, Server, Share2, Users } from "lucide-react";
 import { InfoCard } from "@/components/info-card";
 
 export function WelcomePage() {
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 h-full p-10 bg-[url('5570869.jpg')] bg-cover bg-center">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 flex-1 p-10 h-full">
             <div className="lg:col-span-3 flex flex-col gap-6">
                 <div className="grid grid-cols-3 gap-6">
                     <div className="lg:col-span-2">
@@ -38,14 +38,26 @@ export function WelcomePage() {
                                 <Network className="text-white size-4" />
                             </div>
                         </InfoCard>
-                        <InfoCard title="Servidores" quantity="18">
+                        <InfoCard title="Servidores" quantity="3">
+                            <div className="w-10 h-10 border border-blue-500 rounded-md overflow-hidden flex items-center justify-center bg-blue-400">
+                                <Server className="text-white size-4" />
+                            </div>
+                        </InfoCard>
+                        <InfoCard title="IPs Moni..." quantity="18">
                             <div className="w-10 h-10 border border-blue-500 rounded-md overflow-hidden flex items-center justify-center bg-blue-400">
                                 <Network className="text-white size-4" />
                             </div>
                         </InfoCard>
-                        <InfoCard title="IPs Monitorados" quantity="18" />
-                        <InfoCard title="Usuários" quantity="3" />
-                        <InfoCard title="Serviços" quantity="18" />
+                        <InfoCard title="Usuários" quantity="3">
+                            <div className="w-10 h-10 border border-blue-500 rounded-md overflow-hidden flex items-center justify-center bg-blue-400">
+                                <Users className="text-white size-4" />
+                            </div>
+                        </InfoCard>
+                        <InfoCard title="Módulos" quantity="5">
+                            <div className="w-10 h-10 border border-blue-500 rounded-md overflow-hidden flex items-center justify-center bg-blue-400">
+                                <Package className="text-white size-4" />
+                            </div>
+                        </InfoCard>
                     </div>
                     <span className="text-lg font-bold text-gray-700">Acesse os Módulos</span>
                     <Carousel
@@ -58,7 +70,7 @@ export function WelcomePage() {
                                 delay: 5000,
                             }),
                         ]}
-                        className="w-full relative"
+                        className="w-full relative px-6"
                     >
                         <CarouselContent className="py-4 pl-1 mr-2">
                             <CarouselItem className="basis-1/4">
@@ -87,8 +99,8 @@ export function WelcomePage() {
                                 </ModuleCard>
                             </CarouselItem>
                         </CarouselContent>
-                        <CarouselPrevious className="-left-8" />
-                        <CarouselNext className="-right-8" />
+                        <CarouselPrevious className="left-0" />
+                        <CarouselNext className="right-0" />
                     </Carousel>
                 </div>
             </div>
