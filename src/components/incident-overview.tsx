@@ -82,7 +82,7 @@ export function IncidentOverviewComponent() {
     return (
         <Card
             className="
-                h-fit rounded-3xl
+                h-100 rounded-3xl
                 border-slate-200
                 shadow-sm
                 transition-all duration-300

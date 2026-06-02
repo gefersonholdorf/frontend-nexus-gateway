@@ -29,7 +29,7 @@ export function SystemGrid({ fullDetails, filtering }: SystemGridProps) {
     );
 
     return (
-        <div className="w-full grid grid-cols-1 px-10 md:grid-cols-2 xl:grid-cols-4 gap-6">
+        <div className="w-full grid grid-cols-1 px-10 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {filteredSystems.map((systems) => (
                 <Card
                     key={`${systems.id}-${systems.domain}`}

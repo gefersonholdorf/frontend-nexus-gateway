@@ -1,11 +1,12 @@
 import { BackupOverviewComponent } from "@/components/backup-overview";
+import { EventsOverviewComponent } from "@/components/events-overview";
 import { IncidentOverviewComponent } from "@/components/incident-overview";
 import { InfoCard } from "@/components/info-card";
 import { ModuleCard } from "@/components/module-card";
 import { SystemStatusCard } from "@/components/system-status-card";
 import { WeatherCard } from "@/components/weather-card";
 import { WelcomeCard } from "@/components/welcome-card";
-import { AppWindow, Calendar, Cctv, LayoutDashboard, Network, Server, Share2 } from "lucide-react";
+import { AlertTriangle, AppWindow, Calendar, Cctv, LayoutDashboard, Network, Server, Share2 } from "lucide-react";
 
 export function WelcomePage() {
     return (
@@ -64,12 +65,18 @@ export function WelcomePage() {
                                 <ModuleCard page="security-center" title="Central de Segurança" description="Monitore e acesse os sistemas de controle físico, câmeras e infraestrutura operacional do escritório.">
                                     <Cctv className="text-blue-500" />
                                 </ModuleCard>
-                                <ModuleCard isBlock page="security-center" title="Calendário" description="Monitore e acesse os sistemas de controle físico, câmeras e infraestrutura operacional do escritório.">
+                                <ModuleCard isBlock page="security-center" title="Calendário" description="Mantenha-se informado sobre eventos, reuniões e marcos importantes da empresa.">
                                     <Calendar className="text-blue-500" />
+                                </ModuleCard>
+                                <ModuleCard isBlock page="security-center" title="Incidentes" description="Monitore e gerencie incidentes de segurança, falhas e anomalias em tempo real.">
+                                    <AlertTriangle className="text-blue-500" />
                                 </ModuleCard>
                             </div>
                         </div>
-                        <BackupOverviewComponent />
+                        <div className="space-y-6">
+                            <EventsOverviewComponent />
+                            <BackupOverviewComponent />
+                        </div>
                     </div>
                 </div>
             </div>
