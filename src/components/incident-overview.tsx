@@ -8,7 +8,8 @@ interface IncidentsResponse {
         disaster: number,
         high: number
         average: number,
-        warning: number
+        warning: number,
+        information: number
     }
 }
 
@@ -23,7 +24,7 @@ export function IncidentOverviewComponent() {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    hostIds: [10654, 10653]
+                    hostIds: [10654, 10653, 10656]
                 })
             })
 
@@ -70,6 +71,12 @@ export function IncidentOverviewComponent() {
             color: "bg-yellow-500",
             textColor: "text-yellow-500",
         },
+        {
+            label: "Informação",
+            value: query.data.incidents.information,
+            color: "bg-blue-500",
+            textColor: "text-blue-500",
+        },
     ];
 
     return (
@@ -85,8 +92,8 @@ export function IncidentOverviewComponent() {
         >
             <CardHeader className="pb-2">
                 <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-red-50">
-                        <AlertTriangle className="h-5 w-5 text-red-600" />
+                    <div className="w-10 h-10 border border-blue-900 rounded-md overflow-hidden flex items-center justify-center bg-blue-900">
+                        <AlertTriangle className="text-white size-5" />
                     </div>
 
                     <div>

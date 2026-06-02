@@ -25,7 +25,6 @@ export function ServicesPage() {
 
   return (
     <div className="bg-[url('5570869.jpg')] bg-cover bg-center flex flex-col min-h-screen justify-between">
-      <MenuComponent onSetFiltering={handleFilterChange} />
       <div className="px-10 flex justify-between items-center border-b border-zinc-100 bg-white p-4 rounded-lg">
         <div className="flex gap-3 items-center">
           <BackComponent />
@@ -57,7 +56,6 @@ export function ServicesPage() {
       <div className="flex-1 py-4">
         <ServiceGrid fullDetails={fullDetails} filtering={filtering} />
       </div>
-      <FooterComponent />
     </div>
   )
 }

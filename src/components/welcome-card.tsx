@@ -27,7 +27,7 @@ export function WelcomeCard() {
     return (
         <Card
             className="
-                h-55 flex flex-col items-start rounded-2xl px-4 py-4 border transition-all duration-300 transform hover:scale-[1.01]
+                min-h-55 flex flex-col items-start rounded-2xl px-4 py-4 border transition-all duration-300 transform hover:scale-[1.01]
                 hover:shadow-lg bg-linear-to-br from-[#001B66] via-[#00185C] to-[#00144D] border-b border-blue-900 shadow-lg
             ">
             <CardContent className="flex flex-col gap-2">

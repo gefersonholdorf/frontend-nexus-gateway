@@ -6,7 +6,7 @@ export function MenuComponent({ onSetFiltering }: { onSetFiltering?: (value: str
 
     const isWelcomePage = window.location.pathname !== "/gateway"
     return (
-        <div className="w-full grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6 justify-between px-10 py-2 min-h-20 bg-linear-to-br from-[#001B66] via-[#00185C] to-[#00144D] items-center border-b border-blue-900 shadow-lg">
+        <div className="w-full grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-6 justify-between px-10 py-2 min-h-20 bg-linear-to-br from-[#001B66] via-[#00185C] to-[#00144D] items-center border-b border-blue-900 shadow-lg">
             <img src="./logo.png" className="w-50 p-2 cursor-pointer" onClick={() => navigate('/welcome')} />
             <div>
                 {!isWelcomePage && (

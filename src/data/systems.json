@@ -1,0 +1,72 @@
+[
+    {
+        "id": "1",
+        "type": "homolog",
+        "name": "Biller Homologação",
+        "description": "Sistema de tarifagem de telefonia.",
+        "ip": "10.188.25.101",
+        "port": 80,
+        "domain": "https://homologabiller.lusati.com.br",
+        "logo": "biller.png"
+    },
+    {
+        "id": "2",
+        "type": "production",
+        "name": "Biller Produção",
+        "description": "Sistema de tarifagem de telefonia.",
+        "ip": "10.188.25.101",
+        "port": 80,
+        "domain": "https://biller.lusati.com.br",
+        "logo": "biller.png"
+    },
+    {
+        "id": "3",
+        "type": "production",
+        "name": "Biller Produção - VOIP",
+        "description": "Sistema de tarifagem de telefonia.",
+        "ip": "10.188.25.101",
+        "port": 80,
+        "domain": "https://voip.scti.sc.gov.br",
+        "logo": "biller.png"
+    },
+    {
+        "id": "4",
+        "type": "homolog",
+        "name": "Diamante Homologação",
+        "description": "Sistema para corretores de seguros.",
+        "ip": "10.188.25.101",
+        "port": 80,
+        "domain": "https://homologadiamante.lusati.com.br",
+        "logo": "diamante.png"
+    },
+    {
+        "id": "5",
+        "type": "production",
+        "name": "Diamante Produção",
+        "description": "Sistema para corretores de seguros.",
+        "ip": "10.188.25.101",
+        "port": 80,
+        "domain": "https://diamante.lusati.com.br",
+        "logo": "diamante.png"
+    },
+    {
+        "id": "6",
+        "type": "homolog",
+        "name": "Bot Homologação",
+        "description": "Sistema de messageria.",
+        "ip": "10.188.25.101",
+        "port": 80,
+        "domain": "https://homologabot.lusati.com.br",
+        "logo": "bot.png"
+    },
+    {
+        "id": "7",
+        "type": "production",
+        "name": "Bot Produção",
+        "description": "Sistema de messageria.",
+        "ip": "10.188.25.101",
+        "port": 80,
+        "domain": "https://bot.lusati.com.br",
+        "logo": "bot.png"
+    }
+]
