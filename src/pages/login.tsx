@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useMutation } from "@tanstack/react-query";
-import { Loader2Icon, LoaderIcon, LogIn, Network } from "lucide-react";
+import { Loader2Icon, LogIn, Network } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";

@@ -10,15 +10,17 @@ interface ModuleCardProps {
     page?: string
     redirection?: string
     children: React.ReactNode
+    isBlock?: boolean
 }
 
-export function ModuleCard({ title, description, page, redirection, children }: ModuleCardProps) {
+export function ModuleCard({ title, description, page, redirection, children, isBlock }: ModuleCardProps) {
     const navigate = useNavigate()
 
     return (
         <div
-            className="w-full flex justify-center items-center cursor-pointer"
+            className={`w-full h-55flex justify-center items-center ${isBlock ? "cursor-not-allowed" : "cursor-pointer"}`}
             onClick={() => {
+                if (isBlock) return
                 if (page) {
                     navigate(`/${page}`)
                     return
@@ -31,10 +33,10 @@ export function ModuleCard({ title, description, page, redirection, children }: 
         >
             <Card
                 className="
-                        h-fit w-full group
+                        w-full group
                         flex flex-col justify-between
                         rounded-2xl px-0 pt-0 shadow-lg
-                        border-t-5 border-transparent hover:border-blue-600
+                        border-t-5 border-transparent hover:border-blue-900
                         transition-all duration-300
                         transform hover:scale-[1.01]
                         hover:shadow-lg
@@ -56,7 +58,7 @@ export function ModuleCard({ title, description, page, redirection, children }: 
                 </CardHeader>
                 <CardContent className="space-y-4 mt-0 pt-0 px-4 flex flex-col justify-center items-center">
                     <Button
-                        className="
+                        className={`
                                 cursor-pointer w-full gap-2
                                 px-0
                                 bg-transparent
@@ -65,7 +67,7 @@ export function ModuleCard({ title, description, page, redirection, children }: 
                                 hover:bg-transparent
                                 flex justify-center
                                 transition-all duration-300
-                            "
+                                ${isBlock ? "cursor-not-allowed" : "cursor-pointer"}`}
                     >
                         Acessar módulo
                         <MoveRight size={16} />

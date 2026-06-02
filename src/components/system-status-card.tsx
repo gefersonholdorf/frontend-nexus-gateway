@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Activity, Cpu, HardDrive } from "lucide-react";
 import { Card } from "./ui/card";
+import { Skeleton } from "./ui/skeleton";
 
 interface SystemStatusCardProps {
     serverId: string;
@@ -31,8 +32,8 @@ export function SystemStatusCard({
 
     if (query.isLoading) {
         return (
-            <Card className="p-6">
-                Carregando servidor...
+            <Card className="h-55 p-0">
+                <Skeleton className="h-full bg-gray-100" />
             </Card>
         );
     }
@@ -46,7 +47,7 @@ export function SystemStatusCard({
     return (
         <Card
             className={`
-                rounded-2xl border  border-slate-200 px-6 py-5 shadow-sm flex flex-col gap-1 transition-all duration-300 transform hover:scale-[1.01]
+                h-55 rounded-2xl border  border-slate-200 px-6 py-5 shadow-sm flex flex-col gap-1 transition-all duration-300 transform hover:scale-[1.01]
                 hover:shadow-lg`}
         >
             <div className="flex items-center justify-between mb-2">
@@ -137,8 +138,8 @@ function Metric({
             <div className="h-2 bg-slate-200 rounded-full overflow-hidden">
                 <div
                     className={`h-full rounded-full transition-all ${isCritical
-                            ? "bg-red-500"
-                            : "bg-emerald-500"
+                        ? "bg-red-500"
+                        : "bg-emerald-500"
                         }`}
                     style={{
                         width: `${Math.min(percent, 100)}%`,

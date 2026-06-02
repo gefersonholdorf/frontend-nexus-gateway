@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 
 import { Card } from "./ui/card";
+import { Skeleton } from "./ui/skeleton";
 
 function getWeatherDescription(code: number) {
     const map: Record<number, string> = {
@@ -155,8 +156,8 @@ export function WeatherCard() {
 
     if (query.isLoading) {
         return (
-            <Card className="p-6">
-                Carregando clima...
+            <Card className="h-55 p-0">
+                <Skeleton className="h-full bg-gray-100" />
             </Card>
         );
     }
