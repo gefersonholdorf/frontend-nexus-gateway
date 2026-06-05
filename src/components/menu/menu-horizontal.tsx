@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router";
-import { Input } from "./ui/input";
+import { Input } from "../ui/input";
 
 export function MenuComponent({ onSetFiltering }: { onSetFiltering?: (value: string) => void }) {
     const navigate = useNavigate()

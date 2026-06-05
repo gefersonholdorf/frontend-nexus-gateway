@@ -1,4 +1,4 @@
-import { Circle, CircleCheck, CircleX, CloudUpload } from "lucide-react";
+import { CircleCheck, CircleX, CloudUpload } from "lucide-react";
 import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
 import { ScrollArea } from "./ui/scroll-area";
 

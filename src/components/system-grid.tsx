@@ -1,4 +1,4 @@
-import { ExternalLink } from "lucide-react"
+import { ArrowRight, ExternalLink } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import SystemsData from "@/data/systems.json"
@@ -34,7 +34,7 @@ export function SystemGrid({ fullDetails, filtering }: SystemGridProps) {
                 <Card
                     key={`${systems.id}-${systems.domain}`}
                     className={`
-                        flex-1 cursor-pointer
+                        flex-1 cursor-pointer group
                         rounded-2xl px-0 pt-0 shadow-lg
                         border-t-4 border-transparent
                         transition-all duration-300
@@ -54,7 +54,7 @@ export function SystemGrid({ fullDetails, filtering }: SystemGridProps) {
                             </div>
 
                             <div className="flex flex-col">
-                                <CardTitle className="text-base font-semibold leading-tight">
+                                <CardTitle className="text-base font-semibold leading-tight group-hover:text-blue-900">
                                     {systems.name}
                                 </CardTitle>
 
@@ -68,41 +68,40 @@ export function SystemGrid({ fullDetails, filtering }: SystemGridProps) {
                         </div>
                     </CardHeader>
 
-                    <CardContent className="space-y-2 mt-0 pt-0 px-4">
+                    <CardContent className="mt-0 px-4 space-y-2">
                         {fullDetails && (
-                            <>
+                            <div className="border rounded-md bg-gray-100 p-2">
                                 <div className="grid grid-cols-2 gap-2 text-sm">
-                                    <div className="px-2 py-1 rounded-lg bg-muted border border-zinc-300">
-                                        <span className="text-xs text-muted-foreground">IP</span>
+                                    <div className="px-2 py-1">
+                                        <span className="text-xs text-blue-900">IP</span>
                                         <p className="font-mono text-[0.8rem]">
                                             {systems.ip ?? "-"}
                                         </p>
                                     </div>
 
-                                    <div className="px-2 py-1 rounded-lg bg-muted border border-zinc-300">
-                                        <span className="text-xs text-muted-foreground">PORTA</span>
+                                    <div className="px-2 py-1">
+                                        <span className="text-xs text-blue-900">PORTA</span>
                                         <p className="font-mono text-[0.8rem]">
                                             {systems.port ?? "-"}
                                         </p>
                                     </div>
                                 </div>
 
-                                <div className="px-2 py-1 rounded-lg bg-muted text-sm border border-zinc-300">
-                                    <span className="text-xs text-muted-foreground">
+                                <div className="px-2 py-1 ">
+                                    <span className="text-xs text-blue-900">
                                         DOMÍNIO
                                     </span>
                                     <p className="font-mono text-[0.8rem] break-all">
                                         {systems.domain}
                                     </p>
                                 </div>
-                            </>
+                            </div>
                         )}
 
                         <Button
                             className="
-                                w-full cursor-pointer gap-2
-                                border border-gray-300
-                                underline underline-offset-4
+                                w-full cursor-pointer gap-2 flex justify-between roudend-none
+                                outline-none border-0
                                 bg-transparent
                                 text-blue-700
                                 hover:text-blue-900
@@ -111,8 +110,11 @@ export function SystemGrid({ fullDetails, filtering }: SystemGridProps) {
                             "
                             onClick={() => window.open(systems.domain, "_blank")}
                         >
-                            <ExternalLink size={16} />
-                            Acessar {systems.name}
+                            <div className="flex items-center gap-1">
+                                <ExternalLink size={16} />
+                                Acessar {systems.name}
+                            </div>
+                            <ArrowRight size={16} />
                         </Button>
                     </CardContent>
                 </Card>

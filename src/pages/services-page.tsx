@@ -7,7 +7,7 @@ import {
 import { Expand, LayoutDashboard, Minimize } from "lucide-react";
 import { useState } from "react";
 import { FooterComponent } from "../components/footer";
-import { MenuComponent } from "../components/menu";
+import { MenuComponent } from "../components/menu/menu-horizontal";
 import { ServiceGrid } from "../components/service-grid";
 
 export function ServicesPage() {
@@ -32,8 +32,8 @@ export function ServicesPage() {
             <LayoutDashboard className="text-blue-600 size-4" />
           </div>
           <div>
-            <h1 className="text-lg font-bold">Serviços e Sistemas</h1>
-            <p className="text-gray-600 text-[.8rem]">Acesso centralizado aos serviços e sistemas internos.</p>
+            <h1 className="text-lg font-bold">Serviços</h1>
+            <p className="text-gray-600 text-[.8rem]">Visualize e acesse todos os serviços internos da infraestrutura.</p>
           </div>
         </div>
         <Tooltip>
