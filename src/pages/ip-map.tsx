@@ -73,7 +73,7 @@ export function IpMapPage() {
                     </div>
                 </div>
             </div>
-            <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-4 justify-between">
+            <div className="w-full px-10 grid grid-cols-1 lg:grid-cols-2 gap-4 justify-between">
                 <div className="flex gap-2 items-start border bg-white p-4 rounded-xl border-zinc-300 shadow-sm w-full transition-all duration-300 transform hover:scale-[1.02]">
                     <div className="flex flex-col justify-between gap-2">
                         <div className="w-full flex flex-col lg:flex-row items-center justify-center gap-2">

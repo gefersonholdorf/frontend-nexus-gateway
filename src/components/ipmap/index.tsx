@@ -14,7 +14,7 @@ interface IpMapComponentProps {
 
 export function IpMapComponent({ subnet, data, isLoading }: IpMapComponentProps) {
     return (
-        <div className="bg-white p-4 rounded-xl border border-zinc-300 shadow-lg space-y-4">
+        <div className="bg-white mx-10 mb-8 p-4 rounded-xl border border-zinc-300 shadow-lg space-y-4 ">
             <div className="flex flex-col lg:flex-row justify-between gap-4">
                 <div className="flex gap-2 items-center">
                     <div className="flex w-fit py-1 px-2 border border-zinc-300 bg-white rounded-sm shadow-sm">

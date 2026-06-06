@@ -1,13 +1,12 @@
 import { BackComponent } from "@/components/back-component";
+import { Input } from "@/components/ui/input";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Expand, LayoutDashboard, Minimize } from "lucide-react";
+import { Expand, Minimize, MonitorCloud, Search } from "lucide-react";
 import { useState } from "react";
-import { FooterComponent } from "../components/footer";
-import { MenuComponent } from "../components/menu/menu-horizontal";
 import { ServiceGrid } from "../components/service-grid";
 
 export function ServicesPage() {
@@ -29,7 +28,7 @@ export function ServicesPage() {
         <div className="flex gap-3 items-center">
           <BackComponent />
           <div className="w-10 h-10 border border-blue-600 rounded-md overflow-hidden flex items-center justify-center bg-blue-100">
-            <LayoutDashboard className="text-blue-600 size-4" />
+            <MonitorCloud className="text-blue-600 size-4" />
           </div>
           <div>
             <h1 className="text-lg font-bold">Serviços</h1>
@@ -52,6 +51,17 @@ export function ServicesPage() {
             )}
           </TooltipContent>
         </Tooltip>
+      </div>
+      <div className="bg-white px-10 py-4 grid grid-cols-1 lg:grid-cols-9 gap-2">
+        <div className="relative flex items-center col-span-6">
+          <Search className="absolute left-3 h-4 w-4 text-muted-foreground" />
+
+          <Input
+            className="pl-10"
+            placeholder="Buscar serviço..."
+            onChange={(e) => handleFilterChange(e.target.value)}
+          />
+        </div>
       </div>
       <div className="flex-1 py-4">
         <ServiceGrid fullDetails={fullDetails} filtering={filtering} />

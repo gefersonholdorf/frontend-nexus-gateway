@@ -28,7 +28,7 @@ export function ServiceGrid({ fullDetails, filtering }: ServiceGridProps) {
     );
 
     return (
-        <div className="w-full grid grid-cols-1 px-10 md:grid-cols-2 xl:grid-cols-4 gap-6">
+        <div className="w-full grid grid-cols-1 px-10 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {filteredServices.map((service) => (
                 <Card
                     key={`${service.id}-${service.domain}`}
@@ -36,24 +36,27 @@ export function ServiceGrid({ fullDetails, filtering }: ServiceGridProps) {
                         flex-1
                         rounded-2xl px-0 pt-0 shadow-lg
                         border border-transparent
-                        hover:border-blue-500/60
+                        hover:border-blue-900/60
                         transition-all duration-300
                         transform hover:scale-[1.03]
-                        hover:shadow-xl hover:shadow-blue-200/40
+                        hover:shadow-xl
                     "
                 >
-                    <CardHeader className="flex flex-row items-center gap-2 pt-4 px-4 border-zinc-200">
+                    <CardHeader className="flex items-start gap-2 pt-4 px-4">
 
-                        <div className="w-10 h-10 border border-zinc-300 rounded-md overflow-hidden flex items-center justify-center bg-white">
+                        <div className="min-w-10 h-10 border border-zinc-300 rounded-md overflow-hidden flex items-center justify-center bg-white">
                             <img
                                 src={`./logos/${service.logo}`}
                                 alt={service.name}
-                                className="w-8 h-8 object-contain"
+                                className="max-w-full max-h-full object-contain p-1"
+                                onError={(e) => {
+                                    (e.currentTarget as HTMLImageElement).style.display = "none";
+                                }}
                             />
                         </div>
 
                         <div className="flex flex-col">
-                            <CardTitle className="text-base font-semibold leading-tight">
+                            <CardTitle className="text-base font-semibold truncate w-full">
                                 {service.name}
                             </CardTitle>
 
@@ -96,9 +99,9 @@ export function ServiceGrid({ fullDetails, filtering }: ServiceGridProps) {
                         <Button
                             className="
                                 cursor-pointer w-full gap-2
-                                bg-transparent border border-blue-500/60
-                                hover:bg-blue-500 hover:text-white
-                                text-blue-600
+                                bg-transparent border border-blue-900/60
+                                hover:text-blue-900
+                                text-blue-700 hover:bg-transparent
                                 transition-all duration-300
                             "
                             onClick={() => window.open(service.domain, "_blank")}

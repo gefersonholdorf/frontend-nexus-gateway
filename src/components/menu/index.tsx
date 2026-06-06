@@ -1,4 +1,4 @@
-import { AlertTriangle, AppWindow, Calendar, Cctv, LayoutDashboard, LayoutDashboardIcon, Network, Rocket } from "lucide-react";
+import { AlertTriangle, AppWindow, Calendar, Cctv, LayoutDashboard, MonitorCloud, Network, Rocket } from "lucide-react";
 
 export const sidebarItems = [
     {
@@ -14,7 +14,7 @@ export const sidebarItems = [
     {
         label: "Serviços",
         path: "/services",
-        icon: LayoutDashboardIcon,
+        icon: MonitorCloud,
     },
     {
         label: "IP Map",
