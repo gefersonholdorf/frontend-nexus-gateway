@@ -1,11 +1,9 @@
 import { BackupOverviewComponent } from "@/components/backup-overview";
 import { EventsOverviewComponent } from "@/components/events-overview";
 import { IncidentOverviewComponent } from "@/components/incident-overview";
-import { InfoCard } from "@/components/info-card";
 import { SystemStatusCard } from "@/components/system-status-card";
 import { WeatherCard } from "@/components/weather-card";
 import { WelcomeCard } from "@/components/welcome-card";
-import { Network, Server } from "lucide-react";
 
 export function WelcomePage() {
     return (

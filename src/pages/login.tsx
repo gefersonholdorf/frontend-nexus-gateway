@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useMutation } from "@tanstack/react-query";
-import { Loader2Icon, LogIn, Network } from "lucide-react";
+import { Loader2Icon, Lock, LogIn, Mail, Network } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
@@ -159,12 +159,17 @@ export function LoginPage() {
                     <div className="mt-6 mb-6 space-y-2 w-full">
                         <div className="w-full">
                             <span className="text-[.8rem] text-gray-600">E-mail</span>
-                            <Input
-                                value={email}
-                                onChange={handleSetEmail}
-                                className={`w-full p-5 ${errors.email ? "border-red-500" : ""
-                                    }`}
-                            />
+                            <div className="relative flex items-center">
+                                <Mail className="absolute left-3 h-4 w-4 text-muted-foreground" />
+
+                                <Input
+                                    value={email}
+                                    onChange={handleSetEmail}
+                                    placeholder="Informe seu email..."
+                                    className={`pl-10 w-full py-5 ${errors.email ? "border-red-500" : ""
+                                        }`}
+                                />
+                            </div>
 
                             {errors.email && (
                                 <p className="text-red-500 text-xs mt-1">
@@ -174,14 +179,18 @@ export function LoginPage() {
                         </div>
                         <div className="w-full">
                             <span className="text-[.8rem] text-gray-600">Senha</span>
-                            <Input
-                                type="password"
-                                value={password}
-                                onChange={handleSetPassword}
-                                className={`w-full p-5 ${errors.password ? "border-red-500" : ""
-                                    }`}
-                            />
+                            <div className="relative flex items-center">
+                                <Lock className="absolute left-3 h-4 w-4 text-muted-foreground" />
 
+                                <Input
+                                    type="password"
+                                    value={password}
+                                    placeholder="Informe sua senha..."
+                                    onChange={handleSetPassword}
+                                    className={`w-full pl-10 py-5 ${errors.password ? "border-red-500" : ""
+                                        }`}
+                                />
+                            </div>
                             {errors.password && (
                                 <p className="text-red-500 text-xs mt-1">
                                     {errors.password}

@@ -1,4 +1,4 @@
-import { AlertTriangle, AppWindow, BarChart3, Calendar, CameraIcon, Cctv, FileText, Layout, LayoutDashboard, LayoutDashboardIcon, Network, Rocket, Settings, Users } from "lucide-react";
+import { AlertTriangle, AppWindow, Calendar, Cctv, LayoutDashboard, LayoutDashboardIcon, Network, Rocket } from "lucide-react";
 
 export const sidebarItems = [
     {
@@ -30,15 +30,18 @@ export const sidebarItems = [
         label: "Calendário",
         path: "/events",
         icon: Calendar,
+        isBlocked: true,
     },
     {
         label: "Incidentes",
         path: "/incidents",
         icon: AlertTriangle,
+        isBlocked: true,
     },
     {
         label: "Deploy Automatizado",
         path: "/deploy",
         icon: Rocket,
+        isBlocked: true,
     }
 ];

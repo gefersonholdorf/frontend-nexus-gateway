@@ -1,124 +1,253 @@
-import { ArrowRight, ExternalLink } from "lucide-react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import SystemsData from "@/data/systems.json"
+import {
+    ArrowRight,
+    ExternalLink,
+    Globe,
+    Network,
+    Server
+} from "lucide-react";
+
+import {
+    Card,
+    CardHeader,
+    CardTitle
+} from "@/components/ui/card";
+
+import { Button } from "@/components/ui/button";
+import SystemsData from "@/data/systems.json";
 
 type System = {
-    id: string
-    name: string
-    description: string
-    ip?: string
-    port?: number
-    domain: string
-    logo: string
-    type: 'homolog' | 'production'
-}
+    id: string;
+    name: string;
+    description: string;
+    ip?: string;
+    port?: number;
+    domain: string;
+    logo: string;
+    type: "homolog" | "production";
+};
 
-const systems: System[] = SystemsData as System[]
+const systems: System[] = SystemsData as System[];
 
 interface SystemGridProps {
-    fullDetails?: boolean
-    filtering?: string
+    fullDetails?: boolean;
+    filtering?: string;
+    typeFiltering?: 'todos' | 'production' | 'homolog'
 }
 
-export function SystemGrid({ fullDetails, filtering }: SystemGridProps) {
-    const filteredSystems = systems.filter((systems) =>
-        filtering
-            ? systems.name.toLowerCase().includes(filtering.toLowerCase())
-            : true
-    );
+export function SystemGrid({
+    fullDetails = false,
+    filtering = "",
+    typeFiltering = 'todos'
+}: SystemGridProps) {
+    const filteredSystems = systems
+        .filter((system) => {
+            if (typeFiltering === 'todos') return system
+            return system.type === typeFiltering
+        })
+        .filter((system) =>
+            system.name.toLowerCase().includes(filtering.toLowerCase())
+        );
 
     return (
-        <div className="w-full grid grid-cols-1 px-10 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {filteredSystems.map((systems) => (
-                <Card
-                    key={`${systems.id}-${systems.domain}`}
-                    className={`
-                        flex-1 cursor-pointer group
-                        rounded-2xl px-0 pt-0 shadow-lg
-                        border-t-4 border-transparent
-                        transition-all duration-300
-                        transform hover:scale-[1.03]
-                        hover:shadow-xl ${systems.type === 'production' ? 'hover:border-green-500' : 'hover:border-amber-500'}
-                    `}
-                >
-                    <CardHeader className="flex flex-row items-center justify-between gap-2 pt-4 px-4 border-zinc-200">
+        <div className="w-full px-6 xl:px-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                {filteredSystems.map((system) => {
+                    const isProd = system.type === "production";
 
-                        <div className="flex flex-row items-center gap-2">
-                            <div className="w-10 h-10 border border-zinc-300 rounded-md overflow-hidden flex items-center justify-center bg-white">
-                                <img
-                                    src={`./${systems.logo}`}
-                                    alt={systems.name}
-                                    className="w-8 h-8 object-contain"
-                                />
-                            </div>
-
-                            <div className="flex flex-col">
-                                <CardTitle className="text-base font-semibold leading-tight group-hover:text-blue-900">
-                                    {systems.name}
-                                </CardTitle>
-
-                                <p className="text-xs text-muted-foreground">
-                                    {systems.description}
-                                </p>
-                            </div>
-                        </div>
-                        <div className={`px-2 py-1 rounded-full text-[.8rem] font-semibold border ${systems.type === 'production' ? 'bg-green-100 text-green-700 border-green-500' : 'border-amber-500 bg-amber-100 text-amber-700'}`}>
-                            {systems.type === 'production' ? 'Produção' : 'Homologação'}
-                        </div>
-                    </CardHeader>
-
-                    <CardContent className="mt-0 px-4 space-y-2">
-                        {fullDetails && (
-                            <div className="border rounded-md bg-gray-100 p-2">
-                                <div className="grid grid-cols-2 gap-2 text-sm">
-                                    <div className="px-2 py-1">
-                                        <span className="text-xs text-blue-900">IP</span>
-                                        <p className="font-mono text-[0.8rem]">
-                                            {systems.ip ?? "-"}
-                                        </p>
-                                    </div>
-
-                                    <div className="px-2 py-1">
-                                        <span className="text-xs text-blue-900">PORTA</span>
-                                        <p className="font-mono text-[0.8rem]">
-                                            {systems.port ?? "-"}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div className="px-2 py-1 ">
-                                    <span className="text-xs text-blue-900">
-                                        DOMÍNIO
-                                    </span>
-                                    <p className="font-mono text-[0.8rem] break-all">
-                                        {systems.domain}
-                                    </p>
-                                </div>
-                            </div>
-                        )}
-
-                        <Button
-                            className="
-                                w-full cursor-pointer gap-2 flex justify-between roudend-none
-                                outline-none border-0
-                                bg-transparent
-                                text-blue-700
-                                hover:text-blue-900
-                                hover:bg-transparent
-                                transition-all duration-300
-                            "
-                            onClick={() => window.open(systems.domain, "_blank")}
+                    return (
+                        <Card
+                            key={`${system.id}-${system.domain}`}
+                            onClick={() => window.open(`${system.domain}`, "_blank")}
+                            className={`
+                                group
+                                relative
+                                gap-1
+                                overflow-hidden
+                                rounded-3xl
+                                border
+                                bg-linear-to-b
+                                from-background
+                                to-muted/20
+                                shadow-sm
+                                transition-all
+                                duration-300
+                                hover:-translate-y-1
+                                hover:shadow-xl
+                                hover:border-primary/30
+                                py-4
+                                cursor-pointer
+                            `}
                         >
-                            <div className="flex items-center gap-1">
-                                <ExternalLink size={16} />
-                                Acessar {systems.name}
+                            {/* Barra superior */}
+                            <div
+                                className={`
+                                    absolute
+                                    top-0
+                                    left-0
+                                    h-1
+                                    w-full
+                                    ${isProd
+                                        ? "bg-linear-to-r from-green-500 via-green-400 to-emerald-500"
+                                        : "bg-linear-to-r from-amber-500 via-orange-400 to-yellow-500"
+                                    }
+                                `}
+                            />
+
+                            {/* Glow */}
+                            <div
+                                className={`
+                                    absolute
+                                    inset-0
+                                    opacity-0
+                                    transition-opacity
+                                    duration-500
+                                    ${isProd
+                                        ? "bg-green-500/5"
+                                        : "bg-amber-500/5"
+                                    }
+                                `}
+                            />
+
+                            <CardHeader className="relative z-10 border-b">
+                                <div className="flex items-start justify-between gap-3">
+                                    <div className="flex gap-4">
+                                        <div
+                                            className="
+                                                h-12
+                                                w-12
+                                                rounded-2xl
+                                                border
+                                                bg-linear-to-br
+                                                from-white
+                                                to-slate-100
+                                                shadow-md
+                                                flex
+                                                items-center
+                                                justify-center
+                                                overflow-hidden
+                                            "
+                                        >
+                                            <img
+                                                src={`./${system.logo}`}
+                                                alt={system.name}
+                                                className="
+                                                    w-8
+                                                    h-8
+                                                    object-contain
+                                                    transition-transform
+                                                    duration-500
+                                                    group-hover:scale-110
+                                                "
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <CardTitle
+                                                className="
+                                                    text truncate
+                                                    font-bold
+                                                    transition-colors
+                                                    duration-300
+                                                    group-hover:text-primary
+                                                "
+                                            >
+                                                {system.name}
+                                            </CardTitle>
+
+                                            <p className="text-[.8rem] truncate text-muted-foreground mt-1">
+                                                {system.description}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </CardHeader>
+
+                            <div className="pt-4 px-4">
+                                {fullDetails && (
+                                    <div
+                                        className="
+                                            rounded-2xl
+                                            border
+                                            bg-muted/40 p-4 mb-4 gap-4
+                                        "
+                                    >
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div className="">
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <Server size={14} />
+                                                    <span className="text-xs text-muted-foreground">
+                                                        IP
+                                                    </span>
+                                                </div>
+
+                                                <p className="font-mono text-[.8rem] text-gray-600 font-medium">
+                                                    {system.ip ?? "-"}
+                                                </p>
+                                            </div>
+
+                                            <div>
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <Network size={14} />
+                                                    <span className="text-xs text-muted-foreground">
+                                                        Porta
+                                                    </span>
+                                                </div>
+
+                                                <p className="font-mono text-[.8rem] text-gray-600 font-medium">
+                                                    {system.port ?? "-"}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div className="pt-4">
+                                            <div className="flex items-center gap-2 mb-1">
+                                                <Globe size={14} />
+                                                <span className="text-xs text-muted-foreground">
+                                                    Domínio
+                                                </span>
+                                            </div>
+
+                                            <p className="font-mono text-[.8rem] text-gray-600 break-all">
+                                                {system.domain}
+                                            </p>
+                                        </div>
+                                    </div>
+                                )}
+
+                                <Button
+                                    variant="ghost"
+                                    onClick={() => window.open(system.domain, "_blank")}
+                                    className="
+        w-full
+        h-11
+        px-3 py-0
+        rounded-xl
+        justify-between
+        border
+        hover:bg-primary/5
+        hover:border-primary/20
+        transition-all
+    "
+                                >
+                                    <div className="flex items-center gap-2 text-primary font-medium">
+                                        <ExternalLink size={15} />
+                                        Acessar Sistema
+                                    </div>
+
+                                    <ArrowRight
+                                        size={15}
+                                        className="
+            transition-transform
+            duration-300
+            group-hover:translate-x-1
+        "
+                                    />
+                                </Button>
                             </div>
-                            <ArrowRight size={16} />
-                        </Button>
-                    </CardContent>
-                </Card>
-            ))}
+                        </Card>
+                    );
+                })}
+            </div>
         </div>
     );
 }

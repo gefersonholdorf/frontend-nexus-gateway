@@ -6,7 +6,7 @@
         "description": "Sistema de tarifagem de telefonia.",
         "ip": "10.188.25.101",
         "port": 80,
-        "domain": "https://homologabiller.lusati.com.br",
+        "domain": "https://biller-hom.lusati.com.br",
         "logo": "biller.png"
     },
     {
@@ -36,7 +36,7 @@
         "description": "Sistema para corretores de seguros.",
         "ip": "10.188.25.101",
         "port": 80,
-        "domain": "https://homologadiamante.lusati.com.br",
+        "domain": "https://diamante-hom.lusati.com.br",
         "logo": "diamante.png"
     },
     {
@@ -56,7 +56,7 @@
         "description": "Sistema de messageria.",
         "ip": "10.188.25.101",
         "port": 80,
-        "domain": "https://homologabot.lusati.com.br",
+        "domain": "https://bot-hom.lusati.com.br",
         "logo": "bot.png"
     },
     {

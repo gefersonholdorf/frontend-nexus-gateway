@@ -134,6 +134,7 @@ export function Sidebar({
                                 label={item!.label}
                                 path={item!.path}
                                 collapsed={collapsed}
+                                isBlocked={item?.isBlocked}
                             />
                         ))}
                     </nav>

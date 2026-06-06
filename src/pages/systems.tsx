@@ -4,13 +4,15 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { AppWindow, Expand, Minimize } from "lucide-react";
+import { AppWindow, Expand, Minimize, Search } from "lucide-react";
 import { useState } from "react";
 import { SystemGrid } from "@/components/system-grid";
+import { Input } from "@/components/ui/input";
 
 export function SystemsPage() {
     const [fullDetails, setFullDetails] = useState(false)
     const [filtering, setFiltering] = useState("")
+    const [typeFiltering, setTypeFiltering] = useState<'homolog' | 'production' | 'todos'>("todos")
 
     function toggleDetails() {
         console.log("Toggle details")
@@ -19,6 +21,10 @@ export function SystemsPage() {
 
     function handleFilterChange(value: string) {
         setFiltering(value)
+    }
+
+    function handleTypeFiltering(type: 'homolog' | 'production' | 'todos') {
+        setTypeFiltering(type)
     }
 
     return (
@@ -51,8 +57,40 @@ export function SystemsPage() {
                     </TooltipContent>
                 </Tooltip>
             </div>
+            <div className="bg-white px-10 py-4 grid grid-cols-1 lg:grid-cols-9 gap-2">
+                <div className="relative flex items-center col-span-6">
+                    <Search className="absolute left-3 h-4 w-4 text-muted-foreground" />
+
+                    <Input
+                        className="pl-10"
+                        placeholder="Buscar sistema..."
+                        onChange={(e) => handleFilterChange(e.target.value)}
+                    />
+                </div>
+                <div
+                    onClick={() => handleTypeFiltering('todos')}
+                    className={`col-span-1 border rounded-sm flex items-center justify-center hover:border-blue-900 transition-all duration-300 ease-in-out
+                            cursor-pointer ${typeFiltering === 'todos' ? 'bg-blue-900 text-white' : 'bg-white text-gray-900'}`}
+                >
+                    <span className="font-bold text-[.8rem]">Todos</span>
+                </div>
+                <div
+                    onClick={() => handleTypeFiltering('production')}
+                    className={`col-span-1 border rounded-sm flex items-center justify-center hover:border-blue-900 transition-all duration-300 ease-in-out
+                            cursor-pointer ${typeFiltering === 'production' ? 'bg-blue-900 text-white' : 'bg-white text-gray-900'}`}
+                >
+                    <span className="font-bold text-[.8rem]">Produção</span>
+                </div>
+                <div
+                    onClick={() => handleTypeFiltering('homolog')}
+                    className={`col-span-1 border rounded-sm flex items-center justify-center hover:border-blue-900 transition-all duration-300 ease-in-out
+                            cursor-pointer ${typeFiltering === 'homolog' ? 'bg-blue-900 text-white' : 'bg-white text-gray-900'}`}
+                >
+                    <span className="font-bold text-[.8rem]">Homologação</span>
+                </div>
+            </div>
             <div className="flex-1 py-4">
-                <SystemGrid fullDetails={fullDetails} filtering={filtering} />
+                <SystemGrid fullDetails={fullDetails} filtering={filtering} typeFiltering={typeFiltering} />
             </div>
         </div>
     )
