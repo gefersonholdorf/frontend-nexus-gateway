@@ -1,9 +1,11 @@
 import { Clock, Network } from "lucide-react";
 import { Card, CardContent } from "./ui/card";
 import { useEffect, useState } from "react";
+import { useUser } from "@/contexts/user-context";
 
 export function WelcomeCard() {
     const [tempo, setTempo] = useState(new Date());
+    const { userName } = useUser()
 
     useEffect(() => {
         const timer = setInterval(() => setTempo(new Date()), 1000);
@@ -35,7 +37,7 @@ export function WelcomeCard() {
                     <Network className="text-white size-4" />
                 </div>
                 <h2 className="text-white font-extrabold text-3xl">
-                    {getSaudacao()}, Geferson
+                    {getSaudacao()}, {userName}
                 </h2>
                 <p className="text-gray-200 font-normal text-sm">Bem-vindo ao <span className="font-bold">Nexus Gateway</span> — Plataforma centralizada de Intranet da Lusati</p>
                 <div className="flex items-center gap-2 pt-2">

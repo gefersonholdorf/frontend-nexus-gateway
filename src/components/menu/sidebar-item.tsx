@@ -31,16 +31,16 @@ export function SidebarItem({
                     "group flex items-center gap-3 rounded-xl px-3 py-3 transition-all duration-200",
                     "hover:bg-white/10",
                     isActive &&
-                    "bg-blue-900 text-gray-300 shadow-md font-medium",
+                    "bg-gray-200/10 text-gray-800 shadow-md font-medium",
                     isBlocked &&
                     "cursor-not-allowed opacity-30"
                 )
             }
         >
-            <Icon size={18} />
+            <Icon size={18} className="text-gray-100" />
 
             {!collapsed && (
-                <span className="truncate text-[.9rem] text-gray-300">
+                <span className="truncate text-[.9rem] text-gray-100">
                     {label}
                 </span>
             )}

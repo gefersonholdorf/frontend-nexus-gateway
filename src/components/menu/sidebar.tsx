@@ -1,5 +1,4 @@
 import {
-    Camera,
     ChevronLeft,
     ChevronRight,
     Menu,
@@ -8,6 +7,7 @@ import {
 import { useState } from "react";
 import { SidebarItem } from "./sidebar-item";
 import { sidebarItems } from ".";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 interface SidebarProps {
     collapsed: boolean;
@@ -65,13 +65,13 @@ export function Sidebar({
         flex
         flex-col
 
-        bg-linear-to-br from-[#001B66] via-[#00185C] to-[#00144D]
+        bg-linear-to-br from-[#020B3F] via-[#030A35] to-[#010726]
         backdrop-blur
         text-white
         transition-all
         duration-300
         border-r
-        border-zinc-800
+        border-gray-900
 
         justify-between
 
@@ -92,7 +92,7 @@ export function Sidebar({
                         items-center
                         justify-between
                         border-b
-                        border-zinc-800
+                        border-gray-800
                         px-4
                     "
                     >
@@ -139,13 +139,25 @@ export function Sidebar({
                         ))}
                     </nav>
                 </div>
-                {!collapsed && (
-                    <div className="flex justify-start p-4">
+                <div className="flex flex-col gap-4 justify-start p-4">
+                    <div className="hover:bg-gray-100/10 flex justify-start items-center gap-1 p-2 rounded-lg cursor-pointer">
+                        <Avatar className="w-10">
+                            <AvatarImage className="h-9 w-9" src="https://avatars.githubusercontent.com/u/68699314?v=4" />
+                            <AvatarFallback>CN</AvatarFallback>
+                        </Avatar>
+                        {!collapsed && (
+                            <div className="flex flex-col">
+                                <span className="text-sm">Perfil</span>
+                                <span className="text-[.7rem] text-gray-200">Geferson - ADMIN</span>
+                            </div>
+                        )}
+                    </div>
+                    {!collapsed && (
                         <span className="text-gray-300 text-[.8rem] font-normal">
                             © 2026 Geferson Holdorf
                         </span>
-                    </div>
-                )}
+                    )}
+                </div>
             </aside>
         </>
     );

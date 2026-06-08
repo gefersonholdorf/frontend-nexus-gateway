@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useUser } from "@/contexts/user-context";
 import { useMutation } from "@tanstack/react-query";
 import { Loader2Icon, Lock, LogIn, Mail, Network } from "lucide-react";
 import { useState } from "react";
@@ -35,6 +36,7 @@ export function LoginPage() {
         },
     })
 
+    const { setUserName } = useUser();
 
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -95,10 +97,12 @@ export function LoginPage() {
         })
 
         try {
-            await mutation.mutateAsync({
+            const result = await mutation.mutateAsync({
                 email,
                 password,
             })
+
+            setUserName(result?.user?.name)
 
             toast.success("Login realizado com sucesso.", {
                 position: "top-center",
