@@ -28,7 +28,7 @@ export function ServiceGrid({ fullDetails, filtering }: ServiceGridProps) {
     );
 
     return (
-        <div className="w-full grid grid-cols-1 px-10 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        <div className="w-full grid grid-cols-1 px-10 md:grid-cols-2 xl:grid-cols-4 gap-6">
             {filteredServices.map((service) => (
                 <Card
                     key={`${service.id}-${service.domain}`}
@@ -55,12 +55,12 @@ export function ServiceGrid({ fullDetails, filtering }: ServiceGridProps) {
                             />
                         </div>
 
-                        <div className="flex flex-col">
-                            <CardTitle className="text-base font-semibold truncate w-full">
+                        <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
+                            <CardTitle className="text-base font-semibold truncate block w-full">
                                 {service.name}
                             </CardTitle>
 
-                            <p className="text-xs text-muted-foreground">
+                            <p className="text-xs truncate block text-muted-foreground">
                                 {service.description}
                             </p>
                         </div>

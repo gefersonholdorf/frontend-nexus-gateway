@@ -1,120 +1,104 @@
-"use client"
-
 import {
-    Label,
-    PolarRadiusAxis,
-    RadialBar,
-    RadialBarChart,
-} from "recharts"
-
-
+    Card,
+    CardContent
+} from "@/components/ui/card"
 import {
     ChartContainer,
     type ChartConfig,
 } from "@/components/ui/chart"
-
-const backupOk = 70
-const backupError = 30
-
-const total = backupOk + backupError
-const successPercentage = Math.round((backupOk / total) * 100)
+import {
+    Label,
+    PolarGrid,
+    PolarRadiusAxis,
+    RadialBar,
+    RadialBarChart,
+} from "recharts"
+export const description = "A radial chart with a custom shape"
 
 const chartData = [
     {
-        name: "Backups",
-        ok: backupOk,
-        erro: backupError,
+        name: "background",
+        value: 100,
+        fill: "#fff",
+    },
+    {
+        name: "progress",
+        value: 80,
+        fill: "#00BC7D",
     },
 ]
 
 const chartConfig = {
-    ok: {
-        label: "OK",
-        color: "#16a34a",
+    visitors: {
+        label: "Taxa de Sucesso",
     },
-    erro: {
-        label: "Erro",
-        color: "#ef4444",
+    safari: {
+        label: "Safari",
+        color: "var(--chart-2)",
     },
 } satisfies ChartConfig
-
 export function BackupGaugeChart() {
     return (
-        <div className="flex flex-col border-transparent outline-none w-full h-fit p-0 m-0 shadow-none -pb-8">
-            <ChartContainer
-                config={chartConfig}
-                className="flex justify-center items-center h-35 p-0"
-            >
-                <RadialBarChart
-                    className=""
-                    data={chartData}
-                    innerRadius={70}
-                    outerRadius={50}
-                    startAngle={180}
-                    endAngle={0}
+        <Card className="flex flex-col h-fit p-0 border-transparent outline-transparent">
+            <CardContent className="flex-1 w-full p-0 m-0 border-transparent justify-center items-center">
+                <ChartContainer
+                    config={chartConfig}
+                    className="p-0 flex items-center border-transparent justify-center w-full max-h-47.5"
                 >
-                    <RadialBar
-                        dataKey="erro"
-                        stackId="a"
-                        fill="#ef4444"
-                    />
-
-                    <RadialBar
-                        dataKey="ok"
-                        stackId="a"
-                        fill="#10B981"
-                        cornerRadius={5}
-                    />
-
-                    <PolarRadiusAxis
-                        tick={false}
-                        tickLine={false}
-                        axisLine={false}
-                        className=""
+                    <RadialBarChart
+                        data={chartData}
+                        startAngle={90}
+                        endAngle={-270}
+                        innerRadius={50}
+                        outerRadius={85}
+                        barSize={90}
                     >
-                        <Label
-                            className=""
-                            content={({ viewBox }) => {
-                                if (!viewBox || !("cx" in viewBox) || !("cy" in viewBox))
-                                    return null
-
-                                return (
-                                    <text
-                                        x={viewBox.cx}
-                                        y={viewBox.cy}
-                                        textAnchor="middle"
-                                        dominantBaseline="middle"
-                                    >
-                                        <tspan
-                                            x={viewBox.cx}
-                                            y={viewBox.cy}
-                                            className="fill-foreground text-4xl font-bold"
-                                        >
-                                            {successPercentage}%
-                                        </tspan>
-
-                                        <tspan
-                                            x={viewBox.cx}
-                                            y={viewBox.cy + 24}
-                                            className="fill-muted-foreground"
-                                        >
-                                            Taxa de Sucesso de Backups
-                                        </tspan>
-
-                                        <tspan
-                                            x={viewBox.cx}
-                                            y={viewBox.cy + 44}
-                                            className="fill-muted-foreground text-xs"
-                                        >
-                                            {backupOk}% OK • {backupError}% Erro
-                                        </tspan>
-                                    </text>
-                                )
-                            }}
+                        <PolarGrid
+                            gridType="circle"
+                            radialLines={false}
+                            stroke="none"
+                            className="first:white last:fill-background"
+                            polarRadius={[86, 74]}
                         />
-                    </PolarRadiusAxis>
-                </RadialBarChart>
-            </ChartContainer>
-        </div >
+                        <RadialBar
+                            dataKey="value"
+                            cornerRadius={20}
+                            background
+                        />
+                        <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
+                            <Label
+                                content={({ viewBox }) => {
+                                    if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                                        return (
+                                            <text
+                                                x={viewBox.cx}
+                                                y={viewBox.cy}
+                                                textAnchor="middle"
+                                                dominantBaseline="middle"
+                                            >
+                                                <tspan
+                                                    x={viewBox.cx}
+                                                    y={viewBox.cy}
+                                                    className="fill-emerald-700 text-4xl font-bold"
+                                                >
+                                                    {chartData[1].value.toLocaleString()} %
+                                                </tspan>
+                                                <tspan
+                                                    x={viewBox.cx}
+                                                    y={(viewBox.cy || 0) + 24}
+                                                    className="fill-muted-foreground"
+                                                >
+                                                    Taxa de Sucesso
+                                                </tspan>
+                                            </text>
+                                        )
+                                    }
+                                }}
+                            />
+                        </PolarRadiusAxis>
+                    </RadialBarChart>
+                </ChartContainer>
+            </CardContent>
+        </Card>
     )
 }

@@ -1,13 +1,27 @@
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
+import { useUser } from "@/contexts/user-context";
 import {
     ChevronLeft,
     ChevronRight,
+    History,
+    LogOut,
     Menu,
+    UserPen,
     X,
 } from "lucide-react";
 import { useState } from "react";
-import { SidebarItem } from "./sidebar-item";
+import { useNavigate } from "react-router";
 import { sidebarItems } from ".";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { SidebarItem } from "./sidebar-item";
 
 interface SidebarProps {
     collapsed: boolean;
@@ -19,6 +33,8 @@ export function Sidebar({
     setCollapsed,
 }: SidebarProps) {
     const [mobileOpen, setMobileOpen] = useState(false);
+    const { userName } = useUser()
+    const navigate = useNavigate()
 
     return (
         <>
@@ -65,7 +81,7 @@ export function Sidebar({
         flex
         flex-col
 
-        bg-linear-to-br from-[#020B3F] via-[#030A35] to-[#010726]
+        bg-(image:--background-gradient)
         backdrop-blur
         text-white
         transition-all
@@ -140,25 +156,45 @@ export function Sidebar({
                     </nav>
                 </div>
                 <div className="flex flex-col gap-4 justify-start p-4">
-                    <div className="hover:bg-gray-100/10 flex justify-start items-center gap-1 p-2 rounded-lg cursor-pointer">
-                        <Avatar className="w-10">
-                            <AvatarImage className="h-9 w-9" src="https://avatars.githubusercontent.com/u/68699314?v=4" />
-                            <AvatarFallback>CN</AvatarFallback>
-                        </Avatar>
-                        {!collapsed && (
-                            <div className="flex flex-col">
-                                <span className="text-sm">Perfil</span>
-                                <span className="text-[.7rem] text-gray-200">Geferson - ADMIN</span>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <div className="hover:bg-gray-100/10 flex justify-start items-center gap-1 p-2 rounded-lg cursor-pointer">
+                                <Avatar className="w-10">
+                                    <AvatarImage className="h-9 w-9" src="https://avatars.githubusercontent.com/u/68699314?v=4" />
+                                    <AvatarFallback>CN</AvatarFallback>
+                                </Avatar>
+                                {!collapsed && (
+                                    <div className="w-full flex justify-between items-center">
+                                        <div className="flex flex-col">
+                                            <span className="text-sm">{userName}</span>
+                                            <span className="text-[.7rem] text-gray-200">Admin</span>
+                                        </div>
+                                        <div>
+                                            <ChevronRight />
+                                        </div>
+                                    </div>
+                                )}
                             </div>
-                        )}
-                    </div>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="bg-blue-900/50 text-white">
+                            <DropdownMenuGroup>
+                                <DropdownMenuLabel>Ações</DropdownMenuLabel>
+                                <DropdownMenuItem><UserPen />Editar Perfil</DropdownMenuItem>
+                                <DropdownMenuItem><History />Alterar Senha</DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem onClick={() => navigate('/')}>
+                                    <LogOut className="text-red-500" /> Sair do Sistema
+                                </DropdownMenuItem>
+                            </DropdownMenuGroup>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                     {!collapsed && (
                         <span className="text-gray-300 text-[.8rem] font-normal">
                             © 2026 Geferson Holdorf
                         </span>
                     )}
-                </div>
-            </aside>
+                </div >
+            </aside >
         </>
     );
 }

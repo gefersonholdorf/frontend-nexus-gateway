@@ -104,6 +104,13 @@ export function LoginPage() {
 
             setUserName(result?.user?.name)
 
+            localStorage.setItem('user', JSON.stringify({
+                user: {
+                    name: result?.user?.name,
+                    token: result?.user?.token
+                }
+            }))
+
             toast.success("Login realizado com sucesso.", {
                 position: "top-center",
                 richColors: true,

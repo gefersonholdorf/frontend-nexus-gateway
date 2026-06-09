@@ -1,70 +1,8 @@
-import { CircleCheck, CircleX, CloudUpload } from "lucide-react";
-import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
-import { ScrollArea } from "./ui/scroll-area";
+import { ArrowRight, CloudUpload } from "lucide-react";
+import { Card, CardContent, CardHeader } from "./ui/card";
 import { BackupGaugeChart } from "./backup-chart";
 
-interface Backup {
-    id: string
-    name: string
-    date: Date
-    status: 'success' | 'failed'
-    size: string
-}
-
-const backups: Backup[] = [
-    {
-        id: "1",
-        name: "Backup 1",
-        date: new Date(),
-        status: "success",
-        size: "100 MB"
-    },
-    {
-        id: "2",
-        name: "Backup 2",
-        date: new Date(),
-        status: "failed",
-        size: "200 MB"
-    },
-    {
-        id: "3",
-        name: "Backup 3",
-        date: new Date(),
-        status: "success",
-        size: "150 MB"
-    },
-    {
-        id: "4",
-        name: "Backup 4",
-        date: new Date(),
-        status: "success",
-        size: "120 MB"
-    },
-    {
-        id: "5",
-        name: "Backup 4",
-        date: new Date(),
-        status: "success",
-        size: "120 MB"
-    },
-    {
-        id: "6",
-        name: "Backup 4",
-        date: new Date(),
-        status: "success",
-        size: "120 MB"
-    },
-    {
-        id: "7",
-        name: "Backup 4",
-        date: new Date(),
-        status: "success",
-        size: "120 MB"
-    }
-]
-
 export function BackupOverviewComponent() {
-    const totalBackups = 80
     return (
         <Card
             className="
@@ -92,32 +30,31 @@ export function BackupOverviewComponent() {
                     </div>
                 </div>
             </CardHeader>
-            <CardContent className="flex gap-4 border-b border-slate-200 pb-4">
+            <CardContent className="flex flex-col gap-4pb-4">
                 <BackupGaugeChart />
+                <div className=" pt-4">
+                    <button
+                        className="
+                                                            flex
+                                                            w-full
+                                                            items-center
+                                                            justify-center
+                                                            gap-2
+                                                            rounded-xl
+                                                            bg-slate-100
+                                                            py-3
+                                                            text-sm
+                                                            font-medium
+                                                            text-slate-700
+                                                            transition-all
+                                                            hover:bg-slate-200
+                                                        "
+                    >
+                        Ver Backups
+                        <ArrowRight size={16} />
+                    </button>
+                </div>
             </CardContent>
-            <CardFooter className="flex flex-col justify-start items-start pt-0 px-0">
-                <ScrollArea className="w-full h-50 mt-2">
-                    {backups.map((backups) => (
-                        <div key={backups.id} className="flex items-center justify-between px-4 py-2 border-b last:border-b-0">
-                            <div className="flex items-center gap-3">
-                                {backups.status === 'success' ? (
-                                    <CircleCheck className="text-emerald-500 size-4" />
-                                ) : (
-                                    <CircleX className="text-red-500 size-4" />
-                                )}
-                                <span className="text-[.8rem] font-medium text-slate-700">{backups.name}</span>
-                            </div>
-                            <div className="flex items-center gap-1">
-                                <span className="text-[.7rem] text-slate-500">{backups.size} -</span>
-                                <span className="text-[.7rem] text-slate-500">{backups.date.toLocaleTimeString('pt-BR', {
-                                    hour: '2-digit',
-                                    minute: '2-digit'
-                                })}</span>
-                            </div>
-                        </div>
-                    ))}
-                </ScrollArea>
-            </CardFooter>
         </Card >
     )
 }

@@ -17,8 +17,8 @@ export function CalendarPage() {
                     </div>
                 </div>
             </div>
-            <div className="flex-1 border grid grid-cols-1 lg:grid-cols-3 gap-6 pt-6 px-16">
-                <div className="lg:col-span-2">
+            <div className="flex-1 border grid grid-cols-1 lg:grid-cols-4 gap-6 pt-6 px-16">
+                <div className="lg:col-span-3">
                     <Calendar
                         mode="single"
                         captionLayout="dropdown"
@@ -26,18 +26,7 @@ export function CalendarPage() {
                     />
                 </div>
                 <div className="lg:col-span-1">
-                    <Calendar
-                        mode="single"
-                        captionLayout="dropdown"
-                        className="rounded-lg border"
-                    />
-                </div>
-                <div className="lg:col-span-1">
-                    <Calendar
-                        mode="single"
-                        captionLayout="dropdown"
-                        className="rounded-lg border"
-                    />
+                    <span>Teste</span>
                 </div>
             </div >
         </>
