@@ -87,6 +87,7 @@ export function Sidebar({
         transition-all
         duration-300
         border-r
+        shadow-lg
         border-border
 
         justify-between

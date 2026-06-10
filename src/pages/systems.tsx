@@ -34,19 +34,19 @@ export function SystemsPage() {
         <div
             className={cn(
                 "flex flex-col min-h-screen justify-between",
-                theme === "clean" && "bg-[url('/5570869.jpg')] bg-cover bg-center",
+                theme === "clean" && "bg-background bg-cover bg-center",
                 theme === "dark" && "bg-background"
             )}
         >
             <div className="px-10 flex justify-between items-center border-b border-border bg-background p-4 rounded-lg">
                 <div className="flex gap-3 items-center">
                     <BackComponent />
-                    <div className="w-10 h-10 border border-border rounded-md overflow-hidden flex items-center justify-center bg-background/20">
-                        <AppWindow className="text-primary-text size-4" />
+                    <div className="w-10 h-10 border border-primary rounded-md overflow-hidden flex items-center justify-center bg-background/20">
+                        <AppWindow className="text-primary size-4" />
                     </div>
                     <div>
                         <h1 className="text-lg font-bold">Sistemas</h1>
-                        <p className="text-primary-text text-[.8rem]">Visualize e acesse todos os sistemas da Lusati Tecnologia.</p>
+                        <p className="text-muted-foreground text-[.8rem]">Visualize e acesse todos os sistemas da Lusati Tecnologia.</p>
                     </div>
                 </div>
                 <Tooltip>
@@ -71,7 +71,7 @@ export function SystemsPage() {
                     <Search className="absolute left-3 h-4 w-4 text-muted-foreground" />
 
                     <Input
-                        className="pl-10"
+                        className="pl-10 bg-(image:--background-gradient)"
                         placeholder="Buscar sistema..."
                         onChange={(e) => handleFilterChange(e.target.value)}
                     />
@@ -79,21 +79,21 @@ export function SystemsPage() {
                 <div
                     onClick={() => handleTypeFiltering('todos')}
                     className={`col-span-1 border rounded-sm flex items-center justify-center hover:border-primary transition-all duration-300 ease-in-out
-                            cursor-pointer ${typeFiltering === 'todos' ? 'bg-primary text-primary-text' : 'bg-background text-muted-foreground'}`}
+                            cursor-pointer ${typeFiltering === 'todos' ? 'bg-primary text-secondary' : 'bg-background text-muted-foreground'}`}
                 >
                     <span className="font-bold text-[.8rem]">Todos</span>
                 </div>
                 <div
                     onClick={() => handleTypeFiltering('production')}
                     className={`col-span-1 border rounded-sm flex items-center justify-center hover:border-primary transition-all duration-300 ease-in-out
-                            cursor-pointer ${typeFiltering === 'production' ? 'bg-primary text-primary-text' : 'bg-background text-muted-foreground'}`}
+                            cursor-pointer ${typeFiltering === 'production' ? 'bg-primary text-secondary' : 'bg-background text-muted-foreground'}`}
                 >
                     <span className="font-bold text-[.8rem]">Produção</span>
                 </div>
                 <div
                     onClick={() => handleTypeFiltering('homolog')}
                     className={`col-span-1 border rounded-sm flex items-center justify-center hover:border-primary transition-all duration-300 ease-in-out
-                            cursor-pointer ${typeFiltering === 'homolog' ? 'bg-primary text-primary-text' : 'bg-background text-muted-foreground'}`}
+                            cursor-pointer ${typeFiltering === 'homolog' ? 'bg-primary text-secondary' : 'bg-background text-muted-foreground'}`}
                 >
                     <span className="font-bold text-[.8rem]">Homologação</span>
                 </div>

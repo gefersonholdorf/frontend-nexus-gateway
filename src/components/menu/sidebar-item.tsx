@@ -28,12 +28,12 @@ export function SidebarItem({
             }}
             className={({ isActive }) =>
                 cn(
-                    "group flex items-center gap-3 rounded-xl px-3 py-3 transition-all duration-200",
-                    "hover:bg-background/10 text-muted-foreground",
+                    "group flex items-center gap-3 rounded-lg px-3 py-3 transition-all duration-200",
+                    "hover:bg-primary/10 hover:text-primary text-foreground font-normal",
                     isActive &&
-                    "bg-primary text-white shadow-md font-medium",
+                    "bg-primary/10 text-primary shadow-md font-medium border-l-3 border-primary",
                     isBlocked &&
-                    "cursor-not-allowed opacity-10"
+                    "cursor-not-allowed opacity-50 border-none bg-transparent shadow-none text-muted-foreground"
                 )
             }
         >

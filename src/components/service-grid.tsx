@@ -1,6 +1,4 @@
-import { ExternalLink } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
 import servicesData from "@/data/services.json"
 
 type Service = {
@@ -33,13 +31,13 @@ export function ServiceGrid({ fullDetails, filtering }: ServiceGridProps) {
                 <Card
                     key={`${service.id}-${service.domain}`}
                     className="
-                        flex-1 bg-(image:--background-gradient)
+                        flex-1 justify-center bg-(image:--background-gradient)
                         rounded-2xl px-0 pt-0 shadow-lg
                         border border-transparent
                         hover:border:border
                         transition-all duration-300
                         transform hover:scale-[1.03]
-                        hover:shadow-xl
+                        hover:shadow-xl cursor-pointer
                     "
                 >
                     <CardHeader className="flex items-start gap-2 pt-4 px-4">
@@ -66,8 +64,8 @@ export function ServiceGrid({ fullDetails, filtering }: ServiceGridProps) {
                         </div>
                     </CardHeader>
 
-                    <CardContent className="space-y-2 mt-0 pt-0 px-4">
-                        {fullDetails && (
+                    {fullDetails && (
+                        <CardContent className="space-y-2 mt-0 pt-0">
                             <>
                                 <div className="grid grid-cols-2 gap-2 text-sm">
                                     <div className="px-2 py-1 rounded-lg bg-muted border border-border">
@@ -94,22 +92,22 @@ export function ServiceGrid({ fullDetails, filtering }: ServiceGridProps) {
                                     </p>
                                 </div>
                             </>
-                        )}
 
-                        <Button
-                            className="
+                            {/* <Button
+                                className="
                                 cursor-pointer w-full gap-2
                                 bg-transparent border border-blue-900/60
                                 hover:text-blue-900
                                 text-blue-700 hover:bg-transparent
                                 transition-all duration-300
                             "
-                            onClick={() => window.open(service.domain, "_blank")}
-                        >
-                            <ExternalLink size={16} />
-                            Acessar
-                        </Button>
-                    </CardContent>
+                                onClick={() => window.open(service.domain, "_blank")}
+                            >
+                                <ExternalLink size={16} />
+                                Acessar
+                            </Button> */}
+                        </CardContent>
+                    )}
                 </Card>
             ))}
         </div>

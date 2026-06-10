@@ -156,7 +156,7 @@ export function WeatherCard() {
 
     if (query.isLoading) {
         return (
-            <Card className="h-55 p-0">
+            <Card className="h-35 p-0">
                 <Skeleton className="h-full bg-gray-100" />
             </Card>
         );
@@ -171,7 +171,7 @@ export function WeatherCard() {
     const MainIcon = getWeatherIcon(data.weatherCode);
 
     return (
-        <Card className="h-55 bg-background rounded-2xl border border-border px-6 py-6 shadow-sm flex flex-col gap-1 transition-all duration-300 transform hover:scale-[1.01]
+        <Card className="h-35 bg-(image:--background-gradient) rounded-2xl border border-border px-6 py-6 shadow-lg flex flex-col gap-1 transition-all duration-300 transform hover:scale-[1.01]
                 hover:shadow-lg">
             <div className="flex-1">
                 <div className="mb-2 flex items-center justify-between">
@@ -204,7 +204,7 @@ export function WeatherCard() {
                 </div>
             </div>
 
-            <div className="border-t px-4 pt-2">
+            {/* <div className="border-t px-4 pt-2">
                 <div className="flex items-center justify-between">
                     {data.proximasHoras.map((item) => {
                         const Icon = getWeatherIcon(
@@ -229,7 +229,7 @@ export function WeatherCard() {
                         );
                     })}
                 </div>
-            </div>
+            </div> */}
         </Card>
     );
 }

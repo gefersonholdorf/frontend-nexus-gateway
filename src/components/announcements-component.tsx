@@ -1,4 +1,4 @@
-import { ArrowRight, Megaphone } from "lucide-react";
+import { ArrowRight, Megaphone, User, User2 } from "lucide-react";
 import { Card, CardContent, CardHeader } from "./ui/card";
 
 interface Event {
@@ -36,32 +36,32 @@ const events: Event[] = [
 export function AnnouncementsComponent() {
     return (
         <Card
-            className="h-120 bg-(image:--background-gradient) rounded-3xl border-border shadow-sm transition-all duration-300 transform hover:scale-[1.01] hover:shadow-lg"
+            className="h-120 flex flex-col p-4 bg-(image:--background-gradient) rounded-3xl border-border shadow-lg transition-all duration-300 transform hover:scale-[1.01] hover:shadow-lg"
         >
             <CardHeader className="pb-2">
                 <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 border border-border rounded-md overflow-hidden flex items-center justify-center bg-background">
-                        <Megaphone className="text-primary-text size-5" />
+                    <div className="w-10 h-10 border border-primary rounded-md overflow-hidden flex items-center justify-center bg-background/10">
+                        <Megaphone className="text-primary size-5" />
                     </div>
 
                     <div>
-                        <h3 className="font-semibold text-primary-text">
+                        <h3 className="font-semibold text-[1rem] text-primary-text">
                             Comunicados
                         </h3>
-                        <p className="text-xs text-primary-text">
+                        <p className="text-xs text-muted-foreground">
                             Últimas atualizações
                         </p>
                     </div>
                 </div>
             </CardHeader>
-            <CardContent className="flex flex-col gap-2">
+            <CardContent className="flex flex-col justify-between gap-2">
                 {events.map((event) => (
                     <div
-                        className="flex p-2 justify-start items-start gap-4 border-b border-border"
+                        className="flex-1 flex p-2 items-start justify-between gap-4 border-b border-border rounded-lg hover:bg-primary/10"
                         key={event.id}
                     >
-                        <div className="flex flex-col border border-border bg-primary p-2 rounded-lg items-center justify-center">
-                            <Megaphone className="size-4 text-background" />
+                        <div className="flex flex-col border border-primary bg-primary/10 p-2 rounded-lg items-center justify-center">
+                            <User2 className="size-4 text-primary" />
                         </div>
                         <div className="flex flex-col gap-1">
                             <span className="font-medium truncate text-[.9rem]">{event.title}</span>
@@ -79,7 +79,7 @@ export function AnnouncementsComponent() {
                     </div>
                 ))}
 
-                <div className=" pt-4">
+                <div className="flex-1 pt-4">
                     <button
                         className="
                                             flex
@@ -88,11 +88,11 @@ export function AnnouncementsComponent() {
                                             justify-center
                                             gap-2
                                             rounded-xl
-                                            bg-background
+                                            bg-transparent
                                             py-3
                                             text-sm
                                             font-medium
-                                            text-primary-text
+                                            text-primary cursor-pointer
                                             transition-all
                                             hover:bg-background
                                         "

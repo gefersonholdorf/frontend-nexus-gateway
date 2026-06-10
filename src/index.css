@@ -50,160 +50,188 @@
        BACKGROUND / BASE
     ========================= */
 
-    --background-gradient: linear-gradient(
-        135deg,
-        #F9FAFF 0%,
-        #F4F7FF 50%,
-        #FFFFFF 100%
-    );
+    --background: #F5F7FA;
 
-    --background: #F7F9FF;
-    --foreground: #0A1222;
+    --background-gradient:
+        linear-gradient(
+            135deg,
+            #FFFFFF 0%,
+            #FFFFFC 45%,
+            #FFF 100%
+        );
+
+    --foreground: #0F172A;
 
     /* =========================
-       SURFACES (NÍVEIS DE PROFUNDIDADE)
+       SURFACES
     ========================= */
 
     --surface-1: #FFFFFF;
-    --surface-2: #F6F8FF;
-    --surface-3: #EEF2FF;
+    --surface-2: #FAFBFC;
+    --surface-3: #F3F6FA;
 
-    --card: var(--surface-1);
-    --card-foreground: var(--foreground);
+    --card: #FFFFFF;
+    --card-foreground: #0F172A;
 
-    --popover: var(--surface-1);
-    --popover-foreground: var(--foreground);
+    --popover: #FFFFFF;
+    --popover-foreground: #0F172A;
 
     /* =========================
-       PRIMARY (mais sofisticado e menos “blue default”)
+       PRIMARY
     ========================= */
 
-    --primary: #2B4CFF;
-    --primary-hover: #1F3DDB;
-    --primary-soft: #E7ECFF;
+    --primary: #0C86FA;
+    --primary-hover: #0A74DA;
+    --primary-soft: rgba(12, 134, 250, 0.08);
+
     --primary-foreground: #FFFFFF;
-    --primary-text: #EAF0FF;
+    --primary-text: #F8FAFF;
 
     /* =========================
-       SECONDARY / ACCENT
+       SECONDARY
     ========================= */
 
-    --secondary: #EEF2FF;
-    --secondary-foreground: #18264D;
-
-    --accent: #E8EEFF;
-    --accent-foreground: #18264D;
+    --secondary: #F3F6FA;
+    --secondary-foreground: #334155;
 
     /* =========================
-       MUTED (mais profundo, menos “lavado”)
+       ACCENT
     ========================= */
 
-    --muted: #EEF1F7;
-    --muted-foreground: #5A647A;
+    --accent: #EDF2F7;
+    --accent-foreground: #1E293B;
 
     /* =========================
-       SEMANTIC COLORS
+       MUTED
     ========================= */
 
-    --destructive: #E5484D;
+    --muted: #F1F5F9;
+    --muted-foreground: #64748B;
+
+    /* =========================
+       SEMANTIC
+    ========================= */
+
+    --destructive: #EF4444;
     --success: #22C55E;
     --warning: #F59E0B;
     --info: #3B82F6;
 
     /* =========================
-       BORDERS (mais consistentes visualmente)
+       BORDERS
     ========================= */
 
-    --border: rgba(15, 23, 42, 0.06);
-    --border-hover: rgba(15, 23, 42, 0.10);
-    --input: rgba(15, 23, 42, 0.08);
+    --border: #E2E8F0;
+    --border-hover: #CBD5E1;
+
+    --input: #E2E8F0;
 
     /* =========================
-       FOCUS / INTERACTION
+       INTERACTION
     ========================= */
 
-    --ring: rgba(43, 76, 255, 0.22);
+    --ring: rgba(12, 134, 250, 0.22);
 
     /* =========================
-       RADIUS (mais moderno e consistente)
+       RADIUS
     ========================= */
 
-    --radius: 0.9rem;
+    --radius: 1rem;
 
     /* =========================
-       SIDEBAR (mais separação real de layout)
+       SIDEBAR
     ========================= */
 
     --sidebar: #FFFFFF;
-    --sidebar-foreground: var(--foreground);
+    --sidebar-foreground: #0F172A;
 
-    --sidebar-primary: var(--primary);
+    --sidebar-primary: #0C86FA;
     --sidebar-primary-foreground: #FFFFFF;
 
-    --sidebar-accent: #F3F6FF;
-    --sidebar-accent-foreground: #18264D;
+    --sidebar-accent: #F8FAFC;
+    --sidebar-accent-foreground: #334155;
 
-    --sidebar-border: rgba(15, 23, 42, 0.06);
-    --sidebar-ring: var(--ring);
+    --sidebar-border: #E2E8F0;
+    --sidebar-ring: rgba(12, 134, 250, 0.22);
+
+    /* =========================
+       SHADOWS
+    ========================= */
+
+    --shadow-sm:
+        0 1px 2px rgba(15, 23, 42, 0.04);
+
+    --shadow-md:
+        0 4px 12px rgba(15, 23, 42, 0.06);
+
+    --shadow-lg:
+        0 12px 32px rgba(15, 23, 42, 0.08);
 }
 
 .dark {
-    /* Background base com profundidade real */
-    --background: #070A1A;
-    --background-gradient: linear-gradient(
+    /* Fundo principal */
+    --background: #07111F;
+
+--background-gradient:
+    radial-gradient(
+        ellipse at top left,
+        rgba(12, 134, 250, 0.16) 0%,
+        rgba(12, 134, 250, 0.04) 30%,
+        transparent 55%
+    ),
+    linear-gradient(
         135deg,
-        #070A1A 0%,
-        #0A1030 40%,
-        #050817 100%
+        #07111F 0%,
+        #0A1530 45%,
+        #07111F 100%
     );
 
-    --foreground: #EAF0FF;
+    --foreground: #F8FAFC;
 
-    /* Cards com leve separação do fundo */
-    --card: #0B122E;
-    --card-foreground: #EAF0FF;
+    /* Card claramente acima do fundo */
+    --card: #111C36;
+    --card-foreground: #F8FAFC;
 
-    --popover: #0B122E;
-    --popover-foreground: #EAF0FF;
+    /* Modais e popovers acima dos cards */
+    --popover: #172445;
+    --popover-foreground: #F8FAFC;
 
-    /* Primary mais vibrante e moderno (menos “neon chapado”) */
-    --primary: #1BB1C7;
+    /* Azul principal */
+    --primary: #0C86FA;
+    --primary-hover: #2B97FF;
+    --primary-active: #086CD0;
     --primary-foreground: #FFFFFF;
-    --primary-text: #F6F8FB;
 
-    /* Secondary mais neutro (menos azul saturado) */
-    --secondary: #111A3A;
-    --secondary-foreground: #D6DEFF;
+    /* Neutros */
+    --secondary: #FFF;
+    --secondary-foreground: #DDE7FF;
 
-    /* Muted mais suave e consistente */
-    --muted: #0E1633;
-    --muted-foreground: #9AA7C7;
+    --muted: #13203C;
+    --muted-foreground: #A5B4D6;
 
-    /* Accent com leve contraste roxo-azulado (mais sofisticado) */
-    --accent: #141D3F;
-    --accent-foreground: #EAF0FF;
+    --accent: #1A2A50;
+    --accent-foreground: #F8FAFC;
 
-    --destructive: #FF4D5A;
+    /* Feedback */
+    --destructive: #FF5C69;
+    --success: #22C55E;
+    --warning: #F59E0B;
 
-    /* Bordas mais discretas (evita “grid pesado”) */
-    --border: rgba(255, 255, 255, 0.06);
-    --input: rgba(255, 255, 255, 0.10);
+    /* Bordas */
+    --border: rgba(255,255,255,0.08);
+    --input: rgba(255,255,255,0.10);
 
-    /* Ring mais elegante e menos agressivo */
-    --ring: rgba(91, 140, 255, 0.28);
+    /* Focus */
+    --ring: rgba(12,134,250,0.30);
 
-    /* Sidebar com leve diferenciação de profundidade */
-    --sidebar: #06091A;
-    --sidebar-foreground: #EAF0FF;
+    /* Sidebar mais escura */
+    --sidebar: #050C18;
+    --sidebar-foreground: #F8FAFC;
 
-    --sidebar-primary: #5B8CFF;
-    --sidebar-primary-foreground: #FFFFFF;
+    --sidebar-accent: #101D39;
+    --sidebar-accent-foreground: #F8FAFC;
 
-    --sidebar-accent: #101A3A;
-    --sidebar-accent-foreground: #EAF0FF;
-
-    --sidebar-border: rgba(255, 255, 255, 0.06);
-    --sidebar-ring: rgba(91, 140, 255, 0.28);
+    --sidebar-border: rgba(255,255,255,0.06);
 }
 
 /* =========================

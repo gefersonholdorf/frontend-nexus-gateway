@@ -27,8 +27,8 @@ export function MenuComponent({ onSetFiltering }: { onSetFiltering?: (value: str
                     <div className="w-2 h-2 rounded-full bg-emerald-400"></div>
                     <span className="text-primary-text text-[.8rem]">Online</span>
                 </div>
-                <div className="px-2 border border-primary/20 bg-primary/40 rounded-sm">
-                    <span className="text-primary-text text-[.8rem] font-medium">v1.4.0</span>
+                <div className="px-2 border border-primary/20 bg-primary/10 text-primary rounded-sm">
+                    <span className="text-[.8rem] font-medium">v1.4.0</span>
                 </div>
                 <Tooltip>
                     <TooltipTrigger>

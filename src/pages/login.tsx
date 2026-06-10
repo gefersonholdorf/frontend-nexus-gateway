@@ -1,8 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { useTheme } from "@/contexts/theme-context";
 import { useUser } from "@/contexts/user-context";
+import { cn } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
-import { Loader2Icon, Lock, LogIn, Mail, Network } from "lucide-react";
+import { Loader2Icon, Lock, LogIn, Mail, Moon, Network, Sun } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
@@ -47,6 +50,8 @@ export function LoginPage() {
     })
 
     const navigate = useNavigate()
+
+    const { theme, handleSetTheme } = useTheme()
 
     function handleSetEmail(e: React.ChangeEvent<HTMLInputElement>) {
         setEmail(e.target.value)
@@ -128,34 +133,30 @@ export function LoginPage() {
     return (
         <div className="h-screen w-screen p-x grid grid-cols-1 lg:grid-cols-2">
             <div
-                className="bg-[url('/4.png')] bg-cover bg-center bg-no-repeat hidden 
-                lg:flex flex-col justify-between px-16 py-16"
+                className={cn(
+                    "bg-cover bg-center shadow-lg bg-no-repeat hidden lg:flex flex-col justify-between px-16 py-16",
+                    theme === "clean" && "bg-[url('/logo-light-1.png')]",
+                    theme === "dark" && "bg-[url('/logo-dark-1.png')]",
+                )}
             >
                 <div className="flex items-center gap-2">
                 </div>
                 <div className="flex flex-col gap-4 max-w-3/5">
-
                 </div>
-
-                <div className="flex items-center justify-between">
+                <div className="mt-8 w-full flex items-end justify-between">
                     <div></div>
-                    <div className="flex flex-col items-end gap-2">
-                        <span className="text-primary-text text-[.8rem] font-normal">
-                            © 2026 Geferson Holdorf — Nexus Gateway
-                        </span>
-                        <span className="text-primary-text text-[.8rem] font-semibold">
-                            v1.4.0
-                        </span>
+                    <div className="px-2 border border-primary bg-primary/10 text-primary rounded-sm">
+                        <span className="text-[.8rem] font-medium">v1.4.0</span>
                     </div>
                 </div>
             </div>
             <div className=" bg-(image:--background-gradient) w-full flex flex-col justify-center items-start px-16">
-                <div className="mb-10 flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-lg bg-(image:--background-gradient) flex items-center justify-center">
-                        <Network className="text-primary-text size-5" />
+                <div className="mb-10 flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-lg bg-primary/10 border border-primary flex items-center justify-center">
+                        <Network className="text-primary size-5" />
                     </div>
 
-                    <div>
+                    <div className="flex flex-col gap-1">
                         <h1 className="text-3xl font-bold text-primary-text">
                             Nexus Gateway
                         </h1>
@@ -163,6 +164,22 @@ export function LoginPage() {
                             Plataforma Corporativa de Intranet da Lusati
                         </p>
                     </div>
+                    <Tooltip>
+                        <TooltipTrigger>
+                            {theme === 'clean' ? (
+                                <Sun className="text-primary-text size-5 hover:text-blue-500 cursor-pointer" onClick={() => handleSetTheme('dark')} />
+                            ) : (
+                                <Moon className="text-primary-text size-5 hover:text-blue-500 cursor-pointer" onClick={() => handleSetTheme('clean')} />
+                            )}
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            {theme === 'clean' ? (
+                                <span>Mudar para tema escuro</span>
+                            ) : (
+                                <span>Mudar para tema claro</span>
+                            )}
+                        </TooltipContent>
+                    </Tooltip>
                 </div>
                 <h3 className="text-3xl font-bold text-primary-text">Entrar</h3>
                 <p className="text-[.9rem] font-normal text-muted-foreground mt-2">Acesse sua conta para continuar</p>
@@ -210,7 +227,7 @@ export function LoginPage() {
                         </div>
                     </div>
                     <Button
-                        className="w-full shadow-sm shadow-background p-5 font-bold cursor-pointer bg-background text-primary-text"
+                        className="w-full shadow-sm shadow-background p-5 font-bold cursor-pointer bg-primary text-secondary hover:text-primary-text"
                         onClick={handleLogin}>
                         {mutation.isPending ? <Loader2Icon className="animate-spin" /> : <LogIn />}
                         Entrar na plataforma
@@ -222,6 +239,6 @@ export function LoginPage() {
                     </span>
                 </div>
             </div>
-        </div>
+        </div >
     )
 }

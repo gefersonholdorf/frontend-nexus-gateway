@@ -6,7 +6,7 @@ export function BackComponent() {
     return (
         <>
             <div
-                className="flex gap-1 items-center cursor-pointer text-primary-text hover:text-gray-900"
+                className="flex gap-1 items-center cursor-pointer text-primary-text hover:text-muted-foreground"
                 onClick={() => navigate('/welcome')}
             >
                 <ArrowLeft className="size-4" />

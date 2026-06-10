@@ -1,6 +1,4 @@
 import {
-    ArrowRight,
-    ExternalLink,
     Globe,
     Network,
     Server
@@ -12,7 +10,6 @@ import {
     CardTitle
 } from "@/components/ui/card";
 
-import { Button } from "@/components/ui/button";
 import SystemsData from "@/data/systems.json";
 
 type System = {
@@ -65,10 +62,8 @@ export function SystemGrid({
                                 overflow-hidden
                                 rounded-3xl
                                 border-t-4 border-transparent
-                                bg-linear-to-b
-                                from-background
-                                to-muted/20
-                                shadow-sm
+                                bg-(image:--background-gradient)
+                                shadow-lg
                                 transition-all
                                 duration-300
                                 hover:-translate-y-1
@@ -80,7 +75,7 @@ export function SystemGrid({
                                 ${isProd ? 'hover:border-emerald-500' : 'hover:border-amber-500'}
                             `}
                         >
-                            <CardHeader className="relative z-10 border-b p-4">
+                            <CardHeader className={`relative z-10 ${fullDetails && 'border-b'} p-4`}>
                                 <div className="flex items-start justify-between gap-3 w-full min-w-0">
                                     <div className="flex gap-4 flex-1 min-w-0">
                                         <div
@@ -136,59 +131,59 @@ export function SystemGrid({
                                 </div>
                             </CardHeader>
 
-                            <div className="pt-4 px-4">
-                                {fullDetails && (
-                                    <div
-                                        className="
+
+                            {
+                                fullDetails && (
+                                    <div className="pt-4 px-4">
+                                        <div
+                                            className="
                                             rounded-2xl
                                             border
                                             bg-muted/40 p-4 mb-4 gap-4
                                         "
-                                    >
-                                        <div className="grid grid-cols-2 gap-4">
-                                            <div className="">
+                                        >
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div className="">
+                                                    <div className="flex items-center gap-2 mb-1">
+                                                        <Server size={14} className="text-muted-foreground" />
+                                                        <span className="text-xs text-muted-foreground">
+                                                            IP
+                                                        </span>
+                                                    </div>
+
+                                                    <p className="font-mono text-[.8rem] text-muted-foreground font-medium">
+                                                        {system.ip ?? "-"}
+                                                    </p>
+                                                </div>
+
+                                                <div>
+                                                    <div className="flex items-center gap-2 mb-1">
+                                                        <Network size={14} className="text-muted-foreground" />
+                                                        <span className="text-xs text-muted-foreground">
+                                                            Porta
+                                                        </span>
+                                                    </div>
+
+                                                    <p className="font-mono text-[.8rem] text-muted-foreground font-medium">
+                                                        {system.port ?? "-"}
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            <div className="pt-4">
                                                 <div className="flex items-center gap-2 mb-1">
-                                                    <Server size={14} />
+                                                    <Globe size={14} className="text-muted-foreground" />
                                                     <span className="text-xs text-muted-foreground">
-                                                        IP
+                                                        Domínio
                                                     </span>
                                                 </div>
 
-                                                <p className="font-mono text-[.8rem] text-primary-text font-medium">
-                                                    {system.ip ?? "-"}
-                                                </p>
-                                            </div>
-
-                                            <div>
-                                                <div className="flex items-center gap-2 mb-1">
-                                                    <Network size={14} />
-                                                    <span className="text-xs text-muted-foreground">
-                                                        Porta
-                                                    </span>
-                                                </div>
-
-                                                <p className="font-mono text-[.8rem] text-primary-text font-medium">
-                                                    {system.port ?? "-"}
+                                                <p className="font-mono text-[.8rem] text-muted-foreground break-all">
+                                                    {system.domain}
                                                 </p>
                                             </div>
                                         </div>
-
-                                        <div className="pt-4">
-                                            <div className="flex items-center gap-2 mb-1">
-                                                <Globe size={14} />
-                                                <span className="text-xs text-muted-foreground">
-                                                    Domínio
-                                                </span>
-                                            </div>
-
-                                            <p className="font-mono text-[.8rem] text-primary-text break-all">
-                                                {system.domain}
-                                            </p>
-                                        </div>
-                                    </div>
-                                )}
-
-                                <Button
+                                        {/* <Button
                                     variant="ghost"
                                     onClick={() => window.open(system.domain, "_blank")}
                                     className="
@@ -214,12 +209,14 @@ export function SystemGrid({
                                             group-hover:translate-x-1
                                         "
                                     />
-                                </Button>
-                            </div>
+                                </Button> */}
+                                    </div>
+                                )
+                            }
                         </Card>
                     );
                 })}
             </div>
-        </div>
+        </div >
     );
 }
