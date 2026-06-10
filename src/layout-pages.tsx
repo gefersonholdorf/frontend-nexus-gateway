@@ -1,23 +1,22 @@
 import { cn } from "@/lib/utils";
-import { NavLink, Outlet } from "react-router";
+import { useState } from "react";
+import { Outlet } from "react-router";
 import { MenuComponent } from "./components/menu/menu-horizontal";
 import { Sidebar } from "./components/menu/sidebar";
-import { useState } from "react";
+import { useTheme } from "./contexts/theme-context";
 
 
 export function LayoutPages() {
     const [collapsed, setCollapsed] = useState(false);
+    const { theme } = useTheme()
 
     return (
         <div
-            className="
-                bg-[url('/5570869.jpg')]
-                bg-cover
-                bg-center
-                bg-fixed
-                bg-no-repeat
-                min-h-screen
-            "
+            className={cn(
+                "min-h-screen bg-cover bg-center bg-fixed bg-no-repeat",
+                theme === "clean" && "bg-[url('/5570869.jpg')]",
+                theme === "dark" && "bg-background"
+            )}
         >
             <Sidebar
                 collapsed={collapsed}
@@ -35,6 +34,6 @@ export function LayoutPages() {
                     <Outlet />
                 </main>
             </div>
-        </div>
+        </div >
     );
 }

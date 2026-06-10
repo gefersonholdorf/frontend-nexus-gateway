@@ -61,7 +61,7 @@ export function IpMapPage() {
 
     return (
         <div className="space-y-4">
-            <div className="px-10 flex justify-between items-center border-b border-zinc-100 bg-white p-4 rounded-lg">
+            <div className="px-10 flex justify-between items-center border-b border-zinc-100 bg-background p-4 rounded-lg">
                 <div className="flex gap-3 items-center">
                     <BackComponent />
                     <div className="w-10 h-10 border border-blue-600 rounded-md overflow-hidden flex items-center justify-center bg-blue-100">
@@ -69,12 +69,12 @@ export function IpMapPage() {
                     </div>
                     <div>
                         <h1 className="text-lg font-bold">IP Map</h1>
-                        <p className="text-gray-600 text-[.8rem]">Visualize o mapeamento completo de IPs da rede interna, e encontre IPs livres.</p>
+                        <p className="text-primary-text text-[.8rem]">Visualize o mapeamento completo de IPs da rede interna, e encontre IPs livres.</p>
                     </div>
                 </div>
             </div>
             <div className="w-full px-10 grid grid-cols-1 lg:grid-cols-2 gap-4 justify-between">
-                <div className="flex gap-2 items-start border bg-white p-4 rounded-xl border-zinc-300 shadow-sm w-full transition-all duration-300 transform hover:scale-[1.02]">
+                <div className="flex gap-2 items-start border bg-background p-4 rounded-xl border-zinc-300 shadow-sm w-full transition-all duration-300 transform hover:scale-[1.02]">
                     <div className="flex flex-col justify-between gap-2">
                         <div className="w-full flex flex-col lg:flex-row items-center justify-center gap-2">
                             <Select
@@ -100,11 +100,11 @@ export function IpMapPage() {
                         <div className="flex items-center gap-4 mt-2">
                             <div className="flex gap-2 items-center">
                                 <div className="w-3 h-3 rounded-full bg-amber-400"></div>
-                                <span className="text-[.8rem] text-gray-500">Em uso</span>
+                                <span className="text-[.8rem] text-primary-text">Em uso</span>
                             </div>
                             <div className="flex gap-2 items-center">
                                 <div className="w-3 h-3 rounded-full bg-emerald-300"></div>
-                                <span className="text-[.8rem] text-gray-500">Livre</span>
+                                <span className="text-[.8rem] text-primary-text">Livre</span>
                             </div>
                         </div>
                     </div>

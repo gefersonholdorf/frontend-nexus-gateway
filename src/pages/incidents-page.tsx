@@ -67,7 +67,7 @@ export function IncidentsPage() {
     }
     return (
         <>
-            <div className="px-10 flex justify-start items-start border-b border-zinc-100 bg-white p-4 rounded-lg">
+            <div className="px-10 flex justify-start items-start border-b border-zinc-100 bg-background p-4 rounded-lg">
                 <div className="flex gap-3 items-center">
                     <BackComponent />
                     <div className="w-10 h-10 border border-blue-600 rounded-md overflow-hidden flex items-center justify-center bg-blue-100">
@@ -75,7 +75,7 @@ export function IncidentsPage() {
                     </div>
                     <div>
                         <h1 className="text-lg font-bold">Incidentes</h1>
-                        <p className="text-gray-600 text-[.8rem]">Monitore e gerencie incidentes de segurança, falhas e anomalias em tempo real.</p>
+                        <p className="text-primary-text text-[.8rem]">Monitore e gerencie incidentes de segurança, falhas e anomalias em tempo real.</p>
                     </div>
                 </div>
             </div>

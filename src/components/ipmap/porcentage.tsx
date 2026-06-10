@@ -2,12 +2,12 @@ export function Porcentage({ percentage, quantityUsed, quantityTotal }: { percen
     return (
         <div
             className="
-                border bg-white p-4 rounded-xl border-zinc-300 shadow-sm
+                border bg-background p-4 rounded-xl border-zinc-300 shadow-sm
                 w-full transition-all duration-300 transform hover:scale-[1.01]
             "
         >
             <div className="flex gap-4 w-full justify-between items-center mb-3">
-                <p className="text-[.8rem] text-gray-500 italic">
+                <p className="text-[.8rem] text-primary-text italic">
                     Utilização de IPs na Rede
                 </p>
 
@@ -29,11 +29,11 @@ export function Porcentage({ percentage, quantityUsed, quantityTotal }: { percen
             <div className="flex items-center gap-4 mt-2">
                 <div className="flex gap-2 items-center">
                     <div className="w-2 h-2 rounded-full bg-amber-400"></div>
-                    <span className="text-[.8rem] text-gray-600">Em uso ({quantityUsed} IPs)</span>
+                    <span className="text-[.8rem] text-primary-text">Em uso ({quantityUsed} IPs)</span>
                 </div>
                 <div className="flex gap-2 items-center">
                     <div className="w-2 h-2 rounded-full bg-zinc-300"></div>
-                    <span className="text-[.8rem] text-gray-600">Livre ({quantityTotal - quantityUsed} IPs)</span>
+                    <span className="text-[.8rem] text-primary-text">Livre ({quantityTotal - quantityUsed} IPs)</span>
                 </div>
             </div>
         </div>

@@ -45,102 +45,124 @@
     --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* =========================
-   🌞 LIGHT THEME (clean SaaS)
-========================= */
 :root {
+    /* Fundo com profundidade leve (evita branco chapado) */
     --background-gradient: linear-gradient(
-        to bottom right,
-        #F7F9FF,
-        #EEF2FF,
-        #FFFFFF
+        135deg,
+        #F9FAFF 0%,
+        #F3F6FF 45%,
+        #FFFFFF 100%
     );
-    --background: #F7F9FF;
-    --foreground: #0B1220;
 
+    --background: #F8FAFF;
+    --foreground: #0A1222;
+
+    /* Cards com leve separação real */
     --card: #FFFFFF;
-    --card-foreground: #0B1220;
+    --card-foreground: #0A1222;
 
     --popover: #FFFFFF;
-    --popover-foreground: #0B1220;
+    --popover-foreground: #0A1222;
 
-    --primary: #2F5BFF;
+    /* Primary mais sofisticado (menos “azul default de template”) */
+    --primary: #2E5BFF;
     --primary-foreground: #FFFFFF;
+    --primary-text: #EAF0FF;
 
+    /* Secondary mais neutro e elegante */
     --secondary: #EEF2FF;
-    --secondary-foreground: #1B2559;
+    --secondary-foreground: #18264D;
 
-    --muted: #F1F5FF;
-    --muted-foreground: #5A647A;
+    /* Muted mais quente e natural (menos azulado artificial) */
+    --muted: #F2F5FF;
+    --muted-foreground: #5B667D;
 
-    --accent: #EAF0FF;
-    --accent-foreground: #1B2559;
+    /* Accent mais suave e “glass-like” */
+    --accent: #E9EEFF;
+    --accent-foreground: #18264D;
 
     --destructive: #E5484D;
 
-    --border: rgba(15, 23, 42, 0.08);
-    --input: rgba(15, 23, 42, 0.10);
-    --ring: rgba(47, 91, 255, 0.35);
+    /* Bordas mais limpas e menos “cinza sujo” */
+    --border: rgba(15, 23, 42, 0.06);
+    --input: rgba(15, 23, 42, 0.08);
 
-    --radius: 0.75rem;
+    /* Ring mais elegante e menos agressivo */
+    --ring: rgba(46, 91, 255, 0.28);
 
-    /* Sidebar */
+    --radius: 0.85rem;
+
+    /* Sidebar mais “material separado”, não branco chapado */
     --sidebar: #FFFFFF;
-    --sidebar-foreground: #0B1220;
-    --sidebar-primary: #2F5BFF;
+    --sidebar-foreground: #0A1222;
+
+    --sidebar-primary: #2E5BFF;
     --sidebar-primary-foreground: #FFFFFF;
-    --sidebar-accent: #EEF2FF;
-    --sidebar-accent-foreground: #1B2559;
-    --sidebar-border: rgba(15, 23, 42, 0.08);
-    --sidebar-ring: rgba(47, 91, 255, 0.35);
+
+    --sidebar-accent: #F1F4FF;
+    --sidebar-accent-foreground: #18264D;
+
+    --sidebar-border: rgba(15, 23, 42, 0.06);
+    --sidebar-ring: rgba(46, 91, 255, 0.28);
 }
 
-/* =========================
-   🌙 DARK THEME (deep navy tech)
-========================= */
 .dark {
+    /* Background base com profundidade real */
+    --background: #070A1A;
     --background-gradient: linear-gradient(
-        to bottom right,
-        #020B3F,
-        #030A35,
-        #010726
+        135deg,
+        #070A1A 0%,
+        #0A1030 40%,
+        #050817 100%
     );
-    --background: #010726;
+
     --foreground: #EAF0FF;
 
-    --card: #020B3F;
+    /* Cards com leve separação do fundo */
+    --card: #0B122E;
     --card-foreground: #EAF0FF;
 
-    --popover: #020B3F;
+    --popover: #0B122E;
     --popover-foreground: #EAF0FF;
 
-    --primary: #4F7CFF;
+    /* Primary mais vibrante e moderno (menos “neon chapado”) */
+    --primary: #5B8CFF;
     --primary-foreground: #FFFFFF;
+    --primary-text: #DDE7FF;
 
-    --secondary: #0B1A4A;
-    --secondary-foreground: #EAF0FF;
+    /* Secondary mais neutro (menos azul saturado) */
+    --secondary: #111A3A;
+    --secondary-foreground: #D6DEFF;
 
-    --muted: #0A133A;
-    --muted-foreground: #A7B0D6;
+    /* Muted mais suave e consistente */
+    --muted: #0E1633;
+    --muted-foreground: #9AA7C7;
 
-    --accent: #0B1A4A;
+    /* Accent com leve contraste roxo-azulado (mais sofisticado) */
+    --accent: #141D3F;
     --accent-foreground: #EAF0FF;
 
-    --destructive: #FF5A5F;
+    --destructive: #FF4D5A;
 
-    --border: rgba(255, 255, 255, 0.08);
-    --input: rgba(255, 255, 255, 0.12);
-    --ring: rgba(79, 124, 255, 0.35);
+    /* Bordas mais discretas (evita “grid pesado”) */
+    --border: rgba(255, 255, 255, 0.06);
+    --input: rgba(255, 255, 255, 0.10);
 
-    /* Sidebar */
-    --sidebar: #020B3F;
+    /* Ring mais elegante e menos agressivo */
+    --ring: rgba(91, 140, 255, 0.28);
+
+    /* Sidebar com leve diferenciação de profundidade */
+    --sidebar: #06091A;
     --sidebar-foreground: #EAF0FF;
-    --sidebar-primary: #4F7CFF;
+
+    --sidebar-primary: #5B8CFF;
     --sidebar-primary-foreground: #FFFFFF;
-    --sidebar-accent: #0B1A4A;
+
+    --sidebar-accent: #101A3A;
     --sidebar-accent-foreground: #EAF0FF;
-    --sidebar-border: rgba(255, 255, 255, 0.08);
-    --sidebar-ring: rgba(79, 124, 255, 0.35);
+
+    --sidebar-border: rgba(255, 255, 255, 0.06);
+    --sidebar-ring: rgba(91, 140, 255, 0.28);
 }
 
 /* =========================

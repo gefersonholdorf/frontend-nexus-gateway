@@ -97,7 +97,7 @@ export function IncidentDetails({ incident }: { incident: IncidentDetail }) {
             </CardHeader>
             <CardContent className="flex flex-col gap-2 border-t border-slate-200 pt-4">
                 <div className="flex flex-col gap-1">
-                    <span className="text-sm text-gray-600">Links relacionados</span>
+                    <span className="text-sm text-primary-text">Links relacionados</span>
                     <div className="flex flex-col gap-2">
                         {incident.urls.map((url) => (
                             <a

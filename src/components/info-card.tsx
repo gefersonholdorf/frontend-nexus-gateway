@@ -18,7 +18,7 @@ export function InfoCard({ title, quantity, children }: InfoCardProps) {
                 {children}
                 <div className="flex flex-col">
                     <span className="text-2xl font-bold text-gray-900">{quantity}</span>
-                    <span className="text-[.8rem] font text-gray-400">{title}</span>
+                    <span className="text-[.8rem] font text-primary-text">{title}</span>
                 </div>
             </div>
         </Card>

@@ -47,9 +47,9 @@ export function Sidebar({
                     top-4
                     z-50
                     rounded-lg
-                    bg-zinc-900
+                    bg-background
                     p-2
-                    text-white
+                    text-primary-text
                     lg:hidden
                 "
             >
@@ -63,7 +63,7 @@ export function Sidebar({
                         fixed
                         inset-0
                         z-40
-                        bg-black/50
+                        bg-background/50
                         lg:hidden
                     "
                     onClick={() => setMobileOpen(false)}
@@ -83,11 +83,11 @@ export function Sidebar({
 
         bg-(image:--background-gradient)
         backdrop-blur
-        text-white
+        text-primary-text
         transition-all
         duration-300
         border-r
-        border-gray-900
+        border-border
 
         justify-between
 
@@ -108,7 +108,7 @@ export function Sidebar({
                         items-center
                         justify-between
                         border-b
-                        border-gray-800
+                        border-border
                         px-4
                     "
                     >
@@ -167,7 +167,7 @@ export function Sidebar({
                                     <div className="w-full flex justify-between items-center">
                                         <div className="flex flex-col">
                                             <span className="text-sm">{userName}</span>
-                                            <span className="text-[.7rem] text-gray-200">Admin</span>
+                                            <span className="text-[.7rem] text-primary-text/20">Admin</span>
                                         </div>
                                         <div>
                                             <ChevronRight />
@@ -176,7 +176,7 @@ export function Sidebar({
                                 )}
                             </div>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent className="bg-blue-900/50 text-white">
+                        <DropdownMenuContent className="bg-blue-900/50 text-primary-text">
                             <DropdownMenuGroup>
                                 <DropdownMenuLabel>Ações</DropdownMenuLabel>
                                 <DropdownMenuItem><UserPen />Editar Perfil</DropdownMenuItem>
@@ -189,7 +189,7 @@ export function Sidebar({
                         </DropdownMenuContent>
                     </DropdownMenu>
                     {!collapsed && (
-                        <span className="text-gray-300 text-[.8rem] font-normal">
+                        <span className="text-primary-text text-[.8rem] font-normal">
                             © 2026 Geferson Holdorf
                         </span>
                     )}

@@ -44,7 +44,7 @@ export function ServiceGrid({ fullDetails, filtering }: ServiceGridProps) {
                 >
                     <CardHeader className="flex items-start gap-2 pt-4 px-4">
 
-                        <div className="min-w-10 h-10 border border-zinc-300 rounded-md overflow-hidden flex items-center justify-center bg-white">
+                        <div className="min-w-10 h-10 border border-zinc-300 rounded-md overflow-hidden flex items-center justify-center bg-background">
                             <img
                                 src={`./logos/${service.logo}`}
                                 alt={service.name}

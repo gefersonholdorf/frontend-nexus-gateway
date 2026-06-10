@@ -5,7 +5,7 @@ import { Cctv, DoorClosed, Shield } from "lucide-react";
 export function SecurityCenterPage() {
     return (
         <>
-            <div className="px-10 flex justify-start items-start border-b border-zinc-100 bg-white p-4 rounded-lg">
+            <div className="px-10 flex justify-start items-start border-b border-zinc-100 bg-background p-4 rounded-lg">
                 <div className="flex gap-3 items-center">
                     <BackComponent />
                     <div className="w-10 h-10 border border-blue-600 rounded-md overflow-hidden flex items-center justify-center bg-blue-100">
@@ -13,18 +13,18 @@ export function SecurityCenterPage() {
                     </div>
                     <div>
                         <h1 className="text-lg font-bold">Central de Segurança</h1>
-                        <p className="text-gray-600 text-[.8rem]">Monitore e acesse os sistemas de controle físico, câmeras e infraestrutura operacional do escritório.</p>
+                        <p className="text-primary-text text-[.8rem]">Monitore e acesse os sistemas de controle físico, câmeras e infraestrutura operacional do escritório.</p>
                     </div>
                 </div>
             </div>
             <div className="flex-1 px-16 py-8 space-y-6">
                 <div className="flex items-center gap-2 p-5 bg-linear-to-br from-[#001B66] via-[#00185C] to-[#00144D] rounded-lg shadow-sm shadow-blue-900 transition-all duration-300 transform hover:scale-[1.01]">
                     <div className="w-12 h-12 border border-blue-500 rounded-md overflow-hidden flex items-center justify-center bg-blue-400">
-                        <Shield className="text-gray-100 size-6" />
+                        <Shield className="text-primary-text size-6" />
                     </div>
                     <div className="flex flex-col">
                         <span className="text-lg text-gray-50 font-semibold">Infraestrutura Física</span>
-                        <span className="text-sm text-gray-200">Acesse os sistemas de controle físico do escritório. Clique em qualquer card para abrir o painel de gerenciamento.</span>
+                        <span className="text-sm text-primary-text">Acesse os sistemas de controle físico do escritório. Clique em qualquer card para abrir o painel de gerenciamento.</span>
                     </div>
                 </div>
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

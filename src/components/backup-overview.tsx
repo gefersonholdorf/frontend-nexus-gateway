@@ -17,7 +17,7 @@ export function BackupOverviewComponent() {
             <CardHeader className="pb-2">
                 <div className="flex items-center gap-3">
                     <div className="w-10 h-10 border border-blue-900 rounded-md overflow-hidden flex items-center justify-center bg-blue-900">
-                        <CloudUpload className="text-white size-5" />
+                        <CloudUpload className="text-primary-text size-5" />
                     </div>
 
                     <div>

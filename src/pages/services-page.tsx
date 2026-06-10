@@ -24,7 +24,7 @@ export function ServicesPage() {
 
   return (
     <div className="bg-[url('5570869.jpg')] bg-cover bg-center flex flex-col min-h-screen justify-between">
-      <div className="px-10 flex justify-between items-center border-b border-zinc-100 bg-white p-4 rounded-lg">
+      <div className="px-10 flex justify-between items-center border-b border-zinc-100 bg-background p-4 rounded-lg">
         <div className="flex gap-3 items-center">
           <BackComponent />
           <div className="w-10 h-10 border border-blue-600 rounded-md overflow-hidden flex items-center justify-center bg-blue-100">
@@ -32,7 +32,7 @@ export function ServicesPage() {
           </div>
           <div>
             <h1 className="text-lg font-bold">Serviços</h1>
-            <p className="text-gray-600 text-[.8rem]">Visualize e acesse todos os serviços internos da infraestrutura.</p>
+            <p className="text-primary-text text-[.8rem]">Visualize e acesse todos os serviços internos da infraestrutura.</p>
           </div>
         </div>
         <Tooltip>
@@ -52,7 +52,7 @@ export function ServicesPage() {
           </TooltipContent>
         </Tooltip>
       </div>
-      <div className="bg-white px-10 py-4 grid grid-cols-1 lg:grid-cols-9 gap-2">
+      <div className="bg-background px-10 py-4 grid grid-cols-1 lg:grid-cols-9 gap-2">
         <div className="relative flex items-center col-span-6">
           <Search className="absolute left-3 h-4 w-4 text-muted-foreground" />
 

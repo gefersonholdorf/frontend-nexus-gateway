@@ -47,7 +47,7 @@ export function SystemStatusCard({
     return (
         <Card
             className={`
-                h-55 rounded-2xl border  border-slate-200 px-6 py-5 shadow-sm flex flex-col gap-1 transition-all duration-300 transform hover:scale-[1.01]
+                h-55 bg-background rounded-2xl border border-border px-6 py-5 shadow-sm flex flex-col gap-1 transition-all duration-300 transform hover:scale-[1.01]
                 hover:shadow-lg`}
         >
             <div className="flex items-center justify-between mb-2">
@@ -59,7 +59,7 @@ export function SystemStatusCard({
                             }`}
                     />
 
-                    <h3 className="font-bold text text-slate-900">
+                    <h3 className="font-bold text text-primary-text">
                         {server.name}
                     </h3>
                 </div>
@@ -74,7 +74,7 @@ export function SystemStatusCard({
                 </div>
             </div>
 
-            <div className="border-t border-slate-200 pt-2 flex flex-col gap-4">
+            <div className="border-t border-border pt-2 flex flex-col gap-4">
                 <Metric
                     icon={<Cpu size={14} />}
                     label="CPU"
@@ -118,24 +118,24 @@ function Metric({
         <div>
             <div className="flex justify-between items-center mb-1">
                 <div className="flex items-center gap-2">
-                    <span className="text-slate-500">
+                    <span className="text-primary-text">
                         {icon}
                     </span>
 
-                    <span className="text-sm font-medium">
+                    <span className="text-sm font-medium text-primary-text">
                         {label}
                     </span>
                 </div>
 
                 <span
-                    className={`font-bold text-sm ${isCritical ? "text-red-600" : "text-slate-900"
+                    className={`font-bold text-sm ${isCritical ? "text-red-600" : "text-primary-text"
                         }`}
                 >
                     {value}
                 </span>
             </div>
 
-            <div className="h-2 bg-slate-200 rounded-full overflow-hidden">
+            <div className="h-2 bg-gray-500 rounded-full overflow-hidden">
                 <div
                     className={`h-full rounded-full transition-all ${isCritical
                         ? "bg-red-500"

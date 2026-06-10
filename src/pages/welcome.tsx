@@ -15,7 +15,7 @@ export function WelcomePage() {
                     </div>
 
                 </div>
-                <div className="lg:col-span-3 bg-white rounded-sm flex flex-col">
+                <div className="lg:col-span-3 bg-background rounded-sm flex flex-col">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <EventsOverviewComponent />
                         <BackupOverviewComponent />

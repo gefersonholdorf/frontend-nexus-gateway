@@ -171,35 +171,35 @@ export function WeatherCard() {
     const MainIcon = getWeatherIcon(data.weatherCode);
 
     return (
-        <Card className="h-55 rounded-2xl border  border-slate-200 px-6 py-6 shadow-sm flex flex-col gap-1 transition-all duration-300 transform hover:scale-[1.01]
+        <Card className="h-55 bg-background rounded-2xl border border-border px-6 py-6 shadow-sm flex flex-col gap-1 transition-all duration-300 transform hover:scale-[1.01]
                 hover:shadow-lg">
             <div className="flex-1">
                 <div className="mb-2 flex items-center justify-between">
-                    <div className="flex items-center gap-2 text-sm font-medium uppercase tracking-wide text-slate-500">
+                    <div className="flex items-center gap-2 text-sm font-medium uppercase tracking-wide text-primary-text">
                         <MapPin className="size-4" />
                         <span className="text-sm">
                             {data.cidade}, SC
                         </span>
                     </div>
 
-                    <span className="rounded-full bg-slate-100 px-2 py-1 text-[.7rem] font-semibold uppercase text-slate-600">
+                    <span className="rounded-full bg-background px-2 py-1 text-[.7rem] font-semibold uppercase text-primary-text">
                         Agora
                     </span>
                 </div>
 
                 <div className="flex justify-between items-center">
                     <div>
-                        <h1 className="text-3xl font-bold text-slate-900">
+                        <h1 className="text-3xl font-bold text-primary-text">
                             {data.temperatura}°C
                         </h1>
 
-                        <p className="mt-1 text-[.9rem] text-slate-500">
+                        <p className="mt-1 text-[.9rem] text-primary-text">
                             {getWeatherDescription(data.weatherCode)}
                         </p>
                     </div>
 
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl border bg-white">
-                        <MainIcon className="h-6 w-6 text-slate-600" />
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl border bg-background">
+                        <MainIcon className="h-6 w-6 text-primary-text" />
                     </div>
                 </div>
             </div>
@@ -216,13 +216,13 @@ export function WeatherCard() {
                                 key={item.hora}
                                 className="flex flex-col items-center gap-1"
                             >
-                                <span className="text-[.7rem] text-slate-400">
+                                <span className="text-[.7rem] text-primary-text">
                                     {item.hora}
                                 </span>
 
-                                <Icon className="size-5 text-slate-500" />
+                                <Icon className="size-5 text-primary-text" />
 
-                                <span className="text-sm font-semibold text-slate-900">
+                                <span className="text-sm font-semibold text-primary-text">
                                     {item.temp}°
                                 </span>
                             </div>

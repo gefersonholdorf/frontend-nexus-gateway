@@ -154,7 +154,7 @@ export function SystemGrid({
                                                     </span>
                                                 </div>
 
-                                                <p className="font-mono text-[.8rem] text-gray-600 font-medium">
+                                                <p className="font-mono text-[.8rem] text-primary-text font-medium">
                                                     {system.ip ?? "-"}
                                                 </p>
                                             </div>
@@ -167,7 +167,7 @@ export function SystemGrid({
                                                     </span>
                                                 </div>
 
-                                                <p className="font-mono text-[.8rem] text-gray-600 font-medium">
+                                                <p className="font-mono text-[.8rem] text-primary-text font-medium">
                                                     {system.port ?? "-"}
                                                 </p>
                                             </div>
@@ -181,7 +181,7 @@ export function SystemGrid({
                                                 </span>
                                             </div>
 
-                                            <p className="font-mono text-[.8rem] text-gray-600 break-all">
+                                            <p className="font-mono text-[.8rem] text-primary-text break-all">
                                                 {system.domain}
                                             </p>
                                         </div>

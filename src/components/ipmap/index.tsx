@@ -14,20 +14,20 @@ interface IpMapComponentProps {
 
 export function IpMapComponent({ subnet, data, isLoading }: IpMapComponentProps) {
     return (
-        <div className="bg-white mx-10 mb-8 p-4 rounded-xl border border-zinc-300 shadow-lg space-y-4 ">
+        <div className="bg-background mx-10 mb-8 p-4 rounded-xl border border-zinc-300 shadow-lg space-y-4 ">
             <div className="flex flex-col lg:flex-row justify-between gap-4">
                 <div className="flex gap-2 items-center">
-                    <div className="flex w-fit py-1 px-2 border border-zinc-300 bg-white rounded-sm shadow-sm">
+                    <div className="flex w-fit py-1 px-2 border border-zinc-300 bg-background rounded-sm shadow-sm">
                         {
                             isLoading ? (
                                 <Skeleton className="h-5 w-20" />
                             ) : (
-                                <p className="text-[.8rem] text-gray-500 italic">{subnet}</p>
+                                <p className="text-[.8rem] text-primary-text italic">{subnet}</p>
                             )
                         }
 
                     </div>
-                    <p className="text-[.8rem] text-gray-500 italic">254 endereços visíveis</p>
+                    <p className="text-[.8rem] text-primary-text italic">254 endereços visíveis</p>
                 </div>
             </div>
             <div className="grid grid-cols-3 lg:grid-cols-15 gap-2">

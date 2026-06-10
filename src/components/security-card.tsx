@@ -25,7 +25,7 @@ export function SecurityCard({ title, description, ip, typeColor, children }: Se
             </CardHeader>
             <CardContent className="border-b-2 pb-4 space-y-1">
                 <h4 className="font-bold text-lg text-gray-800 group-hover:text-blue-500">{title}</h4>
-                <p className="font-sm text-gray-600 line-clamp-2 min-h-10">{description}</p>
+                <p className="font-sm text-primary-text line-clamp-2 min-h-10">{description}</p>
             </CardContent>
             <CardFooter className="flex justify-between items-center">
                 <div className={`${typeColor === 'black' ? 'bg-gray-100' : 'bg-blue-100'} px-2 py-1 rounded-lg`}>

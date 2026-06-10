@@ -6,13 +6,13 @@ export function BackComponent() {
     return (
         <>
             <div
-                className="flex gap-1 items-center cursor-pointer text-gray-600 hover:text-gray-900"
+                className="flex gap-1 items-center cursor-pointer text-primary-text hover:text-gray-900"
                 onClick={() => navigate('/welcome')}
             >
                 <ArrowLeft className="size-4" />
                 <span className="text-sm">Voltar</span>
             </div>
-            <span className="text-gray-300"> | </span>
+            <span className="text-primary-text"> | </span>
         </>
     )
 }

@@ -30,21 +30,21 @@ export function WelcomeCard() {
         <Card
             className="
                 min-h-55 flex flex-col items-start rounded-2xl px-4 py-4 border transition-all duration-300 transform hover:scale-[1.01]
-                hover:shadow-lg bg-linear-to-br from-[#020B3F] via-[#030A35] to-[#010726] border-b border-blue-900 shadow-lg
+                hover:shadow-lg bg-(image:--background-gradient) border-b border-border shadow-lg
             ">
             <CardContent className="flex flex-col gap-2">
                 <div className="w-10 h-10 border border-blue-500 rounded-md overflow-hidden flex items-center justify-center bg-blue-400">
-                    <Network className="text-white size-4" />
+                    <Network className="text-primary-text size-4" />
                 </div>
-                <h2 className="text-white font-extrabold text-3xl">
+                <h2 className="text-primary-text font-extrabold text-3xl">
                     {getSaudacao()}, {userName}
                 </h2>
-                <p className="text-gray-200 font-normal text-sm">Bem-vindo ao <span className="font-bold">Nexus Gateway</span> — Plataforma centralizada de Intranet da Lusati</p>
+                <p className="text-primary-text font-normal text-sm">Bem-vindo ao <span className="font-bold">Nexus Gateway</span> — Plataforma centralizada de Intranet da Lusati</p>
                 <div className="flex items-center gap-2 pt-2">
-                    <Clock className="text-white size-5" />
+                    <Clock className="text-primary-text size-5" />
                     <p className="text-gray-50 font-semibold text-lg italic">{tempo.toLocaleTimeString()}</p>
-                    <p className="text-white">|</p>
-                    <p className="text-gray-200 font-normal text-sm">
+                    <p className="text-primary-text">|</p>
+                    <p className="text-primary-text font-normal text-sm">
                         {tempo.toLocaleDateString("pt-BR", {
                             weekday: "long",
                             day: "numeric",

@@ -140,10 +140,10 @@ export function LoginPage() {
                 <div className="flex items-center justify-between">
                     <div></div>
                     <div className="flex flex-col items-end gap-2">
-                        <span className="text-gray-300 text-[.8rem] font-normal">
+                        <span className="text-primary-text text-[.8rem] font-normal">
                             © 2026 Geferson Holdorf — Nexus Gateway
                         </span>
-                        <span className="text-gray-300 text-[.8rem] font-semibold">
+                        <span className="text-primary-text text-[.8rem] font-semibold">
                             v1.4.0
                         </span>
                     </div>
@@ -151,8 +151,8 @@ export function LoginPage() {
             </div>
             <div className="w-full flex flex-col justify-center items-start px-16">
                 <div className="mb-10 flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-lg bg-linear-to-br from-[#367BF4] to-[#0D47C9] flex items-center justify-center">
-                        <Network className="text-white size-5" />
+                    <div className="w-12 h-12 rounded-lg bg-(image:--background-gradient) flex items-center justify-center">
+                        <Network className="text-primary-text size-5" />
                     </div>
 
                     <div>
@@ -165,11 +165,11 @@ export function LoginPage() {
                     </div>
                 </div>
                 <h3 className="text-3xl font-bold text-gray-900">Entrar</h3>
-                <p className="text-[.9rem] font-normal text-gray-600 mt-2">Acesse sua conta para continuar</p>
+                <p className="text-[.9rem] font-normal text-primary-text mt-2">Acesse sua conta para continuar</p>
                 <form onSubmit={handleLogin} className="w-full">
                     <div className="mt-6 mb-6 space-y-2 w-full">
                         <div className="w-full">
-                            <span className="text-[.8rem] text-gray-600">E-mail</span>
+                            <span className="text-[.8rem] text-primary-text">E-mail</span>
                             <div className="relative flex items-center">
                                 <Mail className="absolute left-3 h-4 w-4 text-muted-foreground" />
 
@@ -189,7 +189,7 @@ export function LoginPage() {
                             )}
                         </div>
                         <div className="w-full">
-                            <span className="text-[.8rem] text-gray-600">Senha</span>
+                            <span className="text-[.8rem] text-primary-text">Senha</span>
                             <div className="relative flex items-center">
                                 <Lock className="absolute left-3 h-4 w-4 text-muted-foreground" />
 
@@ -210,14 +210,14 @@ export function LoginPage() {
                         </div>
                     </div>
                     <Button
-                        className="w-full shadow-sm shadow-blue-200 p-5 font-bold cursor-pointer bg-linear-to-br from-[#367BF4] via-[#1D5FE0] to-[#0D47C9] hover:bg-blue-800 text-white"
+                        className="w-full shadow-sm shadow-blue-200 p-5 font-bold cursor-pointer bg-linear-to-br from-[#367BF4] via-[#1D5FE0] to-[#0D47C9] hover:bg-blue-800 text-primary-text"
                         onClick={handleLogin}>
                         {mutation.isPending ? <Loader2Icon className="animate-spin" /> : <LogIn />}
                         Entrar na plataforma
                     </Button>
                 </form>
                 <div className="w-full text-center pt-8">
-                    <span className="text-[.8rem] font-normal text-gray-600">
+                    <span className="text-[.8rem] font-normal text-primary-text">
                         Problemas com acesso? <span className="text-blue-600 cursor-pointer hover:underline">Contate o suporte</span>
                     </span>
                 </div>
