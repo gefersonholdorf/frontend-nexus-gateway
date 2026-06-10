@@ -47,7 +47,7 @@ export function SystemStatusCard({
     return (
         <Card
             className={`
-                h-55 bg-background rounded-2xl border border-border px-6 py-5 shadow-sm flex flex-col gap-1 transition-all duration-300 transform hover:scale-[1.01]
+                h-55 bg-(image:--background-gradient) rounded-2xl border border-border px-6 py-5 shadow-sm flex flex-col gap-1 transition-all duration-300 transform hover:scale-[1.01]
                 hover:shadow-lg`}
         >
             <div className="flex items-center justify-between mb-2">

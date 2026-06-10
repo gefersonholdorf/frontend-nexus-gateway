@@ -29,18 +29,18 @@ export function SidebarItem({
             className={({ isActive }) =>
                 cn(
                     "group flex items-center gap-3 rounded-xl px-3 py-3 transition-all duration-200",
-                    "hover:bg-background/10",
+                    "hover:bg-background/10 text-muted-foreground",
                     isActive &&
-                    "bg-gray-200/10 text-primary-text shadow-md font-medium",
+                    "bg-primary text-white shadow-md font-medium",
                     isBlocked &&
-                    "cursor-not-allowed opacity-30"
+                    "cursor-not-allowed opacity-10"
                 )
             }
         >
-            <Icon size={18} className="text-primary-text" />
+            <Icon size={18} className="" />
 
             {!collapsed && (
-                <span className="truncate text-[.9rem] text-primary-text">
+                <span className="truncate text-[.9rem]">
                     {label}
                 </span>
             )}

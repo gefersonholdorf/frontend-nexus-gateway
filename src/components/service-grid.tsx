@@ -33,10 +33,10 @@ export function ServiceGrid({ fullDetails, filtering }: ServiceGridProps) {
                 <Card
                     key={`${service.id}-${service.domain}`}
                     className="
-                        flex-1
+                        flex-1 bg-(image:--background-gradient)
                         rounded-2xl px-0 pt-0 shadow-lg
                         border border-transparent
-                        hover:border-blue-900/60
+                        hover:border:border
                         transition-all duration-300
                         transform hover:scale-[1.03]
                         hover:shadow-xl
@@ -44,7 +44,7 @@ export function ServiceGrid({ fullDetails, filtering }: ServiceGridProps) {
                 >
                     <CardHeader className="flex items-start gap-2 pt-4 px-4">
 
-                        <div className="min-w-10 h-10 border border-zinc-300 rounded-md overflow-hidden flex items-center justify-center bg-background">
+                        <div className="min-w-10 h-10 border border-border rounded-md overflow-hidden flex items-center justify-center bg-background">
                             <img
                                 src={`./logos/${service.logo}`}
                                 alt={service.name}
@@ -70,14 +70,14 @@ export function ServiceGrid({ fullDetails, filtering }: ServiceGridProps) {
                         {fullDetails && (
                             <>
                                 <div className="grid grid-cols-2 gap-2 text-sm">
-                                    <div className="px-2 py-1 rounded-lg bg-muted border border-zinc-300">
+                                    <div className="px-2 py-1 rounded-lg bg-muted border border-border">
                                         <span className="text-xs text-muted-foreground">IP</span>
                                         <p className="font-mono text-[0.8rem]">
                                             {service.ip ?? "-"}
                                         </p>
                                     </div>
 
-                                    <div className="px-2 py-1 rounded-lg bg-muted border border-zinc-300">
+                                    <div className="px-2 py-1 rounded-lg bg-muted border border-border">
                                         <span className="text-xs text-muted-foreground">PORTA</span>
                                         <p className="font-mono text-[0.8rem]">
                                             {service.port ?? "-"}
@@ -85,7 +85,7 @@ export function ServiceGrid({ fullDetails, filtering }: ServiceGridProps) {
                                     </div>
                                 </div>
 
-                                <div className="px-2 py-1 rounded-lg bg-muted text-sm border border-zinc-300">
+                                <div className="px-2 py-1 rounded-lg bg-muted text-sm border border-border">
                                     <span className="text-xs text-muted-foreground">
                                         DOMÍNIO
                                     </span>

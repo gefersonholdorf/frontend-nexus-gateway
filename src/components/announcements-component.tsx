@@ -1,5 +1,4 @@
-import { formatEventDate } from "@/lib/format-event-date";
-import { ArrowRight, CalendarClock, Clock } from "lucide-react";
+import { ArrowRight, Megaphone } from "lucide-react";
 import { Card, CardContent, CardHeader } from "./ui/card";
 
 interface Event {
@@ -31,17 +30,10 @@ const events: Event[] = [
         dateInit: new Date('2024-06-21T14:00:00'),
         dateFinish: new Date('2024-06-21T15:00:00'),
         type: 'DEPLOYMENT'
-    },
-    {
-        id: '4',
-        title: 'Deploy da Versão 2.0',
-        dateInit: new Date('2024-06-21T14:00:00'),
-        dateFinish: new Date('2024-06-21T15:00:00'),
-        type: 'DEPLOYMENT'
     }
 ]
 
-export function EventsOverviewComponent() {
+export function AnnouncementsComponent() {
     return (
         <Card
             className="h-120 bg-(image:--background-gradient) rounded-3xl border-border shadow-sm transition-all duration-300 transform hover:scale-[1.01] hover:shadow-lg"
@@ -49,15 +41,15 @@ export function EventsOverviewComponent() {
             <CardHeader className="pb-2">
                 <div className="flex items-center gap-3">
                     <div className="w-10 h-10 border border-border rounded-md overflow-hidden flex items-center justify-center bg-background">
-                        <CalendarClock className="text-primary-text size-5" />
+                        <Megaphone className="text-primary-text size-5" />
                     </div>
 
                     <div>
                         <h3 className="font-semibold text-primary-text">
-                            Próximos Eventos
+                            Comunicados
                         </h3>
                         <p className="text-xs text-primary-text">
-                            Visão geral dos próximos eventos da Lusati
+                            Últimas atualizações
                         </p>
                     </div>
                 </div>
@@ -65,19 +57,22 @@ export function EventsOverviewComponent() {
             <CardContent className="flex flex-col gap-2">
                 {events.map((event) => (
                     <div
-                        className="flex p-2 justify-start items-center gap-4 border-b border-border"
+                        className="flex p-2 justify-start items-start gap-4 border-b border-border"
                         key={event.id}
                     >
-                        <div className="flex flex-col items-center justify-center">
-                            <span className="text-xl text-primary-text">09</span>
-                            <span className="text-[.8rem] font-light text-muted-foreground">Jul</span>
+                        <div className="flex flex-col border border-border bg-primary p-2 rounded-lg items-center justify-center">
+                            <Megaphone className="size-4 text-background" />
                         </div>
                         <div className="flex flex-col gap-1">
                             <span className="font-medium truncate text-[.9rem]">{event.title}</span>
                             <div className="flex items-center gap-1">
-                                <Clock className="text-muted-foreground size-3" />
-                                <span className="text-[.75rem] text-muted-foreground">
-                                    {formatEventDate(event.dateInit, event.dateFinish)}
+                                <span className="text-[.75rem] text-muted-foreground line-clamp-2">
+                                    A partir de agosto, todos os colaboradores poA partir de agosto, todos os colaboradores poderão aderir ao novo plano de saúde com coberturaderão aderir ao novo plano de saúde com coberturaA partir de agosto, todos os colaboradores poderão aderir ao novo plano de saúde com cobertura
+                                </span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                                <span className="text-[.70rem] font-light text-muted-foreground line-clamp-2">
+                                    Há 40 minutos
                                 </span>
                             </div>
                         </div>
@@ -102,7 +97,7 @@ export function EventsOverviewComponent() {
                                             hover:bg-background
                                         "
                     >
-                        Ver Calendário Completo
+                        Ver Todos os Comunicados
                         <ArrowRight size={16} />
                     </button>
                 </div>

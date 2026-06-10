@@ -23,12 +23,12 @@ export function ServicesPage() {
   }
 
   return (
-    <div className="bg-[url('5570869.jpg')] bg-cover bg-center flex flex-col min-h-screen justify-between">
-      <div className="px-10 flex justify-between items-center border-b border-zinc-100 bg-background p-4 rounded-lg">
+    <div className="bg-background bg-cover bg-center flex flex-col min-h-screen justify-between">
+      <div className="px-10 flex justify-between items-center border-b border-border bg-background p-4 rounded-lg">
         <div className="flex gap-3 items-center">
           <BackComponent />
-          <div className="w-10 h-10 border border-blue-600 rounded-md overflow-hidden flex items-center justify-center bg-blue-100">
-            <MonitorCloud className="text-blue-600 size-4" />
+          <div className="w-10 h-10 border border-border rounded-md overflow-hidden flex items-center justify-center bg-background">
+            <MonitorCloud className="text-primary size-4" />
           </div>
           <div>
             <h1 className="text-lg font-bold">Serviços</h1>

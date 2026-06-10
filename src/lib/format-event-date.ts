@@ -14,5 +14,5 @@ export function formatEventDate(start: Date, end: Date) {
         minute: '2-digit',
     }).format(end)
 
-    return `${date.replace('.', '')} · ${startTime} - ${endTime}`
+    return `${startTime} - ${endTime}`
 }

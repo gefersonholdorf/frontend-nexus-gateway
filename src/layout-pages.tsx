@@ -14,7 +14,7 @@ export function LayoutPages() {
         <div
             className={cn(
                 "min-h-screen bg-cover bg-center bg-fixed bg-no-repeat",
-                theme === "clean" && "bg-[url('/5570869.jpg')]",
+                theme === "clean" && "bg-background",
                 theme === "dark" && "bg-background"
             )}
         >

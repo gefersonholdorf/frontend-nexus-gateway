@@ -78,22 +78,22 @@ export function SystemsPage() {
                 </div>
                 <div
                     onClick={() => handleTypeFiltering('todos')}
-                    className={`col-span-1 border rounded-sm flex items-center justify-center hover:border-blue-900 transition-all duration-300 ease-in-out
-                            cursor-pointer ${typeFiltering === 'todos' ? 'bg-blue-900 text-primary-text' : 'bg-background text-gray-900'}`}
+                    className={`col-span-1 border rounded-sm flex items-center justify-center hover:border-primary transition-all duration-300 ease-in-out
+                            cursor-pointer ${typeFiltering === 'todos' ? 'bg-primary text-primary-text' : 'bg-background text-muted-foreground'}`}
                 >
                     <span className="font-bold text-[.8rem]">Todos</span>
                 </div>
                 <div
                     onClick={() => handleTypeFiltering('production')}
-                    className={`col-span-1 border rounded-sm flex items-center justify-center hover:border-blue-900 transition-all duration-300 ease-in-out
-                            cursor-pointer ${typeFiltering === 'production' ? 'bg-blue-900 text-primary-text' : 'bg-background text-gray-900'}`}
+                    className={`col-span-1 border rounded-sm flex items-center justify-center hover:border-primary transition-all duration-300 ease-in-out
+                            cursor-pointer ${typeFiltering === 'production' ? 'bg-primary text-primary-text' : 'bg-background text-muted-foreground'}`}
                 >
                     <span className="font-bold text-[.8rem]">Produção</span>
                 </div>
                 <div
                     onClick={() => handleTypeFiltering('homolog')}
-                    className={`col-span-1 border rounded-sm flex items-center justify-center hover:border-blue-900 transition-all duration-300 ease-in-out
-                            cursor-pointer ${typeFiltering === 'homolog' ? 'bg-blue-900 text-primary-text' : 'bg-background text-gray-900'}`}
+                    className={`col-span-1 border rounded-sm flex items-center justify-center hover:border-primary transition-all duration-300 ease-in-out
+                            cursor-pointer ${typeFiltering === 'homolog' ? 'bg-primary text-primary-text' : 'bg-background text-muted-foreground'}`}
                 >
                     <span className="font-bold text-[.8rem]">Homologação</span>
                 </div>

@@ -46,64 +46,105 @@
 }
 
 :root {
-    /* Fundo com profundidade leve (evita branco chapado) */
+    /* =========================
+       BACKGROUND / BASE
+    ========================= */
+
     --background-gradient: linear-gradient(
         135deg,
         #F9FAFF 0%,
-        #F3F6FF 45%,
+        #F4F7FF 50%,
         #FFFFFF 100%
     );
 
-    --background: #F8FAFF;
+    --background: #F7F9FF;
     --foreground: #0A1222;
 
-    /* Cards com leve separação real */
-    --card: #FFFFFF;
-    --card-foreground: #0A1222;
+    /* =========================
+       SURFACES (NÍVEIS DE PROFUNDIDADE)
+    ========================= */
 
-    --popover: #FFFFFF;
-    --popover-foreground: #0A1222;
+    --surface-1: #FFFFFF;
+    --surface-2: #F6F8FF;
+    --surface-3: #EEF2FF;
 
-    /* Primary mais sofisticado (menos “azul default de template”) */
-    --primary: #2E5BFF;
+    --card: var(--surface-1);
+    --card-foreground: var(--foreground);
+
+    --popover: var(--surface-1);
+    --popover-foreground: var(--foreground);
+
+    /* =========================
+       PRIMARY (mais sofisticado e menos “blue default”)
+    ========================= */
+
+    --primary: #2B4CFF;
+    --primary-hover: #1F3DDB;
+    --primary-soft: #E7ECFF;
     --primary-foreground: #FFFFFF;
     --primary-text: #EAF0FF;
 
-    /* Secondary mais neutro e elegante */
+    /* =========================
+       SECONDARY / ACCENT
+    ========================= */
+
     --secondary: #EEF2FF;
     --secondary-foreground: #18264D;
 
-    /* Muted mais quente e natural (menos azulado artificial) */
-    --muted: #F2F5FF;
-    --muted-foreground: #5B667D;
-
-    /* Accent mais suave e “glass-like” */
-    --accent: #E9EEFF;
+    --accent: #E8EEFF;
     --accent-foreground: #18264D;
 
-    --destructive: #E5484D;
+    /* =========================
+       MUTED (mais profundo, menos “lavado”)
+    ========================= */
 
-    /* Bordas mais limpas e menos “cinza sujo” */
+    --muted: #EEF1F7;
+    --muted-foreground: #5A647A;
+
+    /* =========================
+       SEMANTIC COLORS
+    ========================= */
+
+    --destructive: #E5484D;
+    --success: #22C55E;
+    --warning: #F59E0B;
+    --info: #3B82F6;
+
+    /* =========================
+       BORDERS (mais consistentes visualmente)
+    ========================= */
+
     --border: rgba(15, 23, 42, 0.06);
+    --border-hover: rgba(15, 23, 42, 0.10);
     --input: rgba(15, 23, 42, 0.08);
 
-    /* Ring mais elegante e menos agressivo */
-    --ring: rgba(46, 91, 255, 0.28);
+    /* =========================
+       FOCUS / INTERACTION
+    ========================= */
 
-    --radius: 0.85rem;
+    --ring: rgba(43, 76, 255, 0.22);
 
-    /* Sidebar mais “material separado”, não branco chapado */
+    /* =========================
+       RADIUS (mais moderno e consistente)
+    ========================= */
+
+    --radius: 0.9rem;
+
+    /* =========================
+       SIDEBAR (mais separação real de layout)
+    ========================= */
+
     --sidebar: #FFFFFF;
-    --sidebar-foreground: #0A1222;
+    --sidebar-foreground: var(--foreground);
 
-    --sidebar-primary: #2E5BFF;
+    --sidebar-primary: var(--primary);
     --sidebar-primary-foreground: #FFFFFF;
 
-    --sidebar-accent: #F1F4FF;
+    --sidebar-accent: #F3F6FF;
     --sidebar-accent-foreground: #18264D;
 
     --sidebar-border: rgba(15, 23, 42, 0.06);
-    --sidebar-ring: rgba(46, 91, 255, 0.28);
+    --sidebar-ring: var(--ring);
 }
 
 .dark {
@@ -126,9 +167,9 @@
     --popover-foreground: #EAF0FF;
 
     /* Primary mais vibrante e moderno (menos “neon chapado”) */
-    --primary: #5B8CFF;
+    --primary: #1BB1C7;
     --primary-foreground: #FFFFFF;
-    --primary-text: #DDE7FF;
+    --primary-text: #F6F8FB;
 
     /* Secondary mais neutro (menos azul saturado) */
     --secondary: #111A3A;

@@ -149,23 +149,23 @@ export function LoginPage() {
                     </div>
                 </div>
             </div>
-            <div className="w-full flex flex-col justify-center items-start px-16">
+            <div className=" bg-(image:--background-gradient) w-full flex flex-col justify-center items-start px-16">
                 <div className="mb-10 flex items-center gap-3">
                     <div className="w-12 h-12 rounded-lg bg-(image:--background-gradient) flex items-center justify-center">
                         <Network className="text-primary-text size-5" />
                     </div>
 
                     <div>
-                        <h1 className="text-3xl font-bold text-slate-900">
+                        <h1 className="text-3xl font-bold text-primary-text">
                             Nexus Gateway
                         </h1>
-                        <p className="text-xs text-slate-500">
+                        <p className="text-xs text-muted-foreground">
                             Plataforma Corporativa de Intranet da Lusati
                         </p>
                     </div>
                 </div>
-                <h3 className="text-3xl font-bold text-gray-900">Entrar</h3>
-                <p className="text-[.9rem] font-normal text-primary-text mt-2">Acesse sua conta para continuar</p>
+                <h3 className="text-3xl font-bold text-primary-text">Entrar</h3>
+                <p className="text-[.9rem] font-normal text-muted-foreground mt-2">Acesse sua conta para continuar</p>
                 <form onSubmit={handleLogin} className="w-full">
                     <div className="mt-6 mb-6 space-y-2 w-full">
                         <div className="w-full">
@@ -210,7 +210,7 @@ export function LoginPage() {
                         </div>
                     </div>
                     <Button
-                        className="w-full shadow-sm shadow-blue-200 p-5 font-bold cursor-pointer bg-linear-to-br from-[#367BF4] via-[#1D5FE0] to-[#0D47C9] hover:bg-blue-800 text-primary-text"
+                        className="w-full shadow-sm shadow-background p-5 font-bold cursor-pointer bg-background text-primary-text"
                         onClick={handleLogin}>
                         {mutation.isPending ? <Loader2Icon className="animate-spin" /> : <LogIn />}
                         Entrar na plataforma
