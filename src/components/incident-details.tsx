@@ -1,4 +1,4 @@
-import { AlertTriangle } from "lucide-react";
+import { Link, X } from "lucide-react";
 import { Card, CardContent, CardHeader } from "./ui/card";
 
 interface IncidentDetail {
@@ -33,52 +33,59 @@ export function IncidentDetails({ incident }: { incident: IncidentDetail }) {
             value: 5,
             color: "border-red-700",
             textColor: "text-red-700",
-            bg: "bg-red-700/10"
+            bg: "bg-red-700/10",
+            colorFull: "bg-red-700"
         },
         {
             label: "Alto",
             value: 4,
             color: "border-red-500",
             textColor: "text-red-500",
-            bg: "bg-red-500/10"
+            bg: "bg-red-500/10",
+            colorFull: "bg-red-500"
         },
         {
             label: "Médio",
             value: 3,
             color: "border-orange-500",
             textColor: "text-orange-500",
-            bg: "bg-orange-500/10"
+            bg: "bg-orange-500/10",
+            colorFull: "bg-orange-500"
         },
         {
             label: "Aviso",
             value: 2,
             color: "border-yellow-500",
             textColor: "text-yellow-500",
-            bg: "bg-yellow-500/10"
+            bg: "bg-yellow-500/10",
+            colorFull: "bg-yellow-500"
         },
         {
             label: "Informação",
             value: 1,
             color: "border-blue-500",
             textColor: "text-blue-500",
-            bg: "bg-blue-500/10"
+            bg: "bg-blue-500/10",
+            colorFull: "bg-blue-500"
         },
     ];
     return (
         <Card
-            className={`h-fit rounded-3xl border-slate-200 shadow-sm transition-all duration-300 transform hover:scale-[1.01] hover:shadow-lg
-                    border-l ${incidents[incident.severity].color} border-l-5
+            className={`h-52 bg-card rounded-3xl border border-border shadow-lg transition-all duration-300 transform hover:scale-[1.01] hover:shadow-lg
+                    
                 `}
         >
-            <CardHeader className="pb-2">
+            <CardHeader className="pb-2 space-y-2">
+                <div className={`w-fit flex items-center gap-2 px-2 py-1 rounded-sm ${incidents[incident.severity].bg} border ${incidents[incident.severity].color}`}>
+                    <span className={`flex gap-2 items-center text-xs font-semibold ${incidents[incident.severity].textColor}`}>
+                        <div className={`w-2 h-2 rounded-full ${incidents[incident.severity].colorFull}`}></div>
+                        {incidents[incident.severity].label}
+                    </span>
+                </div>
                 <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 border border-gray-300 rounded-md overflow-hidden flex items-center justify-center bg-gray-50">
-                        <AlertTriangle className={incidents[incident.severity].textColor} size={20} />
-                    </div>
-
                     <div className="w-full flex items-start justify-between gap-3">
-                        <div>
-                            <h3 className="font-semibold text-slate-900">
+                        <div className="space-y-1">
+                            <h3 className="line-clamp-2 font-semibold text-primary-text">
                                 {incident.name}
                             </h3>
                             <div className="flex items-center gap-1">
@@ -87,29 +94,25 @@ export function IncidentDetails({ incident }: { incident: IncidentDetail }) {
                                 </span>
                             </div>
                         </div>
-                        <div className={`flex items-center gap-2 px-2 py-1 rounded-sm ${incidents[incident.severity].bg}`}>
-                            <span className={`text-xs font-semibold ${incidents[incident.severity].textColor}`}>
-                                {incidents[incident.severity].label}
-                            </span>
-                        </div>
                     </div>
                 </div>
             </CardHeader>
-            <CardContent className="flex flex-col gap-2 border-t border-slate-200 pt-4">
+            <CardContent className="flex flex-col gap-2 border-t border-border pt-4">
                 <div className="flex flex-col gap-1">
-                    <span className="text-sm text-primary-text">Links relacionados</span>
                     <div className="flex flex-col gap-2">
-                        {incident.urls.map((url) => (
+                        {incident.urls.length > 0 && incident.urls.map((url) => (
                             <a
                                 key={url.url}
                                 href={url.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-blue-500 text-sm hover:underline"
+                                className="flex gap-2 items-center text-primary text-sm font-medium"
                             >
-                                {url.name}
+                                <Link className="size-4" />
+                                Abrir no GLPI
                             </a>
                         ))}
+                        {incident.urls.length === 0 && (<span className="flex gap-2 items-center text-primary text-sm font-medium"><X className="size-4" />Nenhum chamado encontrado</span>)}
                     </div>
                 </div>
             </CardContent >

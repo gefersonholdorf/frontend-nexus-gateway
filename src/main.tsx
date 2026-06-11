@@ -12,7 +12,6 @@ import { LoginPage } from './pages/login.tsx'
 import { SecurityCenterPage } from './pages/security-center.tsx'
 import { Toaster } from "@/components/ui/sonner"
 import { SystemsPage } from './pages/systems.tsx'
-import { IncidentsPage } from './pages/incidents-page.tsx'
 import { CalendarPage } from './pages/calendar-page.tsx'
 import { UserProvider } from './contexts/user-context.tsx'
 import { ThemeProvider } from './contexts/theme-context.tsx'
@@ -35,7 +34,6 @@ createRoot(document.getElementById('root')!).render(
                   <Route path="/security-center" element={<SecurityCenterPage />} />
                   <Route path="/systems" element={<SystemsPage />} />
                   <Route path="/services" element={<ServicesPage />} />
-                  <Route path="/incidents" element={<IncidentsPage />} />
                   <Route path="/calendar" element={<CalendarPage />} />
                   <Route path="/servers" element={<ServersPage />} />
                 </Route>

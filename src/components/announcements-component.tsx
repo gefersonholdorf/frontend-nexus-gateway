@@ -1,4 +1,4 @@
-import { ArrowRight, Megaphone, User, User2 } from "lucide-react";
+import { ArrowRight, Megaphone, User2 } from "lucide-react";
 import { Card, CardContent, CardHeader } from "./ui/card";
 
 interface Event {

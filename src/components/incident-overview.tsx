@@ -1,7 +1,7 @@
-import { AlertTriangle, ArrowRight } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { AlertTriangle } from "lucide-react";
 import { Card, CardContent, CardHeader } from "./ui/card";
 import { Skeleton } from "./ui/skeleton";
-import { useQuery } from "@tanstack/react-query";
 
 interface IncidentsResponse {
     incidents: {
@@ -82,7 +82,7 @@ export function IncidentOverviewComponent() {
     return (
         <Card
             className="
-                h-100 rounded-3xl bg-(image:--background-gradient)
+                h-90 rounded-3xl bg-(image:--background-gradient)
                 border-border
                 shadow-sm
                 transition-all duration-300
@@ -98,7 +98,7 @@ export function IncidentOverviewComponent() {
 
                     <div>
                         <h3 className="font-semibold text-primary-text">
-                            Incidentes Ativos - Servidores
+                            Incidentes Ativos - Quantitativos
                         </h3>
                         <p className="text-xs text-muted-foreground">
                             Monitoramento em tempo real
@@ -144,7 +144,7 @@ export function IncidentOverviewComponent() {
                     ))}
                 </div>
 
-                {/* Rodapé */}
+                {/* Rodapé
                 <div className=" pt-4">
                     <button
                         className="
@@ -166,7 +166,7 @@ export function IncidentOverviewComponent() {
                         Ver detalhes dos incidentes
                         <ArrowRight size={16} />
                     </button>
-                </div>
+                </div> */}
             </CardContent>
         </Card>
     );
