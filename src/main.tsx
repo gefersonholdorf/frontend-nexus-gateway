@@ -16,6 +16,7 @@ import { IncidentsPage } from './pages/incidents-page.tsx'
 import { CalendarPage } from './pages/calendar-page.tsx'
 import { UserProvider } from './contexts/user-context.tsx'
 import { ThemeProvider } from './contexts/theme-context.tsx'
+import { ServersPage } from './pages/servers-page.tsx'
 
 const queryClient = new QueryClient()
 
@@ -36,6 +37,7 @@ createRoot(document.getElementById('root')!).render(
                   <Route path="/services" element={<ServicesPage />} />
                   <Route path="/incidents" element={<IncidentsPage />} />
                   <Route path="/calendar" element={<CalendarPage />} />
+                  <Route path="/servers" element={<ServersPage />} />
                 </Route>
               </Routes>
             </RootLayout>

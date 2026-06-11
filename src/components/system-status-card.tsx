@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Activity, Cpu, HardDrive } from "lucide-react";
+import { Activity, Clock, Cpu, HardDrive } from "lucide-react";
 import { Card } from "./ui/card";
 import { Skeleton } from "./ui/skeleton";
 
@@ -7,6 +7,7 @@ interface SystemStatusCardProps {
     serverId: string;
     serverName: string
 }
+
 
 export function SystemStatusCard({
     serverId,
@@ -30,6 +31,12 @@ export function SystemStatusCard({
         refetchInterval: 30000,
     });
 
+    function formatUptime(seconds: number) {
+        const dias = Math.floor(seconds / 86400);
+
+        return `${dias} dias`;
+    }
+
     if (query.isLoading) {
         return (
             <Card className="h-55 p-0">
@@ -47,7 +54,7 @@ export function SystemStatusCard({
     return (
         <Card
             className={`
-                h-55 bg-(image:--background-gradient) rounded-2xl border border-border px-6 py-5 shadow-sm flex flex-col gap-1 transition-all duration-300 transform hover:scale-[1.01]
+                h-64 bg-(image:--background-gradient) rounded-2xl border border-border px-6 py-5 shadow-sm flex flex-col gap-1 transition-all duration-300 transform hover:scale-[1.01]
                 hover:shadow-lg`}
         >
             <div className="flex items-center justify-between mb-2">
@@ -95,6 +102,12 @@ export function SystemStatusCard({
                     value={`${server.disk.toFixed(0)}%`}
                     percent={server.disk}
                 />
+            </div>
+            <div className="border-t border-border mt-2 pt-2 flex flex-col gap-4">
+                <div className="flex items-center gap-2">
+                    <Clock className="size-4 text-muted-foreground" />
+                    <span className={"text-[.8rem] text-muted-foreground"}>{formatUptime(server.uptime)} dias online</span>
+                </div>
             </div>
         </Card>
     );

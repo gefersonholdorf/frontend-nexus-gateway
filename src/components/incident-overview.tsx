@@ -82,8 +82,8 @@ export function IncidentOverviewComponent() {
     return (
         <Card
             className="
-                h-116 rounded-3xl
-                border-slate-200
+                h-100 rounded-3xl bg-(image:--background-gradient)
+                border-border
                 shadow-sm
                 transition-all duration-300
                 transform hover:scale-[1.01]
@@ -92,15 +92,15 @@ export function IncidentOverviewComponent() {
         >
             <CardHeader className="pb-2">
                 <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 border border-blue-900 rounded-md overflow-hidden flex items-center justify-center bg-blue-900">
-                        <AlertTriangle className="text-primary-text size-5" />
+                    <div className="w-10 h-10 border border-primary rounded-md overflow-hidden flex items-center justify-center bg-primary/10">
+                        <AlertTriangle className="text-primary size-5" />
                     </div>
 
                     <div>
-                        <h3 className="font-semibold text-slate-900">
+                        <h3 className="font-semibold text-primary-text">
                             Incidentes Ativos - Servidores
                         </h3>
-                        <p className="text-xs text-slate-500">
+                        <p className="text-xs text-muted-foreground">
                             Monitoramento em tempo real
                         </p>
                     </div>
@@ -118,11 +118,11 @@ export function IncidentOverviewComponent() {
                                 justify-between
                                 rounded-xl
                                 border
-                                border-slate-100
+                                border-border
                                 px-4
                                 py-1
                                 transition-all
-                                hover:bg-slate-50
+                                hover:border-border
                             "
                         >
                             <div className="flex items-center gap-3">
@@ -130,7 +130,7 @@ export function IncidentOverviewComponent() {
                                     className={`h-3 w-3 rounded-full ${incident.color}`}
                                 />
 
-                                <span className="text-sm font-medium text-slate-700">
+                                <span className="text-sm font-medium text-primary-text">
                                     {incident.label}
                                 </span>
                             </div>
@@ -154,13 +154,13 @@ export function IncidentOverviewComponent() {
                             justify-center
                             gap-2
                             rounded-xl
-                            bg-slate-100
+                            bg-primary/10
                             py-3
                             text-sm
                             font-medium
-                            text-slate-700
+                            text-primary
                             transition-all
-                            hover:bg-slate-200
+                            hover:font-bold cursor-pointer
                         "
                     >
                         Ver detalhes dos incidentes

@@ -13,7 +13,7 @@ export function SecurityCenterPage() {
                     </div>
                     <div>
                         <h1 className="text-lg font-bold">Central de Segurança</h1>
-                        <p className="text-primary-text text-[.8rem]">Monitore e acesse os sistemas de controle físico, câmeras e infraestrutura operacional do escritório.</p>
+                        <p className="text-muted-foreground text-[.8rem]">Monitore e acesse os sistemas de controle físico, câmeras e infraestrutura operacional do escritório.</p>
                     </div>
                 </div>
             </div>

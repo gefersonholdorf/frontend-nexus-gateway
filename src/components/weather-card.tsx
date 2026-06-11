@@ -176,13 +176,13 @@ export function WeatherCard() {
             <div className="flex-1">
                 <div className="mb-2 flex items-center justify-between">
                     <div className="flex items-center gap-2 text-sm font-medium uppercase tracking-wide text-primary-text">
-                        <MapPin className="size-4" />
-                        <span className="text-sm">
+                        <MapPin className="size-4 text-muted-foreground" />
+                        <span className="text-sm text-muted-foreground">
                             {data.cidade}, SC
                         </span>
                     </div>
 
-                    <span className="rounded-full bg-background px-2 py-1 text-[.7rem] font-semibold uppercase text-primary-text">
+                    <span className="rounded-full bg-background px-2 py-1 text-[.7rem] font-semibold uppercase text-muted-foreground">
                         Agora
                     </span>
                 </div>
@@ -193,12 +193,12 @@ export function WeatherCard() {
                             {data.temperatura}°C
                         </h1>
 
-                        <p className="mt-1 text-[.9rem] text-primary-text">
+                        <p className="mt-1 text-[.9rem] text-muted-foreground">
                             {getWeatherDescription(data.weatherCode)}
                         </p>
                     </div>
 
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl border bg-background">
+                    <div className="flex h-12 w-12 p-3 items-center justify-center rounded-xl border bg-background">
                         <MainIcon className="h-6 w-6 text-primary-text" />
                     </div>
                 </div>

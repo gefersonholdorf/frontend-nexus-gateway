@@ -27,12 +27,12 @@ export function ServicesPage() {
       <div className="px-10 flex justify-between items-center border-b border-border bg-background p-4 rounded-lg">
         <div className="flex gap-3 items-center">
           <BackComponent />
-          <div className="w-10 h-10 border border-border rounded-md overflow-hidden flex items-center justify-center bg-background">
+          <div className="w-10 h-10 border border-primary rounded-md overflow-hidden flex items-center justify-center bg-background">
             <MonitorCloud className="text-primary size-4" />
           </div>
           <div>
             <h1 className="text-lg font-bold">Serviços</h1>
-            <p className="text-primary-text text-[.8rem]">Visualize e acesse todos os serviços internos da infraestrutura.</p>
+            <p className="text-muted-foreground text-[.8rem]">Visualize e acesse todos os serviços internos da infraestrutura.</p>
           </div>
         </div>
         <Tooltip>
@@ -57,7 +57,7 @@ export function ServicesPage() {
           <Search className="absolute left-3 h-4 w-4 text-muted-foreground" />
 
           <Input
-            className="pl-10"
+            className="pl-10 bg-(image:--background-gradient)"
             placeholder="Buscar serviço..."
             onChange={(e) => handleFilterChange(e.target.value)}
           />

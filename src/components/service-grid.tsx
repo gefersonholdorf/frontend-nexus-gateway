@@ -31,30 +31,51 @@ export function ServiceGrid({ fullDetails, filtering }: ServiceGridProps) {
                 <Card
                     key={`${service.id}-${service.domain}`}
                     className="
+                        group
                         flex-1 justify-center bg-(image:--background-gradient)
-                        rounded-2xl px-0 pt-0 shadow-lg
+                        rounded-2xl px-0 pt-0 pb-4 shadow-lg
                         border border-transparent
                         hover:border:border
                         transition-all duration-300
                         transform hover:scale-[1.03]
                         hover:shadow-xl cursor-pointer
                     "
+                    onClick={() => window.open(service.domain, "_blank")}
                 >
-                    <CardHeader className="flex items-start gap-2 pt-4 px-4">
+                    <CardHeader className="flex items-start justify-center gap-2 pt-4 px-4">
 
-                        <div className="min-w-10 h-10 border border-border rounded-md overflow-hidden flex items-center justify-center bg-background">
+                        <div
+                            className="
+                                                h-12
+                                                w-12
+                                                rounded-2xl
+                                                border
+                                                bg-linear-to-br
+                                                from-white
+                                                to-slate-100
+                                                shadow-md
+                                                flex
+                                                items-center
+                                                justify-center
+                                                overflow-hidden
+                                            "
+                        >
                             <img
                                 src={`./logos/${service.logo}`}
                                 alt={service.name}
-                                className="max-w-full max-h-full object-contain p-1"
-                                onError={(e) => {
-                                    (e.currentTarget as HTMLImageElement).style.display = "none";
-                                }}
+                                className="
+                                                    w-8
+                                                    h-8
+                                                    object-contain
+                                                    transition-transform
+                                                    duration-500
+                                                    group-hover:scale-110
+                                                "
                             />
                         </div>
 
                         <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
-                            <CardTitle className="text-base font-semibold truncate block w-full">
+                            <CardTitle className="text-base font-bold truncate block w-full group-hover:text-primary">
                                 {service.name}
                             </CardTitle>
 
@@ -65,19 +86,19 @@ export function ServiceGrid({ fullDetails, filtering }: ServiceGridProps) {
                     </CardHeader>
 
                     {fullDetails && (
-                        <CardContent className="space-y-2 mt-0 pt-0">
+                        <CardContent className="space-y-2 p-4 mt-0 pt-0">
                             <>
                                 <div className="grid grid-cols-2 gap-2 text-sm">
                                     <div className="px-2 py-1 rounded-lg bg-muted border border-border">
                                         <span className="text-xs text-muted-foreground">IP</span>
-                                        <p className="font-mono text-[0.8rem]">
+                                        <p className="font-mono text-muted-foreground text-[0.8rem]">
                                             {service.ip ?? "-"}
                                         </p>
                                     </div>
 
                                     <div className="px-2 py-1 rounded-lg bg-muted border border-border">
                                         <span className="text-xs text-muted-foreground">PORTA</span>
-                                        <p className="font-mono text-[0.8rem]">
+                                        <p className="font-mono text-[0.8rem] text-muted-foreground">
                                             {service.port ?? "-"}
                                         </p>
                                     </div>
@@ -87,7 +108,7 @@ export function ServiceGrid({ fullDetails, filtering }: ServiceGridProps) {
                                     <span className="text-xs text-muted-foreground">
                                         DOMÍNIO
                                     </span>
-                                    <p className="font-mono text-[0.8rem] break-all">
+                                    <p className="font-mono text-muted-foreground text-[0.8rem] break-all">
                                         {service.domain}
                                     </p>
                                 </div>

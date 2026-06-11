@@ -170,21 +170,16 @@
 
 .dark {
     /* Fundo principal */
-    --background: #07111F;
+    --background: #111827;
 
---background-gradient:
-    radial-gradient(
-        ellipse at top left,
-        rgba(12, 134, 250, 0.16) 0%,
-        rgba(12, 134, 250, 0.04) 30%,
-        transparent 55%
-    ),
+   --background-gradient:
     linear-gradient(
         135deg,
-        #07111F 0%,
-        #0A1530 45%,
-        #07111F 100%
+        #18233D 0%,
+        #18233D 45%,
+        #18233D 100%
     );
+      
 
     --foreground: #F8FAFC;
 

@@ -36,7 +36,7 @@ const events: Event[] = [
 export function AnnouncementsComponent() {
     return (
         <Card
-            className="h-120 flex flex-col p-4 bg-(image:--background-gradient) rounded-3xl border-border shadow-lg transition-all duration-300 transform hover:scale-[1.01] hover:shadow-lg"
+            className="h-120 flex flex-col py-6 bg-(image:--background-gradient) rounded-3xl border-border shadow-lg transition-all duration-300 transform hover:scale-[1.01] hover:shadow-lg"
         >
             <CardHeader className="pb-2">
                 <div className="flex items-center gap-3">

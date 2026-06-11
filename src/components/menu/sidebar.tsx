@@ -168,7 +168,7 @@ export function Sidebar({
                                     <div className="w-full flex justify-between items-center">
                                         <div className="flex flex-col">
                                             <span className="text-sm">{userName}</span>
-                                            <span className="text-[.7rem] text-primary-text/20">Admin</span>
+                                            <span className="text-[.7rem] text-muted-foreground">Admin</span>
                                         </div>
                                         <div>
                                             <ChevronRight />
@@ -177,7 +177,7 @@ export function Sidebar({
                                 )}
                             </div>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent className="bg-blue-900/50 text-primary-text">
+                        <DropdownMenuContent className="bg-background text-primary-text">
                             <DropdownMenuGroup>
                                 <DropdownMenuLabel>Ações</DropdownMenuLabel>
                                 <DropdownMenuItem><UserPen />Editar Perfil</DropdownMenuItem>

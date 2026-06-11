@@ -44,7 +44,7 @@ const events: Event[] = [
 export function EventsOverviewComponent() {
     return (
         <Card
-            className="h-120 bg-(image:--background-gradient) flex flex-col rounded-3xl border-border shadow-lg transition-all duration-300 transform hover:scale-[1.01] hover:shadow-lg"
+            className="h-120 py-6 bg-(image:--background-gradient) flex flex-col rounded-3xl border-border shadow-lg transition-all duration-300 transform hover:scale-[1.01] hover:shadow-lg"
         >
             <CardHeader className="pb-2">
                 <div className="flex items-center gap-3">

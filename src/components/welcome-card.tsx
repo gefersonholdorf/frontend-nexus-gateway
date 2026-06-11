@@ -34,14 +34,14 @@ export function WelcomeCard() {
             ">
             <CardContent className="flex flex-col gap-2">
                 <h2 className="text-primary-text font-extrabold text-3xl">
-                    {getSaudacao()}, {userName}
+                    {getSaudacao()}, <span className={"text-primary-text"}>{userName}</span>
                 </h2>
                 <p className="text-muted-foreground font-normal text-sm">Bem-vindo ao <span className="font-bold text-primary-text">Nexus Gateway</span> — Plataforma centralizada de Intranet da Lusati</p>
                 <div className="flex items-center gap-2 pt-2">
-                    <Clock className="text-primary-text size-5" />
-                    <p className="text-primary-text font-semibold text-lg italic">{tempo.toLocaleTimeString()}</p>
+                    <Clock className="text-muted-foreground size-5" />
+                    <p className="text-primary-text font-semibold text-lg">{tempo.toLocaleTimeString()}</p>
                     <p className="text-primary-text">|</p>
-                    <p className="text-primary-text font-normal text-sm">
+                    <p className="text-muted-foreground font-normal text-sm">
                         {tempo.toLocaleDateString("pt-BR", {
                             weekday: "long",
                             day: "numeric",

@@ -61,7 +61,7 @@ export function SystemGrid({
                                 gap-1
                                 overflow-hidden
                                 rounded-3xl
-                                border-t-4 border-transparent
+                                border-t-4 border-background
                                 bg-(image:--background-gradient)
                                 shadow-lg
                                 transition-all
@@ -70,7 +70,6 @@ export function SystemGrid({
                                 hover:shadow-xl
                                 hover:border-primary/30
                                 p-0
-                                py-2
                                 cursor-pointer
                                 ${isProd ? 'hover:border-emerald-500' : 'hover:border-amber-500'}
                             `}
@@ -134,7 +133,7 @@ export function SystemGrid({
 
                             {
                                 fullDetails && (
-                                    <div className="pt-4 px-4">
+                                    <div className="px-4 py-2">
                                         <div
                                             className="
                                             rounded-2xl
