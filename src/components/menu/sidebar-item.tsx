@@ -29,7 +29,7 @@ export function SidebarItem({
             className={({ isActive }) =>
                 cn(
                     "group flex items-center gap-3 rounded-lg px-3 py-3 transition-all duration-200",
-                    "hover:bg-primary/10 hover:text-primary text-primary-text font-normal hover:font-semibold",
+                    "hover:bg-primary/10 hover:text-primary text-primary-text font-semibold hover:font-semibold",
                     isActive &&
                     "bg-primary/20 text-primary shadow-md border-l-3 border-primary font-bold",
                     isBlocked &&

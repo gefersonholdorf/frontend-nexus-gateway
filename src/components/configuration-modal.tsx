@@ -46,7 +46,7 @@ export function ConfigurationModal({
                     </DialogDescription>
                 </DialogHeader>
 
-                <div className="grid grid-cols-[250px_1fr] min-h-[500px]">
+                <div className="grid grid-cols-[250px_1fr]">
                     {/* MENU LATERAL */}
                     <aside className="border-r bg-muted/20">
                         <button

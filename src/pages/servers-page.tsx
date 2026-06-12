@@ -3,20 +3,20 @@ import { IncidentDetails } from "@/components/incident-details";
 import { IncidentOverviewComponent } from "@/components/incident-overview";
 import { SystemStatusCard } from "@/components/system-status-card";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
-import { useQuery } from "@tanstack/react-query";
-import { AlertTriangle, Server, Wifi, WifiOff } from "lucide-react";
-import type React from "react";
 import {
     Carousel,
     CarouselContent,
     CarouselItem,
     CarouselNext,
     CarouselPrevious,
-} from "@/components/ui/carousel"
-import Autoplay from "embla-carousel-autoplay"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+} from "@/components/ui/carousel";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { UsersPrivilegesServers } from "@/components/users-privileges-servers";
+import { useQuery } from "@tanstack/react-query";
+import Autoplay from "embla-carousel-autoplay";
+import { AlertTriangle, LayoutDashboard, Server, ShieldAlert, Wifi, WifiOff } from "lucide-react";
+import type React from "react";
 
 interface IncidentsDetailsResponse {
     problems: {
@@ -96,8 +96,8 @@ export function ServersPage() {
             <div className="bg-background px-10 py-4 w-full gap-6">
                 <Tabs defaultValue="dashboard">
                     <TabsList variant="line">
-                        <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
-                        <TabsTrigger value="users">Usuários e Privilégios</TabsTrigger>
+                        <TabsTrigger value="dashboard"><LayoutDashboard />Dashboard</TabsTrigger>
+                        <TabsTrigger value="users"><ShieldAlert />Usuários e Privilégios</TabsTrigger>
                     </TabsList>
                     <TabsContent value="dashboard">
                         <div className="bg-background py-4 grid grid-cols-1 lg:grid-cols-4 gap-6">
