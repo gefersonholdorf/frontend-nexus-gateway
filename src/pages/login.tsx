@@ -107,12 +107,14 @@ export function LoginPage() {
                 password,
             })
 
+            console.log(result)
+
             setUserName(result?.user?.name)
 
             localStorage.setItem('user', JSON.stringify({
                 user: {
                     name: result?.user?.name,
-                    token: result?.user?.token
+                    token: result?.token
                 }
             }))
 

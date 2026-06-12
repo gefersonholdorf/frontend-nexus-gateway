@@ -14,7 +14,7 @@ interface SecurityCardProps {
 export function SecurityCard({ title, description, ip, typeColor, children }: SecurityCardProps) {
     return (
         <Card
-            className={`group rounded-2xl shadow-lg cursor-pointer border-t-5 border-transparent ${typeColor === 'black' ? 'hover:border-primary ' : 'hover:border-primary '} px-4 py-4 flex flex-col gap-1 transition-all duration-300 transform hover:scale-[1.01]
+            className={`group bg-(image:--background-gradient) rounded-2xl shadow-lg cursor-pointer border-t-5 border-transparent ${typeColor === 'black' ? 'hover:border-primary ' : 'hover:border-primary '} px-4 py-4 flex flex-col gap-1 transition-all duration-300 transform hover:scale-[1.01]
             hover:shadow-lg h-fit space-y-4`}
             onClick={() => window.open(`http://${ip}`, "_blank")}
         >

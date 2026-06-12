@@ -1,4 +1,4 @@
-import { Clock, ClockAlert, ShieldAlert } from "lucide-react";
+import { Clock, ClockAlert, ShieldAlert, TrendingUp } from "lucide-react";
 import { Card } from "../ui/card";
 
 export function ServerCard() {
@@ -27,7 +27,7 @@ export function ServerCard() {
                             <ShieldAlert className="size-3 text-muted-foreground" />
                             Privilégio
                         </span>
-                        <span className="font-semibold text-primary-text">ADMIN</span>
+                        <span className="font-semibold text-primary-text flex gap-1 items-center text-orange-500"><TrendingUp className=" size-4" /> ADMIN</span>
                     </div>
                     <div className="flex flex-col">
                         <span className="flex items-center gap-1 text-[.8rem] text-muted-foreground">

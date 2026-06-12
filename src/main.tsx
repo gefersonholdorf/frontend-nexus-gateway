@@ -16,6 +16,7 @@ import { CalendarPage } from './pages/calendar-page.tsx'
 import { UserProvider } from './contexts/user-context.tsx'
 import { ThemeProvider } from './contexts/theme-context.tsx'
 import { ServersPage } from './pages/servers-page.tsx'
+import { ProtectedRoute } from './protected-router.tsx'
 
 const queryClient = new QueryClient()
 
@@ -28,14 +29,16 @@ createRoot(document.getElementById('root')!).render(
             <RootLayout>
               <Routes>
                 <Route path="/" element={<LoginPage />} />
-                <Route element={<LayoutPages />}>
-                  <Route path="/welcome" element={<WelcomePage />} />
-                  <Route path="/ipmap" element={<IpMapPage />} />
-                  <Route path="/security-center" element={<SecurityCenterPage />} />
-                  <Route path="/systems" element={<SystemsPage />} />
-                  <Route path="/services" element={<ServicesPage />} />
-                  <Route path="/calendar" element={<CalendarPage />} />
-                  <Route path="/servers" element={<ServersPage />} />
+                <Route element={<ProtectedRoute />}>
+                  <Route element={<LayoutPages />}>
+                    <Route path="/welcome" element={<WelcomePage />} />
+                    <Route path="/ipmap" element={<IpMapPage />} />
+                    <Route path="/security-center" element={<SecurityCenterPage />} />
+                    <Route path="/systems" element={<SystemsPage />} />
+                    <Route path="/services" element={<ServicesPage />} />
+                    <Route path="/calendar" element={<CalendarPage />} />
+                    <Route path="/servers" element={<ServersPage />} />
+                  </Route>
                 </Route>
               </Routes>
             </RootLayout>

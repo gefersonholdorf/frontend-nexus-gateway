@@ -8,10 +8,13 @@ import { PrivilegesModal } from "./modals/privileges-modal";
 
 interface UserCardProps {
     user: {
-        id: number
-        name: string
-        user: string
+        username: string;
+        name: string;
+        group: string;
+        status: string;
+        last_login: string;
         logo: string
+        servers: string[]
     }
 }
 
@@ -35,7 +38,7 @@ export function UserCard({ user }: UserCardProps) {
                     </Avatar>
                     <div className="flex flex-col justify-center">
                         <span className="text-[1.1rem] text-primary-text font-semibold">{user.name}</span>
-                        <span className="text-[.8rem] text-muted-foreground">{user.user}</span>
+                        <span className="text-[.8rem] text-muted-foreground">{user.username}</span>
                     </div>
                 </div>
                 <div className="flex gap-6 items-center">

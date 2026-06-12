@@ -1,5 +1,6 @@
 import { AnnouncementsComponent } from "@/components/announcements-component";
 import { EventsOverviewComponent } from "@/components/events-overview";
+import { QuickAccessComponent } from "@/components/quick-access-component";
 import { WeatherCard } from "@/components/weather-card";
 import { WelcomeCard } from "@/components/welcome-card";
 
@@ -19,6 +20,9 @@ export function WelcomePage() {
                 <div className="col-span-2">
                     <AnnouncementsComponent />
                 </div>
+            </div>
+            <div className="col-span-3">
+                <QuickAccessComponent />
             </div>
         </div>
     )

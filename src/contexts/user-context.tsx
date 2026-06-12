@@ -3,8 +3,9 @@ import { createContext, useContext, useState } from "react";
 type UserContextData = {
     userName: string;
     setUserName: (name: string) => void;
-    userToken: string,
-    setUserToken: (name: string) => void;
+    userToken: string;
+    setUserToken: (token: string) => void;
+    isAuthenticated: boolean;
 };
 
 const UserContext = createContext<UserContextData | undefined>(undefined);
@@ -15,27 +16,34 @@ type UserProviderProps = {
 
 export function UserProvider({ children }: UserProviderProps) {
     const [userName, setUserName] = useState(() => {
-        const stored = localStorage.getItem("user")
-        if (!stored) return ""
+        const stored = localStorage.getItem("user");
+
+        if (!stored) return "";
 
         try {
-            const parsed = JSON.parse(stored)
-            return parsed?.user?.name ?? ""
+            const parsed = JSON.parse(stored);
+            console.log("userName", parsed)
+            return parsed?.user?.name ?? "";
         } catch {
-            return ""
+            return "";
         }
-    })
+    });
+
     const [userToken, setUserToken] = useState(() => {
-        const stored = localStorage.getItem("user")
-        if (!stored) return ""
+        const stored = localStorage.getItem("user");
+
+        if (!stored) return "";
 
         try {
-            const parsed = JSON.parse(stored)
-            return parsed?.user?.token ?? ""
+            const parsed = JSON.parse(stored);
+            console.log("userToken", parsed)
+            return parsed?.user?.token ?? "";
         } catch {
-            return ""
+            return "";
         }
-    })
+    });
+
+    const isAuthenticated = !!userToken;
 
     return (
         <UserContext.Provider
@@ -43,7 +51,8 @@ export function UserProvider({ children }: UserProviderProps) {
                 userName,
                 setUserName,
                 userToken,
-                setUserToken
+                setUserToken,
+                isAuthenticated,
             }}
         >
             {children}
