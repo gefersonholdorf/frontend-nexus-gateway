@@ -65,16 +65,16 @@ export function EventsOverviewComponent() {
             <CardContent className="flex flex-col justify-between gap-2">
                 {events.map((event) => (
                     <div
-                        className="flex p-2 items-start justify-between gap-4 border-b border-border hover:bg-background"
+                        className="flex p-2 items-start justify-between gap-4 border-b rounded-lg border-border hover:bg-background"
                         key={event.id}
                     >
                         <div className="flex gap-4 items-center">
-                            <div className="flex flex-col items-center justify-center">
+                            <div className="flex flex-col items-center justify-center bg-background border border-border px-4 py-1 rounded-lg">
                                 <span className="text-[1.2rem] font-semibold text-primary-text">09</span>
                                 <span className="text-[.8rem] font-light text-muted-foreground">Jul</span>
                             </div>
                             <div className="flex flex-col gap-1">
-                                <span className="font-medium truncate text-[.9rem] text-primary-text">{event.title}</span>
+                                <span className="font-semibold truncate text-[.9rem] text-primary-text">{event.title}</span>
                                 <div className="flex gap-4">
                                     <div className="flex items-center gap-1">
                                         <Clock className="text-muted-foreground size-3" />

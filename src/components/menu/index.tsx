@@ -2,7 +2,7 @@ import { AlertTriangle, AppWindow, Calendar, Cctv, LayoutDashboard, MonitorCloud
 
 export const sidebarItems = [
     {
-        label: "Dashboard",
+        label: "Página Inicial",
         path: "/welcome",
         icon: LayoutDashboard,
     },

@@ -1,4 +1,6 @@
+import { ServerCard } from "@/pages/servers-page";
 import { useQuery } from "@tanstack/react-query";
+import { Server, UserRound, Users, UserStar } from "lucide-react";
 import { UserCard } from "./user-card";
 
 interface UserPrivilege {
@@ -6,8 +8,7 @@ interface UserPrivilege {
     name: string;
     group: string;
     status: string;
-    last_login: string;
-    logo: string
+    last_login: string | null;
 }
 
 interface UsersPrivilegesServersResponse {
@@ -15,6 +16,20 @@ interface UsersPrivilegesServersResponse {
         server: string;
         users: UserPrivilege[];
     }[];
+}
+
+export interface UserServer {
+    server: string;
+    group: string;
+    status: string;
+    lastLogin: string | null;
+}
+
+export interface User {
+    username: string;
+    name: string;
+    logo: string;
+    servers: UserServer[];
 }
 
 export function UsersPrivilegesServers() {
@@ -48,45 +63,98 @@ export function UsersPrivilegesServers() {
         },
     });
 
-    const usersMap = new Map<
-        string,
-        UserPrivilege & {
-            servers: string[];
-        }
-    >();
+    const usersMap = new Map<string, User>();
 
     data?.serversUsersPrivileges.forEach((serverData) => {
-        serverData.users.forEach((user) => {
-            if (!usersMap.has(user.username)) {
-                usersMap.set(user.username, {
-                    ...user,
-                    logo: 'https://api2.lusati.com.br/repositorio/nexus/geferson.png',
+        serverData.users.forEach((serverUser) => {
+            if (!usersMap.has(serverUser.username)) {
+                usersMap.set(serverUser.username, {
+                    username: serverUser.username,
+                    name: serverUser.name,
+                    logo: "https://api2.lusati.com.br/repositorio/nexus/geferson.png",
                     servers: [],
                 });
             }
 
-            usersMap.get(user.username)?.servers.push(serverData.server);
+            const user = usersMap.get(serverUser.username);
+
+            user?.servers.push({
+                server: serverData.server,
+                group: serverUser.group,
+                status: serverUser.status,
+                lastLogin: serverUser.last_login,
+            });
         });
     });
 
     const users = Array.from(usersMap.values());
 
     if (isLoading) {
-        return <div>Carregando...</div>;
+        return (
+            <div className="flex items-center justify-center py-10">
+                Carregando usuários...
+            </div>
+        );
     }
 
     if (error) {
-        return <div>Erro ao carregar usuários.</div>;
+        return (
+            <div className="flex items-center justify-center py-10 text-red-500">
+                Erro ao carregar usuários.
+            </div>
+        );
+    }
+
+    if (!users.length) {
+        return (
+            <div className="flex items-center justify-center py-10">
+                Nenhum usuário encontrado.
+            </div>
+        );
     }
 
     return (
-        <div className="bg-background py-4 grid grid-cols-1 lg:grid-cols-1 gap-6">
-            {users.map((user) => (
-                <UserCard
-                    key={user.username}
-                    user={user}
-                />
-            ))}
-        </div>
+        <>
+            <div className="bg-background py-4 grid grid-cols-1 lg:grid-cols-6 gap-6">
+                <ServerCard color="blue" title="Servidores" quantity={3}>
+                    <div className="w-12 h-12 rounded-md overflow-hidden flex items-center justify-center bg-primary/10">
+                        <Server className="text-blue-500 size-5" />
+                    </div>
+                </ServerCard>
+                <ServerCard color="emerald" title="Usuários" quantity={3}>
+                    <div className="w-12 h-12 rounded-md overflow-hidden flex items-center justify-center bg-primary/10">
+                        <Users className="text-emerald-500 size-5" />
+                    </div>
+                </ServerCard>
+                <ServerCard color="red" title="ADMIN" quantity={6}>
+                    <div className="w-12 h-12 rounded-md overflow-hidden flex items-center justify-center bg-primary/10">
+                        <UserStar className="text-red-500 size-5" />
+                    </div>
+                </ServerCard>
+                <ServerCard color="orange" title="READONLY" quantity={4}>
+                    <div className="w-12 h-12 rounded-md overflow-hidden flex items-center justify-center bg-primary/10">
+                        <UserRound className="text-orange-500 size-5" />
+                    </div>
+                </ServerCard>
+                <ServerCard color="orange" title="Docker" quantity={4}>
+                    <div className="w-12 h-12 rounded-md overflow-hidden flex items-center justify-center bg-primary/10">
+                        <UserRound className="text-orange-500 size-5" />
+                    </div>
+                </ServerCard>
+                <ServerCard color="orange" title="Privilégios" quantity={4}>
+                    <div className="w-12 h-12 rounded-md overflow-hidden flex items-center justify-center bg-primary/10">
+                        <UserRound className="text-orange-500 size-5" />
+                    </div>
+                </ServerCard>
+            </div>
+            <div className="bg-background py-4 grid grid-cols-1 gap-6">
+                {users.map((user) => (
+                    <UserCard
+                        key={user.username}
+                        user={user}
+                    />
+                ))}
+            </div>
+        </>
     );
 }
