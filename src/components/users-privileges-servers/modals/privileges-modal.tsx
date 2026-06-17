@@ -187,16 +187,16 @@ export function PrivilegesModal({
 
                                                 <SelectContent>
                                                     <SelectGroup>
-                                                        <SelectItem value="SERVIDOR-BRA-APP">
-                                                            SERVIDOR-BRA-APP
+                                                        <SelectItem value="SERVER-BRA-APP">
+                                                            SERVER-BRA-APP
                                                         </SelectItem>
 
-                                                        <SelectItem value="SERVIDOR-BRA-INFRA">
-                                                            SERVIDOR-BRA-INFRA
+                                                        <SelectItem value="SERVER-BRA-INFRA">
+                                                            SERVER-BRA-INFRA
                                                         </SelectItem>
 
-                                                        <SelectItem value="SERVIDOR-BRA-HOM">
-                                                            SERVIDOR-BRA-HOM
+                                                        <SelectItem value="SERVER-BRA-HOM">
+                                                            SERVER-BRA-HOM
                                                         </SelectItem>
                                                     </SelectGroup>
                                                 </SelectContent>

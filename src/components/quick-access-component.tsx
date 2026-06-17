@@ -115,7 +115,7 @@ export function QuickAccessComponent() {
                                     justify-center
                                     gap-3
                                     rounded-xl
-                                    border
+                                    border-2
                                     border-border
                                     bg-(image:--background-gradient)
                                     p-4

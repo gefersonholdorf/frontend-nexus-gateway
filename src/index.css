@@ -61,6 +61,7 @@
         );
 
     --foreground: #0F172A;
+    --menu: #64748B;
 
     /* =========================
        SURFACES
@@ -182,6 +183,8 @@
       
 
     --foreground: #F8FAFC;
+
+    --menu: #94A3B8;
 
     /* Card claramente acima do fundo */
     --card: #111C36;

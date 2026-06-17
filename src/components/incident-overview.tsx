@@ -18,7 +18,7 @@ export function IncidentOverviewComponent() {
     const query = useQuery({
         queryKey: ["incidents-overview"],
         queryFn: async () => {
-            const response = await fetch(`http://127.0.0.1:3336/problems`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/problems`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

@@ -17,6 +17,8 @@ import { UserProvider } from './contexts/user-context.tsx'
 import { ThemeProvider } from './contexts/theme-context.tsx'
 import { ServersPage } from './pages/servers-page.tsx'
 import { ProtectedRoute } from './protected-router.tsx'
+import { CommunicationsPage } from './pages/comunications-page.tsx'
+import { ForbiddenPage } from './pages/forbidden-page.tsx'
 
 const queryClient = new QueryClient()
 
@@ -29,6 +31,7 @@ createRoot(document.getElementById('root')!).render(
             <RootLayout>
               <Routes>
                 <Route path="/" element={<LoginPage />} />
+                <Route path="/403" element={<ForbiddenPage />} />
                 <Route element={<ProtectedRoute />}>
                   <Route element={<LayoutPages />}>
                     <Route path="/welcome" element={<WelcomePage />} />
@@ -38,6 +41,7 @@ createRoot(document.getElementById('root')!).render(
                     <Route path="/services" element={<ServicesPage />} />
                     <Route path="/calendar" element={<CalendarPage />} />
                     <Route path="/servers" element={<ServersPage />} />
+                    <Route path="/comunications" element={<CommunicationsPage />} />
                   </Route>
                 </Route>
               </Routes>

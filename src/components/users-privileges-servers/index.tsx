@@ -9,6 +9,8 @@ interface UserPrivilege {
     group: string;
     status: string;
     last_login: string | null;
+    privilegeActive: boolean
+    dt_expires_at: Date | null
 }
 
 interface UsersPrivilegesServersResponse {
@@ -23,6 +25,8 @@ export interface UserServer {
     group: string;
     status: string;
     lastLogin: string | null;
+    privilegeActive: boolean
+    dt_expires_at: Date | null
 }
 
 export interface User {
@@ -43,7 +47,7 @@ export function UsersPrivilegesServers() {
         queryKey: ["server-user-privileges", servers],
         queryFn: async () => {
             const response = await fetch(
-                "http://127.0.0.1:3336/servers/privileges",
+                `${import.meta.env.VITE_API_URL}/servers/privileges`,
                 {
                     method: "POST",
                     headers: {
@@ -83,6 +87,8 @@ export function UsersPrivilegesServers() {
                 group: serverUser.group,
                 status: serverUser.status,
                 lastLogin: serverUser.last_login,
+                privilegeActive: serverUser.privilegeActive,
+                dt_expires_at: serverUser.dt_expires_at ?? null
             });
         });
     });
@@ -116,12 +122,12 @@ export function UsersPrivilegesServers() {
     return (
         <>
             <div className="bg-background py-4 grid grid-cols-1 lg:grid-cols-6 gap-6">
-                <ServerCard color="blue" title="Servidores" quantity={3}>
+                <ServerCard color="blue" title="SERVIDORES" quantity={3}>
                     <div className="w-12 h-12 rounded-md overflow-hidden flex items-center justify-center bg-primary/10">
                         <Server className="text-blue-500 size-5" />
                     </div>
                 </ServerCard>
-                <ServerCard color="emerald" title="Usuários" quantity={3}>
+                <ServerCard color="emerald" title="USUÁRIOS" quantity={3}>
                     <div className="w-12 h-12 rounded-md overflow-hidden flex items-center justify-center bg-primary/10">
                         <Users className="text-emerald-500 size-5" />
                     </div>
@@ -136,14 +142,14 @@ export function UsersPrivilegesServers() {
                         <UserRound className="text-orange-500 size-5" />
                     </div>
                 </ServerCard>
-                <ServerCard color="orange" title="Docker" quantity={4}>
+                <ServerCard color="yellow" title="DOCKER" quantity={4}>
                     <div className="w-12 h-12 rounded-md overflow-hidden flex items-center justify-center bg-primary/10">
-                        <UserRound className="text-orange-500 size-5" />
+                        <UserRound className="text-yellow-500 size-5" />
                     </div>
                 </ServerCard>
-                <ServerCard color="orange" title="Privilégios" quantity={4}>
+                <ServerCard color="purple" title="PRIVILÉGIOS" quantity={4}>
                     <div className="w-12 h-12 rounded-md overflow-hidden flex items-center justify-center bg-primary/10">
-                        <UserRound className="text-orange-500 size-5" />
+                        <UserRound className="text-purple-500 size-5" />
                     </div>
                 </ServerCard>
             </div>

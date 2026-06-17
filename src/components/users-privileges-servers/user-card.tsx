@@ -7,7 +7,7 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { formatLastLogin } from "@/lib/format-last-login";
-import { ChevronDown, ChevronUp, Edit, History, TrendingUp, UserKey } from "lucide-react";
+import { ChevronDown, ChevronUp, Clock, Edit, History, Info, Monitor, Server, Shield, TrendingUp, UserKey } from "lucide-react";
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Card, CardContent, CardHeader } from "../ui/card";
@@ -24,6 +24,8 @@ interface UserCardProps {
             group: string
             status: string
             lastLogin: string | null
+            privilegeActive: boolean
+            dt_expires_at: Date | null
         }[]
     }
 }
@@ -100,11 +102,11 @@ export function UserCard({ user }: UserCardProps) {
                                 <Table>
                                     <TableHeader>
                                         <TableRow>
-                                            <TableHead>Status</TableHead>
-                                            <TableHead>Servidor</TableHead>
-                                            <TableHead>Ambiente</TableHead>
-                                            <TableHead>Último Acesso</TableHead>
-                                            <TableHead className="text-right">Privilégio</TableHead>
+                                            <TableHead><span className="flex items-center gap-1"><Info className="size-4" />Status</span></TableHead>
+                                            <TableHead><span className="flex items-center gap-1"><Server className="size-4" />Servidor</span></TableHead>
+                                            <TableHead><span className="flex items-center gap-1"><Monitor className="size-4" />Ambiente</span></TableHead>
+                                            <TableHead className=""><span className="flex items-center gap-1"><Clock className="size-4" />Último Acesso</span></TableHead>
+                                            <TableHead className="flex items-center justify-end"><span className="flex items-center gap-1"><Shield className="size-4" />Privilégio</span></TableHead>
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
@@ -112,17 +114,24 @@ export function UserCard({ user }: UserCardProps) {
                                             <TableRow key={server.server}>
                                                 <TableCell>
                                                     <span
-                                                        className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium
+                                                        className={`inline-flex items-center rounded-full px-2 py-1 gap-1 text-xs font-medium
                                                     ${server.status === "active"
                                                                 ? "bg-green-500/10 text-green-500"
                                                                 : "bg-red-500/10 text-red-500"
                                                             }`}
                                                     >
+                                                        <div
+                                                            className={`w-1 h-1 rounded-full ${server.status === 'active'
+                                                                ? "bg-emerald-400"
+                                                                : "bg-red-400"
+                                                                }`}
+                                                        />
                                                         {server.status === 'active' ? 'Ativo' : 'Inativo'}
                                                     </span>
                                                 </TableCell>
 
                                                 <TableCell className="font-medium">
+
                                                     {server.server}
                                                 </TableCell>
 
@@ -140,11 +149,21 @@ export function UserCard({ user }: UserCardProps) {
                                                     {server.lastLogin ? formatLastLogin(server.lastLogin) : '---'}
                                                 </TableCell>
 
-                                                <TableCell className="text-right flex items-center justify-end gap-2">
-                                                    <span className="font-medium text-primary-text flex items-center gap-1">
-                                                        <TrendingUp className="size-4" />
-                                                        {server.group.toUpperCase()}
-                                                    </span>
+                                                <TableCell className="text-right flex items-start justify-end gap-2">
+                                                    <Tooltip>
+                                                        <TooltipTrigger>
+                                                            <span className={`font-medium flex items-center gap-2 ${server.privilegeActive ? 'text-emerald-500' : 'text-primary-text'}`}>
+                                                                {server.privilegeActive && (<TrendingUp className="size-4 text-emerald-500" />)}
+                                                                {server.group.toUpperCase()}
+                                                            </span>
+                                                        </TooltipTrigger>
+                                                        <TooltipContent>
+                                                            <div className="flex flex-col">
+                                                                <span>Privilégio Concedido</span>
+                                                                <span>{server.dt_expires_at ? 'Tem' : 'NOK'}</span>
+                                                            </div>
+                                                        </TooltipContent>
+                                                    </Tooltip>
                                                 </TableCell>
                                             </TableRow>
                                         ))}

@@ -16,7 +16,7 @@ export function SystemStatusCard({
     const query = useQuery({
         queryKey: ["status-server", serverId],
         queryFn: async () => {
-            const response = await fetch(`http://127.0.0.1:3336/servers/${serverId}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/servers/${serverId}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

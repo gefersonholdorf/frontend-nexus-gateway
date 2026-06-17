@@ -27,48 +27,58 @@ interface IncidentDetail {
 }
 
 export function IncidentDetails({ incident }: { incident: IncidentDetail }) {
-    const incidents = [
-        {
-            label: "Desastre",
-            value: 5,
-            color: "border-red-700",
-            textColor: "text-red-700",
-            bg: "bg-red-700/10",
-            colorFull: "bg-red-700"
-        },
-        {
-            label: "Alto",
-            value: 4,
-            color: "border-red-500",
-            textColor: "text-red-500",
-            bg: "bg-red-500/10",
-            colorFull: "bg-red-500"
-        },
-        {
-            label: "Médio",
-            value: 3,
-            color: "border-orange-500",
-            textColor: "text-orange-500",
-            bg: "bg-orange-500/10",
-            colorFull: "bg-orange-500"
-        },
-        {
-            label: "Aviso",
-            value: 2,
-            color: "border-yellow-500",
-            textColor: "text-yellow-500",
-            bg: "bg-yellow-500/10",
-            colorFull: "bg-yellow-500"
-        },
-        {
+    const severityMap: Record<number, {
+        label: string;
+        color: string;
+        textColor: string;
+        bg: string;
+        colorFull: string;
+    }> = {
+        1: {
             label: "Informação",
-            value: 1,
             color: "border-blue-500",
             textColor: "text-blue-500",
             bg: "bg-blue-500/10",
             colorFull: "bg-blue-500"
         },
-    ];
+        2: {
+            label: "Aviso",
+            color: "border-yellow-500",
+            textColor: "text-yellow-500",
+            bg: "bg-yellow-500/10",
+            colorFull: "bg-yellow-500"
+        },
+        3: {
+            label: "Médio",
+            color: "border-orange-500",
+            textColor: "text-orange-500",
+            bg: "bg-orange-500/10",
+            colorFull: "bg-orange-500"
+        },
+        4: {
+            label: "Alto",
+            color: "border-red-500",
+            textColor: "text-red-500",
+            bg: "bg-red-500/10",
+            colorFull: "bg-red-500"
+        },
+        5: {
+            label: "Alto",
+            color: "border-red-600",
+            textColor: "text-red-600",
+            bg: "bg-red-600/10",
+            colorFull: "bg-red-600"
+        },
+        6: {
+            label: "Desastre",
+            color: "border-red-700",
+            textColor: "text-red-700",
+            bg: "bg-red-700/10",
+            colorFull: "bg-red-700"
+        }
+    };
+
+    const severity = severityMap[incident.severity] ?? severityMap[0];
     return (
         <Card
             className={`h-52 bg-card rounded-3xl border border-border shadow-lg transition-all duration-300 transform hover:scale-[1.01] hover:shadow-lg
@@ -76,10 +86,10 @@ export function IncidentDetails({ incident }: { incident: IncidentDetail }) {
                 `}
         >
             <CardHeader className="pb-2 space-y-2">
-                <div className={`w-fit flex items-center gap-2 px-2 py-1 rounded-sm ${incidents[incident.severity].bg} border ${incidents[incident.severity].color}`}>
-                    <span className={`flex gap-2 items-center text-xs font-semibold ${incidents[incident.severity].textColor}`}>
-                        <div className={`w-2 h-2 rounded-full ${incidents[incident.severity].colorFull}`}></div>
-                        {incidents[incident.severity].label}
+                <div className={`w-fit flex items-center gap-2 px-2 py-1 rounded-sm ${severity.bg} border ${severity.color}`}>
+                    <span className={`flex gap-2 items-center text-xs font-semibold ${severity.textColor}`}>
+                        <div className={`w-2 h-2 rounded-full ${severity.colorFull}`}></div>
+                        {severity.label}
                     </span>
                 </div>
                 <div className="flex items-center gap-3">

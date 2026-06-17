@@ -22,6 +22,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { sidebarItems } from ".";
 import { SidebarItem } from "./sidebar-item";
+import { EditUserModal } from "../modals/edit-user-modal";
+import { UpdatePasswordModal } from "../modals/change-user-modal";
 
 interface SidebarProps {
     collapsed: boolean;
@@ -35,6 +37,8 @@ export function Sidebar({
     const [mobileOpen, setMobileOpen] = useState(false);
     const { userName } = useUser()
     const navigate = useNavigate()
+    const [editProfileOpen, setEditProfileOpen] = useState(false);
+    const [editPasswordOpen, setEditPasswordOpen] = useState(false);
 
     return (
         <>
@@ -180,8 +184,20 @@ export function Sidebar({
                         <DropdownMenuContent className="bg-background text-primary-text">
                             <DropdownMenuGroup>
                                 <DropdownMenuLabel>Ações</DropdownMenuLabel>
-                                <DropdownMenuItem><UserPen />Editar Perfil</DropdownMenuItem>
-                                <DropdownMenuItem><History />Alterar Senha</DropdownMenuItem>
+                                <DropdownMenuItem
+                                    onSelect={(e) => {
+                                        e.preventDefault();
+                                        setEditProfileOpen(true);
+                                    }}
+                                >
+                                    <UserPen />
+                                    Editar Perfil
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                    onSelect={(e) => {
+                                        e.preventDefault();
+                                        setEditPasswordOpen(true);
+                                    }}><History />Alterar Senha</DropdownMenuItem>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem onClick={() => navigate('/')}>
                                     <LogOut className="text-red-500" /> Sair do Sistema
@@ -196,6 +212,21 @@ export function Sidebar({
                     )}
                 </div >
             </aside >
+            <EditUserModal
+                open={editProfileOpen}
+                onOpenChange={setEditProfileOpen}
+                user={{
+                    name: "Geferson Holdorf",
+                    email: "geferson@lusati.com.br",
+                    username: "gholdorf",
+                    id: 1,
+                }}
+            />
+            <UpdatePasswordModal
+                userId={1}
+                open={editPasswordOpen}
+                onOpenChange={setEditPasswordOpen}
+            />
         </>
     );
 }

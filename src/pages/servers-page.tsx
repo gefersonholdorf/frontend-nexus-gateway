@@ -1,6 +1,7 @@
 import { BackComponent } from "@/components/back-component";
 import { IncidentDetails } from "@/components/incident-details";
 import { IncidentOverviewComponent } from "@/components/incident-overview";
+import { ServerAccessCounterComponent } from "@/components/server-access-counter-component";
 import { SystemStatusCard } from "@/components/system-status-card";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
@@ -50,7 +51,7 @@ export function ServersPage() {
     const query = useQuery({
         queryKey: ["incidents-details"],
         queryFn: async () => {
-            const response = await fetch(`http://127.0.0.1:3336/problems/details`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/problems/details`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -126,6 +127,11 @@ export function ServersPage() {
                             <SystemStatusCard serverName="Server - INFRA" serverId="10653" />
                             <SystemStatusCard serverName="Server - HOM" serverId="10656" />
                             <SystemStatusCard serverName="Server - APP" serverId="10654" />
+                        </div>
+                        <div className="bg-background py-4 grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            <ServerAccessCounterComponent serverName="SERVER-BRA-INFRA" serverId="10653" />
+                            <ServerAccessCounterComponent serverName="SERVER-BRA-HOM" serverId="10656" />
+                            <ServerAccessCounterComponent serverName="SERVER-BRA-APP" serverId="10654" />
                         </div>
                         <div className="bg-background py-4 grid grid-cols-1 lg:grid-cols-3 gap-6">
                             <div className="col-span-1">
