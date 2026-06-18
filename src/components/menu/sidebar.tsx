@@ -6,8 +6,9 @@ import {
     DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuSeparator,
-    DropdownMenuTrigger
+    DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+
 import { useUser } from "@/contexts/user-context";
 import {
     ChevronLeft,
@@ -18,110 +19,73 @@ import {
     UserPen,
     X,
 } from "lucide-react";
+
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { sidebarItems } from ".";
-import { SidebarItem } from "./sidebar-item";
+
 import { EditUserModal } from "../modals/edit-user-modal";
 import { UpdatePasswordModal } from "../modals/change-user-modal";
+import { sidebarModules } from "./sidebar-module";
+import { SidebarItem } from "./sidebar-item";
 
 interface SidebarProps {
     collapsed: boolean;
     setCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export function Sidebar({
-    collapsed,
-    setCollapsed,
-}: SidebarProps) {
+export function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
     const [mobileOpen, setMobileOpen] = useState(false);
-    const { userName } = useUser()
-    const navigate = useNavigate()
+    const { userName } = useUser();
+    const navigate = useNavigate();
+
     const [editProfileOpen, setEditProfileOpen] = useState(false);
     const [editPasswordOpen, setEditPasswordOpen] = useState(false);
 
     return (
         <>
-            {/* Botão Mobile */}
+            {/* BOTÃO MOBILE */}
             <button
                 onClick={() => setMobileOpen(true)}
-                className="
-                    fixed
-                    left-4
-                    top-4
-                    z-50
-                    rounded-lg
-                    bg-background
-                    p-2
-                    text-primary-text
-                    lg:hidden
-                "
+                className="fixed left-4 top-4 z-50 rounded-lg bg-background p-2 text-primary-text lg:hidden"
             >
                 <Menu size={22} />
             </button>
 
-            {/* Overlay Mobile */}
+            {/* OVERLAY MOBILE */}
             {mobileOpen && (
                 <div
-                    className="
-                        fixed
-                        inset-0
-                        z-40
-                        bg-background/50
-                        lg:hidden
-                    "
+                    className="fixed inset-0 z-40 bg-background/50 lg:hidden"
                     onClick={() => setMobileOpen(false)}
                 />
             )}
 
+            {/* SIDEBAR */}
             <aside
                 className={`
-        fixed
-        top-0
-        left-0
-        z-50
-        h-screen
+                    fixed top-0 left-0 z-50 h-screen flex flex-col
+                    bg-(image:--background-gradient)
+                    backdrop-blur text-primary-text
+                    border-r shadow-lg border-border
+                    transition-all duration-300
 
-        flex
-        flex-col
-
-        bg-(image:--background-gradient)
-        backdrop-blur
-        text-primary-text
-        transition-all
-        duration-300
-        border-r
-        shadow-lg
-        border-border
-
-        justify-between
-
-        ${collapsed ? "w-20" : "w-72"}
-
-        ${mobileOpen
-                        ? "translate-x-0"
-                        : "-translate-x-full lg:translate-x-0"
-                    }
-    `}
+                    ${collapsed ? "w-23" : "w-73"}
+                    ${mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
+                `}
             >
-                <div>
-                    {/* Header */}
-                    <div
-                        className="
-                        flex
-                        h-16
-                        items-center
-                        justify-between
-                        border-b
-                        border-border
-                        px-4
-                    "
-                    >
-                        {!collapsed && (
-                            <h2 className="font-bold text-lg">
-                                Nexus Gateway
-                            </h2>
-                        )}
+                {/* HEADER */}
+                <div className="shrink-0">
+                    <div className="flex h-16 items-center justify-between border-b border-border px-4">
+                        <div className="flex items-center gap-2">
+                            {/* <div className="w-8 h-8 rounded-md bg-primary/20 flex items-center justify-center font-bold text-primary">
+                                <img src="./logo-nexus.png" alt="" />
+                            </div> */}
+
+                            {!collapsed && (
+                                <span className="font-semibold tracking-wide">
+                                    Nexus Gateway
+                                </span>
+                            )}
+                        </div>
 
                         <div className="flex items-center gap-2">
                             <button
@@ -132,9 +96,7 @@ export function Sidebar({
                             </button>
 
                             <button
-                                onClick={() =>
-                                    setCollapsed(!collapsed)
-                                }
+                                onClick={() => setCollapsed(!collapsed)}
                                 className="hidden lg:block"
                             >
                                 {collapsed ? (
@@ -145,73 +107,103 @@ export function Sidebar({
                             </button>
                         </div>
                     </div>
+                </div>
 
-                    {/* Navegação */}
-                    <nav className="space-y-2 p-4">
-                        {sidebarItems.map((item, index) => (
-                            <SidebarItem
-                                key={index}
-                                icon={item!.icon}
-                                label={item!.label}
-                                path={item!.path}
-                                collapsed={collapsed}
-                                isBlocked={item?.isBlocked}
-                            />
+                {/* MENU (SCROLL REAL FUNCIONANDO) */}
+                <div className="flex-1 min-h-0 overflow-y-auto px-2 sidebar-scroll">
+                    <nav className="p-4 space-y-5">
+                        {sidebarModules.map((module, index) => (
+                            <div key={index}>
+                                {!collapsed && (
+                                    <h4 className="mb-2 px-3 text-[.65rem] uppercase tracking-widest text-muted-foreground">
+                                        {module.title}
+                                    </h4>
+                                )}
+
+                                <div className="space-y-1">
+                                    {module.items.map((item, i) => (
+                                        <SidebarItem
+                                            key={i}
+                                            icon={item.icon}
+                                            label={item.label}
+                                            path={item.path}
+                                            collapsed={collapsed}
+                                            isBlocked={item.isBlocked}
+                                        />
+                                    ))}
+                                </div>
+                            </div>
                         ))}
                     </nav>
                 </div>
-                <div className="flex flex-col gap-4 justify-start p-4">
+
+                {/* USER AREA */}
+                <div className="shrink-0 border-t border-border p-4">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <div className="hover:bg-gray-100/10 flex justify-start items-center gap-1 p-2 rounded-lg cursor-pointer">
-                                <Avatar className="w-10">
-                                    <AvatarImage className="h-9 w-9" src="https://avatars.githubusercontent.com/u/68699314?v=4" />
+                            <div className="hover:bg-card flex items-center gap-2 p-2 rounded-lg cursor-pointer">
+                                <Avatar className="h-10 w-10">
+                                    <AvatarImage src="https://avatars.githubusercontent.com/u/68699314?v=4" />
                                     <AvatarFallback>CN</AvatarFallback>
                                 </Avatar>
+
                                 {!collapsed && (
-                                    <div className="w-full flex justify-between items-center">
+                                    <div className="flex w-full justify-between items-center">
                                         <div className="flex flex-col">
                                             <span className="text-sm">{userName}</span>
-                                            <span className="text-[.7rem] text-muted-foreground">Admin</span>
+                                            <span className="text-[.7rem] text-muted-foreground">
+                                                Admin
+                                            </span>
                                         </div>
-                                        <div>
-                                            <ChevronRight />
-                                        </div>
+                                        <ChevronRight />
                                     </div>
                                 )}
                             </div>
                         </DropdownMenuTrigger>
+
                         <DropdownMenuContent className="bg-background text-primary-text">
                             <DropdownMenuGroup>
                                 <DropdownMenuLabel>Ações</DropdownMenuLabel>
+
                                 <DropdownMenuItem
                                     onSelect={(e) => {
                                         e.preventDefault();
                                         setEditProfileOpen(true);
                                     }}
                                 >
-                                    <UserPen />
+                                    <UserPen size={16} />
                                     Editar Perfil
                                 </DropdownMenuItem>
+
                                 <DropdownMenuItem
                                     onSelect={(e) => {
                                         e.preventDefault();
                                         setEditPasswordOpen(true);
-                                    }}><History />Alterar Senha</DropdownMenuItem>
+                                    }}
+                                >
+                                    <History size={16} />
+                                    Alterar Senha
+                                </DropdownMenuItem>
+
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem onClick={() => navigate('/')}>
-                                    <LogOut className="text-red-500" /> Sair do Sistema
+
+                                <DropdownMenuItem onClick={() => navigate("/")}>
+                                    <LogOut className="text-red-500" size={16} />
+                                    Sair do Sistema
                                 </DropdownMenuItem>
                             </DropdownMenuGroup>
                         </DropdownMenuContent>
                     </DropdownMenu>
+
                     {!collapsed && (
-                        <span className="text-primary-text text-[.8rem] font-normal">
-                            © 2026 Geferson Holdorf
+                        <span className="text-[.75rem] text-muted-foreground">
+                            © 2026 - Desenvolvido por Geferson
                         </span>
                     )}
-                </div >
-            </aside >
+                </div>
+            </aside>
+
+            {/* MODALS */}
             <EditUserModal
                 open={editProfileOpen}
                 onOpenChange={setEditProfileOpen}
@@ -222,6 +214,7 @@ export function Sidebar({
                     id: 1,
                 }}
             />
+
             <UpdatePasswordModal
                 userId={1}
                 open={editPasswordOpen}

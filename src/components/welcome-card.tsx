@@ -1,5 +1,4 @@
 import { useUser } from "@/contexts/user-context";
-import { ActivityIcon, HourglassIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "./ui/card";
 
@@ -23,7 +22,7 @@ export function WelcomeCard() {
     return (
         <Card
             className="
-            h-80
+                h-65
                 relative p-4
                 overflow-hidden
                 rounded-3xl
@@ -31,8 +30,9 @@ export function WelcomeCard() {
                 border-border/50
                 bg-(image:--background-gradient)
                 shadow-lg
-                transition-all duration-300 transform hover:scale-[1.01]
-                hover:shadow-lg
+                transition-all
+                duration-300
+                hover:shadow-xl
             "
         >
 
@@ -51,7 +51,7 @@ export function WelcomeCard() {
                     </h1>
 
                     <p className="text-sm text-muted-foreground leading-relaxed max-w-md">
-                        Plataforma centralizada de intranet da Lusati.
+                        Plataforma centralizada de intranet da Lusati, desenvolvida para integrar sistemas e centralizar informações corporativas em um único ambiente seguro e eficiente.
                     </p>
                 </div>
 
@@ -84,19 +84,6 @@ export function WelcomeCard() {
                                 year: "numeric"
                             })}
                         </p>
-                    </div>
-                </div>
-                <span className="text-muted-foreground text-[.8rem]">Resumo dos seus Chamados no GLPI:</span>
-                <div className="pt-2 grid grid-cols-1 lg:grid-cols-2 gap-4">
-                    <div className="bg-card border border-border p-3 rounded-sm shadow-sm flex gap-2 items-center">
-                        <ActivityIcon className="size-4 text-blue-500" />
-                        <span className="text-primary-text text-sm">Abertos/Em Andamento:</span>
-                        <span className="text-primary-text font-bold text-xl">4</span>
-                    </div>
-                    <div className="bg-card border border-border p-3 rounded-sm shadow-sm flex gap-2 items-center">
-                        <HourglassIcon className="size-4 text-blue-500" />
-                        <span className="text-primary-text text-sm">Aguardando Encerrar:</span>
-                        <span className="text-primary-text font-bold text-xl">4</span>
                     </div>
                 </div>
             </CardContent>

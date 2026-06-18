@@ -2,13 +2,12 @@ import { cn } from "@/lib/utils";
 import type { LucideIcon } from "lucide-react";
 import { NavLink } from "react-router";
 
-
 interface SidebarItemProps {
     icon: LucideIcon;
     label: string;
     path: string;
     collapsed: boolean;
-    isBlocked?: boolean
+    isBlocked?: boolean;
 }
 
 export function SidebarItem({
@@ -16,31 +15,29 @@ export function SidebarItem({
     label,
     path,
     collapsed,
-    isBlocked
+    isBlocked,
 }: SidebarItemProps) {
     return (
         <NavLink
             to={isBlocked ? "#" : path}
             onClick={(e) => {
-                if (isBlocked) {
-                    e.preventDefault();
-                }
+                if (isBlocked) e.preventDefault();
             }}
             className={({ isActive }) =>
                 cn(
-                    "group flex items-center gap-3 rounded-lg px-3 py-3 transition-all duration-200",
-                    "hover:bg-primary/10 hover:text-primary text-menu font-semibold hover:font-semibold",
+                    "flex items-center gap-3 rounded-lg px-3 py-3 transition-all",
+                    "hover:bg-primary/10 hover:text-primary",
                     isActive &&
-                    "bg-primary/20 text-primary shadow-md border-l-3 border-primary font-semibold",
+                    "bg-primary/20 text-primary border-l-2 border-primary",
                     isBlocked &&
-                    "cursor-not-allowed opacity-50 border-none bg-transparent shadow-none text-muted-foreground"
+                    "opacity-50 cursor-not-allowed border-none text-muted-foreground"
                 )
             }
         >
-            <Icon size={18} className="" />
+            <Icon size={18} />
 
             {!collapsed && (
-                <span className="truncate text-[.9rem]">
+                <span className="text-[.9rem] truncate">
                     {label}
                 </span>
             )}

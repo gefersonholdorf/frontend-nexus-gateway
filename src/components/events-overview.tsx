@@ -6,7 +6,8 @@ import {
     MapPin,
     Video,
     Rocket,
-    Users
+    Users,
+    CalendarCog
 } from "lucide-react";
 
 import { Card, CardContent, CardHeader } from "./ui/card";
@@ -73,7 +74,7 @@ export function EventsOverviewComponent() {
     return (
         <Card
             className="
-                h-145
+                h-150
                 flex
                 flex-col
                 rounded-3xl
@@ -85,40 +86,21 @@ export function EventsOverviewComponent() {
         >
             <CardHeader className="pb-4">
                 <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                        <div
-                            className="
-                                flex
-                                h-12
-                                w-12
-                                items-center
-                                justify-center
-                                rounded-2xl
-                                border
-                                border-primary/20
-                                bg-primary/10
-                            "
-                        >
-                            <CalendarClock className="size-5 text-primary" />
+                    <div className="flex items-center gap-3">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-md border border-primary bg-background/10">
+                            <CalendarCog className="size-5 text-primary" />
                         </div>
 
                         <div>
-                            <h2 className="text-lg font-semibold tracking-tight">
-                                Próximos Eventos
-                            </h2>
+                            <h3 className="text-base font-semibold text-primary-text">
+                                Calendário Compartilhado
+                            </h3>
 
-                            <p className="text-sm text-muted-foreground">
-                                Agenda e atividades programadas da equipe
+                            <p className="text-xs text-muted-foreground">
+                                Confira os calendário compartilhado da Lusati
                             </p>
                         </div>
                     </div>
-
-                    <Badge
-                        variant="secondary"
-                        className="rounded-full px-3 py-1"
-                    >
-                        {events.length} agendados
-                    </Badge>
                 </div>
             </CardHeader>
 
@@ -141,17 +123,16 @@ export function EventsOverviewComponent() {
                                         group
                                         flex
                                         gap-4
-                                        rounded-2xl
-                                        border
-                                        border-border/50
+                                        rounded-sm
+                                        border-2
+                                        border-border
                                         bg-background/40
                                         p-4
                                         transition-all
                                         duration-300
-                                        hover:-translate-y-1
                                         hover:border-primary/30
                                         hover:bg-background/70
-                                        hover:shadow-lg
+                                        hover:shadow-sm
                                     "
                                 >
                                     {/* DATE BLOCK */}
@@ -233,10 +214,10 @@ export function EventsOverviewComponent() {
                             items-center
                             justify-center
                             gap-2
-                            rounded-2xl
+                            rounded-sm cursor-pointer
                             border
                             border-border
-                            bg-background/50
+                            bg-background
                             py-3
                             text-sm
                             font-medium

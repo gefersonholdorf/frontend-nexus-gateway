@@ -41,8 +41,11 @@ export function QuickAccessSupportComponent() {
                 rounded-3xl
                 border-border/50
                 bg-card
+                bg-(image:--background-gradient)
                 shadow-lg
-                transition-all duration-300 transform hover:scale-[1.01]
+                transition-all
+                duration-300
+                hover:shadow-xl
             "
         >
             <CardContent className="h-full p-0">

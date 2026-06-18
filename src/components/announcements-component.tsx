@@ -1,14 +1,14 @@
 import {
     ArrowRight,
     Calendar,
+    Calendars,
     Clock3,
-    Megaphone,
     Rocket,
     Users
 } from "lucide-react";
 
-import { Card, CardContent, CardHeader } from "./ui/card";
 import { Badge } from "./ui/badge";
+import { Card, CardContent, CardHeader } from "./ui/card";
 
 interface Event {
     id: string;
@@ -46,7 +46,7 @@ export function AnnouncementsComponent() {
     return (
         <Card
             className="
-                h-[580px]
+                h-150
                 overflow-hidden
                 rounded-3xl
                 border-border/50
@@ -57,40 +57,21 @@ export function AnnouncementsComponent() {
         >
             <CardHeader className="pb-4">
                 <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                        <div
-                            className="
-                                flex
-                                h-12
-                                w-12
-                                items-center
-                                justify-center
-                                rounded-2xl
-                                bg-primary/10
-                                border
-                                border-primary/20
-                            "
-                        >
-                            <Megaphone className="size-5 text-primary" />
+                    <div className="flex items-center gap-3">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-md border border-primary bg-background/10">
+                            <Calendars className="size-5 text-primary" />
                         </div>
 
                         <div>
-                            <h2 className="text-lg font-semibold tracking-tight">
+                            <h3 className="text-base font-semibold text-primary-text">
                                 Comunicados
-                            </h2>
+                            </h3>
 
-                            <p className="text-sm text-muted-foreground">
-                                Atualizações importantes da organização
+                            <p className="text-xs text-muted-foreground">
+                                Confira os comunicados da Lusati
                             </p>
                         </div>
                     </div>
-
-                    <Badge
-                        variant="secondary"
-                        className="rounded-full px-3 py-1"
-                    >
-                        {events.length} Novos
-                    </Badge>
                 </div>
             </CardHeader>
 
@@ -150,14 +131,13 @@ export function AnnouncementsComponent() {
                                         <div
                                             className="
                                                 flex-1
-                                                rounded-2xl
-                                                border
+                                                rounded-sm
+                                                border-2
                                                 border-border/50
                                                 bg-background/40
                                                 p-4
                                                 transition-all
                                                 duration-300
-                                                hover:-translate-y-1
                                                 hover:border-primary/30
                                                 hover:bg-background/70
                                                 hover:shadow-lg
@@ -243,7 +223,7 @@ export function AnnouncementsComponent() {
                             items-center
                             justify-center
                             gap-2
-                            rounded-2xl
+                            rounded-sm
                             border
                             border-border
                             bg-background/50
