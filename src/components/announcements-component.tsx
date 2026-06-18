@@ -46,7 +46,7 @@ export function AnnouncementsComponent() {
     return (
         <Card
             className="
-                h-150
+                h-165
                 overflow-hidden
                 rounded-3xl
                 border-border/50

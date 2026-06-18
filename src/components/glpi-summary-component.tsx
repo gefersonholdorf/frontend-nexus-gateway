@@ -1,10 +1,11 @@
-import { Hourglass, Ticket, TicketPercentIcon } from "lucide-react";
+import { Hourglass, SquareArrowOutUpRight, Ticket, TicketPercentIcon } from "lucide-react";
 import { Card, CardContent, CardHeader } from "./ui/card";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 export function GLPISummaryComponent() {
     return (
         <Card className="
-        h-58
+                h-52
                 w-full
                 rounded-2xl
                 border
@@ -15,7 +16,7 @@ export function GLPISummaryComponent() {
                 duration-300
                 hover:shadow-xl
             ">
-            <CardHeader className="pb-2">
+            <CardHeader className="flex justify-between items-center gap-6">
                 <div className="flex items-center gap-3">
                     <div className="flex h-10 w-10 items-center justify-center rounded-md border border-primary bg-background/10">
                         <Ticket className="size-5 text-primary" />
@@ -23,28 +24,44 @@ export function GLPISummaryComponent() {
 
                     <div>
                         <h3 className="text-base font-semibold text-primary-text">
-                            Resumo dos seus Chamados
+                            Resumo das suas Solicitações
                         </h3>
 
                         <p className="text-xs text-muted-foreground">
-                            Confira o resumo dos seus chamados do GLPI
+                            Confira o resumo das suas solicitações no GLPI
                         </p>
                     </div>
                 </div>
+                <div>
+                    <Tooltip>
+                        <TooltipTrigger>
+                            <div className="flex gap-1 items-center cursor-pointer group" onClick={() => window.open('https://glpi.lusati.com.br/front/ticket.php', "_blank")}>
+                                <span className="text-muted-foreground text-[.7rem] group-hover:text-primary/80">Ver Solicitações</span>
+                                <SquareArrowOutUpRight className="size-3 text-muted-foreground cursor-pointer group-hover:text-primary/80" />
+                            </div>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <span>Acesse o GLPI para visualizar e gerenciar suas solicitações</span>
+                        </TooltipContent>
+                    </Tooltip>
+                </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-6 pt-0">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                     <Card
                         className={`
                                     bg-(image:--background-gradient) flex-row gap-2 rounded-lg border border-border px-6 py-5 shadow-sm transition-all duration-300 transform hover:scale-[1.01]
                                     hover:shadow-lg`}
                     >
-                        <div className="w-12 h-12 rounded-md overflow-hidden flex items-center justify-center bg-primary/10">
+                        <div className="w-12 h-12 rounded-md overflow-hidden flex items-center justify-center bg-card border border-border">
                             <TicketPercentIcon className="text-emerald-500 size-5" />
                         </div>
-                        <div className="flex flex-col justify-start">
+                        <div className="flex flex-col gap-1 justify-start">
+                            <div className="flex gap-2 items-end">
+                                <span className={`font-bold text-[1.2rem] text-emerald-500`}>4</span>
+                                <span className="text-[.9rem] font-medium text-emerald-500">Chamados</span>
+                            </div>
                             <span className="text-[.8rem] text-muted-foreground">Em Aberto / Andamento</span>
-                            <span className={`font-bold text-[1.2rem] text-emerald-500`}>4</span>
                         </div>
                     </Card>
 
@@ -54,12 +71,15 @@ export function GLPISummaryComponent() {
                                     bg-(image:--background-gradient) flex-row gap-2 rounded-lg border border-border px-6 py-5 shadow-sm transition-all duration-300 transform hover:scale-[1.01]
                                     hover:shadow-lg`}
                     >
-                        <div className="w-12 h-12 rounded-md overflow-hidden flex items-center justify-center bg-primary/10">
-                            <Hourglass className="text-red-500 size-5" />
+                        <div className="w-12 h-12 rounded-md overflow-hidden flex items-center justify-center bg-card border border-border">
+                            <Hourglass className="text-amber-500 size-5" />
                         </div>
-                        <div className="flex flex-col justify-start">
-                            <span className="text-[.8rem] text-muted-foreground">Aguardando Encerrar</span>
-                            <span className={`font-bold text-[1.2rem] text-red-500`}>4</span>
+                        <div className="flex flex-col gap-1 justify-start">
+                            <div className="flex gap-2 items-end">
+                                <span className={`font-bold text-[1.2rem] text-amber-500`}>4</span>
+                                <span className="text-[.9rem] font-medium text-amber-500">Chamados</span>
+                            </div>
+                            <span className="text-[.8rem] text-muted-foreground">Falta Encerrar</span>
                         </div>
                     </Card>
                 </div>

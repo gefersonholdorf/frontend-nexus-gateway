@@ -1,20 +1,19 @@
-import { Clock, ShieldAlert, ShieldCheck, Wifi, WifiOff } from "lucide-react";
+import { Clock, ShieldAlert, ShieldCheck, Wifi } from "lucide-react";
 import { Card, CardContent, CardHeader } from "./ui/card";
 
 interface VPNStatusProps {
     isConnected: boolean;
     userName?: string;
     ip?: string;
-    lastSeen?: string; // data da última conexão
 }
 
 export function VPNStatusCard({
     isConnected,
-    lastSeen,
 }: VPNStatusProps) {
     return (
         <Card
             className="
+            h-52
                 w-full
                 rounded-2xl
                 border border-border
@@ -86,19 +85,16 @@ export function VPNStatusCard({
                     </div>
                 </div>
 
-                {/* LAST SEEN */}
-                {lastSeen && (
-                    <div className="mt-2 flex justify-between text-xs text-muted-foreground">
-                        <div className="flex items-center gap-1">
-                            <Clock className="size-3" />
-                            <span>Data de Expiração</span>
-                        </div>
-
-                        <span className="text-primary-text font-medium">
-                            30/06/2026 18:00:00
-                        </span>
+                <div className="mt-3 flex justify-between text-xs text-muted-foreground border border-border p-3 rounded-sm bg-card">
+                    <div className="flex items-center gap-1">
+                        <Clock className="size-3" />
+                        <span>Data de Expiração</span>
                     </div>
-                )}
+
+                    <span className="text-muted-foreground font-semibold">
+                        30/06/2026 18:00:00
+                    </span>
+                </div>
             </CardContent>
         </Card>
     );

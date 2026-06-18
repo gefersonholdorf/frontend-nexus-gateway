@@ -65,19 +65,6 @@ export function QuickAccessSupportComponent() {
                                 </p>
                             </div>
                         </div>
-
-                        <div
-                            className="
-                                rounded-full
-                                bg-muted
-                                px-2
-                                py-1
-                                text-xs
-                                text-muted-foreground
-                            "
-                        >
-                            {actions.length}
-                        </div>
                     </div>
 
                     <div className="flex flex-1 flex-col gap-2">

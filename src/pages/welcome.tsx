@@ -1,5 +1,5 @@
 import { AnnouncementsComponent } from "@/components/announcements-component";
-import { EventsOverviewComponent } from "@/components/events-overview";
+import { CalendarOverviewComponent } from "@/components/calendar-overview-component";
 import { GLPISummaryComponent } from "@/components/glpi-summary-component";
 import { QuickAccessComponent } from "@/components/quick-access-component";
 import { QuickAccessSupportComponent } from "@/components/quick-access-support-component";
@@ -16,12 +16,12 @@ export function WelcomePage() {
                 </div>
                 <div className="lg:col-span-2 space-y-6">
                     <QuickAccessSupportComponent />
-                    <VPNStatusCard isConnected lastSeen="12/03/2026" />
+                    <VPNStatusCard isConnected />
                 </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <EventsOverviewComponent />
+                <CalendarOverviewComponent />
                 <AnnouncementsComponent />
             </div>
 

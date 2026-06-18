@@ -1,6 +1,7 @@
 import { useUser } from "@/contexts/user-context";
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "./ui/card";
+import { WeatherCard } from "./weather-card";
 
 export function WelcomeCard() {
     const [now, setNow] = useState(new Date());
@@ -22,7 +23,7 @@ export function WelcomeCard() {
     return (
         <Card
             className="
-                h-65
+                h-80
                 relative p-4
                 overflow-hidden
                 rounded-3xl
@@ -50,41 +51,30 @@ export function WelcomeCard() {
                         </span>
                     </h1>
 
-                    <p className="text-sm text-muted-foreground leading-relaxed max-w-md">
+                    <p className="text-sm text-muted-foreground leading-relaxed text-justify">
                         Plataforma centralizada de intranet da Lusati, desenvolvida para integrar sistemas e centralizar informações corporativas em um único ambiente seguro e eficiente.
                     </p>
                 </div>
 
-                {/* TIME BLOCK */}
-                <div
-                    className="
-                        mt-2
-                        mb-4
-                        flex
-                        items-center
-                        justify-between
-                        rounded-sm
-                        border
-                        border-border
-                        px-4
-                        py-3
-                        backdrop-blur-md bg-card
-                    "
-                >
-                    <div className="text-left">
-                        <p className="text-lg font-semibold tabular-nums">
-                            {now.toLocaleTimeString()}
-                        </p>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 py-4">
+                    <Card className="rounded-sm p-4 border-none border-transparent shadow-sm transition-all duration-300 transform hover:scale-[1.01]
+                                    hover:shadow-lg outline-none flex flex-col items-start justify-center">
+                        <div className="text-left">
+                            <p className="text-2xl font-semibold tabular-nums">
+                                {now.toLocaleTimeString()}
+                            </p>
 
-                        <p className="text-xs text-muted-foreground capitalize">
-                            {now.toLocaleDateString("pt-BR", {
-                                weekday: "long",
-                                day: "2-digit",
-                                month: "long",
-                                year: "numeric"
-                            })}
-                        </p>
-                    </div>
+                            <p className="text-xs text-muted-foreground capitalize">
+                                {now.toLocaleDateString("pt-BR", {
+                                    weekday: "long",
+                                    day: "2-digit",
+                                    month: "long",
+                                    year: "numeric"
+                                })}
+                            </p>
+                        </div>
+                    </Card>
+                    <WeatherCard />
                 </div>
             </CardContent>
         </Card>
