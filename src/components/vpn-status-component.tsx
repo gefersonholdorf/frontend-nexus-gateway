@@ -1,15 +1,52 @@
-import { Clock, ShieldAlert, ShieldCheck, Wifi } from "lucide-react";
+import { CircleX, Clock, ShieldAlert, ShieldAlertIcon, ShieldCheck, Wifi } from "lucide-react";
 import { Card, CardContent, CardHeader } from "./ui/card";
+import { Skeleton } from "./ui/skeleton";
+import { useUser } from "@/contexts/user-context";
+import { useQuery } from "@tanstack/react-query";
+import { formatLastLogin } from "@/lib/format-last-login";
 
-interface VPNStatusProps {
-    isConnected: boolean;
-    userName?: string;
-    ip?: string;
+interface VPNDetailsResponse {
+    vpnDetails: {
+        name: string,
+        expirationRaw: string,
+        expirationDate: string,
+        daysRemaining: number
+        status: "valid" | "critical" | "warning" | "expired"
+    }
 }
 
-export function VPNStatusCard({
-    isConnected,
-}: VPNStatusProps) {
+export function VPNStatusCard() {
+    const { user } = useUser()
+    const query = useQuery({
+        queryKey: ["vpn-details"],
+        queryFn: async () => {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/users/vpn`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${user?.token}`
+                }
+            })
+
+            const result = await response.json() as VPNDetailsResponse;
+
+            return result;
+        },
+        refetchInterval: 30000,
+    });
+
+    if (query.isLoading) {
+        return (
+            <Card className="h-52 p-0">
+                <Skeleton className="h-full bg-gray-100" />
+            </Card>
+        );
+    }
+
+    if (!query.data) {
+        return null;
+    }
+
     return (
         <Card
             className="
@@ -55,7 +92,7 @@ export function VPNStatusCard({
                             Usuário
                         </span>
                         <span className="text-sm font-medium text-primary-text">
-                            Lusati_geferson
+                            {query.data.vpnDetails.name}
                         </span>
                     </div>
 
@@ -66,18 +103,35 @@ export function VPNStatusCard({
                         </span>
 
                         <div className="flex items-center gap-1">
-                            {isConnected ? (
+                            {query.data.vpnDetails.status === 'valid' && (
                                 <>
                                     <ShieldCheck className="size-4 text-emerald-500" />
                                     <span className="text-sm font-semibold text-emerald-500">
                                         Válido
                                     </span>
                                 </>
-                            ) : (
+                            )}
+                            {query.data.vpnDetails.status === 'critical' && (
                                 <>
-                                    <ShieldAlert className="size-4 text-red-500" />
+                                    <ShieldAlertIcon className="size-4 text-red-500" />
                                     <span className="text-sm font-semibold text-red-500">
-                                        Desconectado
+                                        Urgente
+                                    </span>
+                                </>
+                            )}
+                            {query.data.vpnDetails.status === 'expired' && (
+                                <>
+                                    <CircleX className="size-4 text-red-500" />
+                                    <span className="text-sm font-semibold text-red-500">
+                                        Expirado
+                                    </span>
+                                </>
+                            )}
+                            {query.data.vpnDetails.status === 'warning' && (
+                                <>
+                                    <ShieldAlert className="size-4 text-amber-500" />
+                                    <span className="text-sm font-semibold text-amber-500">
+                                        Alerta
                                     </span>
                                 </>
                             )}
@@ -92,7 +146,7 @@ export function VPNStatusCard({
                     </div>
 
                     <span className="text-muted-foreground font-semibold">
-                        30/06/2026 18:00:00
+                        {formatLastLogin(query.data.vpnDetails.expirationDate)}
                     </span>
                 </div>
             </CardContent>

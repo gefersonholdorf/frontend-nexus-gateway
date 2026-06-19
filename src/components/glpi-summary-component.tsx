@@ -1,8 +1,49 @@
 import { Hourglass, SquareArrowOutUpRight, Ticket, TicketPercentIcon } from "lucide-react";
 import { Card, CardContent, CardHeader } from "./ui/card";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
+import { Skeleton } from "./ui/skeleton";
+import { useQuery } from "@tanstack/react-query";
+import { useUser } from "@/contexts/user-context";
+
+interface TicketGLPIResponse {
+    summaryTickets: {
+        category: string
+        quantity: number
+    }[]
+}
 
 export function GLPISummaryComponent() {
+    const { user } = useUser()
+    const query = useQuery({
+        queryKey: ["tickets-glpi"],
+        queryFn: async () => {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/users/summary/tickets`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${user?.token}`
+                }
+            })
+
+            const result = await response.json() as TicketGLPIResponse;
+
+            return result;
+        },
+        refetchInterval: 30000,
+    });
+
+    if (query.isLoading) {
+        return (
+            <Card className="h-52 p-0">
+                <Skeleton className="h-full bg-gray-100" />
+            </Card>
+        );
+    }
+
+    if (!query.data) {
+        return null;
+    }
+
     return (
         <Card className="
                 h-52
@@ -54,14 +95,14 @@ export function GLPISummaryComponent() {
                                     hover:shadow-lg`}
                     >
                         <div className="w-12 h-12 rounded-md overflow-hidden flex items-center justify-center bg-card border border-border">
-                            <TicketPercentIcon className="text-emerald-500 size-5" />
+                            <TicketPercentIcon className="text-primary-text size-5" />
                         </div>
                         <div className="flex flex-col gap-1 justify-start">
                             <div className="flex gap-2 items-end">
-                                <span className={`font-bold text-[1.2rem] text-emerald-500`}>4</span>
-                                <span className="text-[.9rem] font-medium text-emerald-500">Chamados</span>
+                                <span className={`font-bold text-[1.2rem] text-primary-text`}>{query.data.summaryTickets[0].quantity}</span>
+                                <span className="text-[.9rem] font-medium text-primary-text">Chamados</span>
                             </div>
-                            <span className="text-[.8rem] text-muted-foreground">Em Aberto / Andamento</span>
+                            <span className="text-[.8rem] text-muted-foreground">{query.data.summaryTickets[0].category}</span>
                         </div>
                     </Card>
 
@@ -72,14 +113,14 @@ export function GLPISummaryComponent() {
                                     hover:shadow-lg`}
                     >
                         <div className="w-12 h-12 rounded-md overflow-hidden flex items-center justify-center bg-card border border-border">
-                            <Hourglass className="text-amber-500 size-5" />
+                            <Hourglass className="text-primary-text size-5" />
                         </div>
                         <div className="flex flex-col gap-1 justify-start">
                             <div className="flex gap-2 items-end">
-                                <span className={`font-bold text-[1.2rem] text-amber-500`}>4</span>
-                                <span className="text-[.9rem] font-medium text-amber-500">Chamados</span>
+                                <span className={`font-bold text-[1.2rem] text-primary-text`}>{query.data.summaryTickets[1].quantity}</span>
+                                <span className="text-[.9rem] font-medium text-primary-text">Chamados</span>
                             </div>
-                            <span className="text-[.8rem] text-muted-foreground">Falta Encerrar</span>
+                            <span className="text-[.8rem] text-muted-foreground">{query.data.summaryTickets[1].category}</span>
                         </div>
                     </Card>
                 </div>

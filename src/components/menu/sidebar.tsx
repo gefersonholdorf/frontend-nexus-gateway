@@ -35,7 +35,7 @@ interface SidebarProps {
 
 export function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
     const [mobileOpen, setMobileOpen] = useState(false);
-    const { userName } = useUser();
+    const { user } = useUser();
     const navigate = useNavigate();
 
     const [editProfileOpen, setEditProfileOpen] = useState(false);
@@ -150,7 +150,7 @@ export function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
                                 {!collapsed && (
                                     <div className="flex w-full justify-between items-center">
                                         <div className="flex flex-col">
-                                            <span className="text-sm">{userName}</span>
+                                            <span className="text-sm">{user?.name}</span>
                                             <span className="text-[.7rem] text-muted-foreground">
                                                 Admin
                                             </span>

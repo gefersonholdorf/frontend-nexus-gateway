@@ -19,6 +19,11 @@ export const sidebarModules = [
                 path: "/welcome",
                 icon: LayoutDashboard,
             },
+            {
+                label: "Calendário",
+                path: "/calendar",
+                icon: Calendar,
+            },
         ],
     },
 
@@ -76,16 +81,4 @@ export const sidebarModules = [
             },
         ],
     },
-
-    {
-        title: "Planejamento",
-        items: [
-            {
-                label: "Calendário",
-                path: "/events",
-                icon: Calendar,
-                isBlocked: true,
-            },
-        ],
-    }
 ];

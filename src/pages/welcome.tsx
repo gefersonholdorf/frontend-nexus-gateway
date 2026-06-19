@@ -16,7 +16,7 @@ export function WelcomePage() {
                 </div>
                 <div className="lg:col-span-2 space-y-6">
                     <QuickAccessSupportComponent />
-                    <VPNStatusCard isConnected />
+                    <VPNStatusCard />
                 </div>
             </div>
 

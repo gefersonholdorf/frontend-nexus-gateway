@@ -1,10 +1,16 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+
+interface User {
+    email: string
+    name: string,
+    roles: string[]
+    permissions: string[]
+    token: string
+}
 
 type UserContextData = {
-    userName: string;
-    setUserName: (name: string) => void;
-    userToken: string;
-    setUserToken: (token: string) => void;
+    user: User | null;
+    setUser: (name: User | null) => void;
     isAuthenticated: boolean;
 };
 
@@ -15,43 +21,35 @@ type UserProviderProps = {
 };
 
 export function UserProvider({ children }: UserProviderProps) {
-    const [userName, setUserName] = useState(() => {
+    const [user, setUser] = useState<User | null>(() => {
         const stored = localStorage.getItem("user");
 
-        if (!stored) return "";
+        if (!stored) return null;
 
         try {
-            const parsed = JSON.parse(stored);
-            console.log("userName", parsed)
-            return parsed?.user?.name ?? "";
+            const parsed = JSON.parse(stored) as User;
+
+            return parsed;
         } catch {
-            return "";
+            return null;
         }
     });
 
-    const [userToken, setUserToken] = useState(() => {
-        const stored = localStorage.getItem("user");
-
-        if (!stored) return "";
-
-        try {
-            const parsed = JSON.parse(stored);
-            console.log("userToken", parsed)
-            return parsed?.user?.token ?? "";
-        } catch {
-            return "";
+    useEffect(() => {
+        if (user) {
+            localStorage.setItem("user", JSON.stringify(user));
+        } else {
+            localStorage.removeItem("user");
         }
-    });
+    }, [user]);
 
-    const isAuthenticated = !!userToken;
+    const isAuthenticated = !!user?.token;
 
     return (
         <UserContext.Provider
             value={{
-                userName,
-                setUserName,
-                userToken,
-                setUserToken,
+                user,
+                setUser,
                 isAuthenticated,
             }}
         >

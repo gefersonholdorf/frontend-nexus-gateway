@@ -10,6 +10,16 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
 
+interface LoginResponse {
+    token: string,
+    user: {
+        email: string
+        name: string,
+        roles: string[]
+        permissions: string[]
+    }
+}
+
 export function LoginPage() {
     const mutation = useMutation({
         mutationKey: ["login"],
@@ -35,11 +45,13 @@ export function LoginPage() {
                 throw new Error("Usuário ou senha inválidos")
             }
 
-            return response.json()
+            const result = await response.json() as LoginResponse
+
+            return result
         },
     })
 
-    const { setUserName } = useUser();
+    const { setUser } = useUser();
 
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -102,20 +114,19 @@ export function LoginPage() {
         })
 
         try {
-            const result = await mutation.mutateAsync({
+            const { token, user } = await mutation.mutateAsync({
                 email,
                 password,
             })
 
-            console.log(result)
-
-            setUserName(result?.user?.name)
+            setUser({
+                ...user,
+                token
+            })
 
             localStorage.setItem('user', JSON.stringify({
-                user: {
-                    name: result?.user?.name,
-                    token: result?.token
-                }
+                token,
+                user
             }))
 
             toast.success("Login realizado com sucesso.", {

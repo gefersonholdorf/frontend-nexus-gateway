@@ -5,7 +5,7 @@ import { WeatherCard } from "./weather-card";
 
 export function WelcomeCard() {
     const [now, setNow] = useState(new Date());
-    const { userName } = useUser();
+    const { user } = useUser()
 
     useEffect(() => {
         const timer = setInterval(() => setNow(new Date()), 1000);
@@ -47,7 +47,7 @@ export function WelcomeCard() {
                     <h1 className="text-2xl font-semibold tracking-tight">
                         {getGreeting()},
                         <span className="ml-2 font-bold text-primary">
-                            {userName}
+                            {user?.name}
                         </span>
                     </h1>
 
