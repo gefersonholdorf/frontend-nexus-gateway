@@ -1,5 +1,6 @@
 import { BackComponent } from "@/components/back-component"
-import { AvailabilityComponente } from "@/components/calendar/availability-componente"
+import { AvailabilityComponent, type Availability } from "@/components/calendar/availability-component"
+import { DrawerAvailabilityContent } from "@/components/calendar/drawer-availability"
 import { DrawerScrollableContent } from "@/components/calendar/drawer-events"
 import { Calendar } from "@/components/ui/calendar"
 import { Card } from "@/components/ui/card"
@@ -32,9 +33,52 @@ interface CalendarResponse {
     }[]
 }
 
+interface AvailabilityResponse {
+    availabilitys: {
+        name: string
+        logo: string | null
+        scheduleId: string
+        availabilityView: string
+        scheduleItems: {
+            isPrivate: false;
+            status: string;
+            subject: string;
+            location: string;
+            isMeeting: boolean;
+            isRecurring: boolean;
+            isException: boolean;
+            isReminderSet: boolean;
+            start: {
+                dateTime: string;
+                timeZone: string;
+            };
+            end: {
+                dateTime: string;
+                timeZone: string;
+            };
+        }[];
+    }[]
+}
+
+interface PresenceResponse {
+    users: {
+        id: number,
+        name: string,
+        email: string,
+        roleDescription: string,
+        logo: string | null,
+        availability: string,
+        activity: string
+    }[]
+}
+
 export function CalendarPage() {
     const [selectedDate, setSelectedDate] = useState<Date>();
     const [openDrawer, setOpenDrawer] = useState(false);
+
+    const [openUserAvailabilityDrawer, setOpenUserAvailabilityDrawer] = useState(false);
+    const [userSelected, setUserSelected] = useState<Availability | null>(null)
+
     const [startDate, setStartDate] = useState<string>(
         "2026-06-01T00:00:00.000Z"
     )
@@ -44,6 +88,7 @@ export function CalendarPage() {
     )
 
     const { user } = useUser()
+
     const query = useQuery({
         queryKey: ["calendar"],
         queryFn: async () => {
@@ -62,6 +107,42 @@ export function CalendarPage() {
         refetchInterval: 30000,
     });
 
+    const queryAvailability = useQuery({
+        queryKey: ["availability"],
+        queryFn: async () => {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/calendar/availability`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${user?.token}`
+                }
+            })
+
+            const result = await response.json() as AvailabilityResponse;
+
+            return result;
+        },
+        refetchInterval: 30000,
+    });
+
+    const queryPresence = useQuery({
+        queryKey: ["presence"],
+        queryFn: async () => {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/calendar/presence`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${user?.token}`
+                }
+            })
+
+            const result = await response.json() as PresenceResponse;
+
+            return result;
+        },
+        refetchInterval: 30000,
+    });
+
     if (query.isLoading) {
         return (
             <Card className="h-52 p-0">
@@ -74,8 +155,41 @@ export function CalendarPage() {
         return null;
     }
 
+    if (queryAvailability.isLoading) {
+        return (
+            <Card className="h-52 p-0">
+                <Skeleton className="h-full bg-gray-100" />
+            </Card>
+        );
+    }
+
+    if (!queryPresence.data) {
+        return null;
+    }
+
+    if (queryPresence.isLoading) {
+        return (
+            <Card className="h-52 p-0">
+                <Skeleton className="h-full bg-gray-100" />
+            </Card>
+        );
+    }
+
+    if (!queryAvailability.data) {
+        return null;
+    }
+
     function handleSetOpenDrawer() {
         setOpenDrawer(!openDrawer)
+    }
+
+    function handleSetUserSelected(userAvailability: Availability) {
+        setUserSelected(userAvailability)
+        setOpenUserAvailabilityDrawer(true)
+    }
+
+    function handleSetOpenUserAvailabilityDrawer() {
+        setOpenUserAvailabilityDrawer(!openUserAvailabilityDrawer)
     }
 
     function handleDaySelect(date: Date | undefined) {
@@ -93,6 +207,32 @@ export function CalendarPage() {
         console.log("startTime", startTime.toISOString());
         console.log("endTime", endTime.toISOString());
     }
+
+    const availabilitys: Availability[] =
+        queryAvailability.data.availabilitys.map((availability) => {
+            const presence = queryPresence.data.users.find(
+                (user) =>
+                    user.email.toLowerCase() ===
+                    availability.scheduleId.toLowerCase()
+            );
+
+            return {
+                ...availability,
+                presence: presence!,
+            };
+        });
+
+    const eventsSelectedDay = query.data.events.filter((event) => {
+        if (!selectedDate) return false;
+
+        const eventDate = new Date(event.startAt);
+
+        return (
+            eventDate.getFullYear() === selectedDate.getFullYear() &&
+            eventDate.getMonth() === selectedDate.getMonth() &&
+            eventDate.getDate() === selectedDate.getDate()
+        );
+    });
 
     return (
         <>
@@ -120,15 +260,21 @@ export function CalendarPage() {
                     />
                 </div>
                 <div className="lg:col-span-2">
-                    <AvailabilityComponente />
+                    <AvailabilityComponent availabilitys={availabilitys} presences={queryPresence.data.users} onSelectedUser={handleSetUserSelected} />
                 </div>
             </div >
             <DrawerScrollableContent
                 open={openDrawer}
                 onOpenChange={handleSetOpenDrawer}
-                events={query.data.events}
+                events={eventsSelectedDay}
             />
-
+            {userSelected && (
+                <DrawerAvailabilityContent
+                    open={openUserAvailabilityDrawer}
+                    onOpenChange={handleSetOpenUserAvailabilityDrawer}
+                    userAvailability={userSelected}
+                />
+            )}
         </>
     )
 }

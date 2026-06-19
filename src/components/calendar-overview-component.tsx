@@ -1,23 +1,19 @@
 import { formatEventDate } from "@/lib/format-event-date";
 import {
-    ArrowRight,
-    CalendarClock,
+    CalendarCog,
     Clock,
     MapPin,
-    Video,
     Rocket,
-    Users,
-    CalendarCog,
     SquareArrowOutUpRight,
-    VideoIcon,
-    User
+    User,
+    Users,
+    Video,
+    VideoIcon
 } from "lucide-react";
 
-import { Card, CardContent, CardHeader } from "./ui/card";
-import { Badge } from "./ui/badge";
-import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import { Button } from "./ui/button";
-import { Avatar, AvatarBadge, AvatarFallback, AvatarGroup, AvatarGroupCount, AvatarImage } from "./ui/avatar";
+import { Card, CardContent, CardHeader } from "./ui/card";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 interface Event {
     id: string;

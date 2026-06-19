@@ -143,7 +143,7 @@ export function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
                         <DropdownMenuTrigger asChild>
                             <div className="hover:bg-card flex items-center gap-2 p-2 rounded-lg cursor-pointer">
                                 <Avatar className="h-10 w-10">
-                                    <AvatarImage src="https://avatars.githubusercontent.com/u/68699314?v=4" />
+                                    <AvatarImage src={`${user?.logo}`} />
                                     <AvatarFallback>CN</AvatarFallback>
                                 </Avatar>
 
@@ -152,7 +152,7 @@ export function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
                                         <div className="flex flex-col">
                                             <span className="text-sm">{user?.name}</span>
                                             <span className="text-[.7rem] text-muted-foreground">
-                                                Admin
+                                                {user?.roleDescription}
                                             </span>
                                         </div>
                                         <ChevronRight />

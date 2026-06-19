@@ -15,6 +15,8 @@ interface LoginResponse {
     user: {
         email: string
         name: string,
+        roleDescription: string
+        logo: string | null
         roles: string[]
         permissions: string[]
     }
