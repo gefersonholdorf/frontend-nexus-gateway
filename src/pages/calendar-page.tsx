@@ -7,8 +7,41 @@ import { Card } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useUser } from "@/contexts/user-context"
 import { useQuery } from "@tanstack/react-query"
-import { Calendar1Icon } from "lucide-react"
+import { Calendar1Icon, Clock, Coffee, Video } from "lucide-react"
 import { useState } from "react"
+
+export const calendarSummary = [
+    {
+        title: "Reuniões Hoje",
+        value: "5",
+        icon: Video,
+        colorText: 'text-blue-500'
+    },
+    {
+        title: "Horas Agendadas",
+        value: "5H",
+        icon: Clock,
+        colorText: 'text-amber-500'
+    },
+    {
+        title: "Tempo Livre",
+        value: "4H",
+        icon: Coffee,
+        colorText: 'text-purple-500'
+    },
+    {
+        title: "Tempo Livre",
+        value: "4H",
+        icon: Coffee,
+        colorText: 'text-purple-500'
+    },
+    {
+        title: "Tempo Livre",
+        value: "4H",
+        icon: Coffee,
+        colorText: 'text-purple-500'
+    }
+]
 
 interface CalendarResponse {
     events:
@@ -20,11 +53,13 @@ interface CalendarResponse {
         organizer: {
             name: string,
             email: string
+            logo?: string | null
         },
         attendees:
         {
             name: string,
             email: string,
+            logo?: string | null
             response: string
         }[],
         isOnline: boolean,
@@ -249,7 +284,24 @@ export function CalendarPage() {
                     </div>
                 </div>
             </div>
-            <div className="flex-1 border grid grid-cols-1 lg:grid-cols-6 gap-6 pt-6 mb-6 px-16">
+            <div className="grid grid-cols 1 lg:grid-cols-5 gap-6 pt-6 mb-6 px-16">
+                {calendarSummary.map((item) => (
+                    <div
+                        key={item.title}
+                        className="flex flex-col items-center justify-center border border-border rounded-lg shadow-lg transition-all duration-300 transform hover:scale-[1.01]
+                                    hover:shadow-lg p-2 gap-1 bg-(image:--background-gradient)"
+                    >
+                        <div className="flex items-center gap-2">
+                            <div className={`${item.colorText} p-2 rounded-lg border border-border bg-card`}>
+                                <item.icon className="size-4" />
+                            </div>
+                            <span className="text-primary-text font-bold text-[1.1rem]">{item.value}</span>
+                        </div>
+                        <span className="text-[.8rem] text-muted-foreground">{item.title}</span>
+                    </div>
+                ))}
+            </div>
+            <div className="flex-1 grid grid-cols-1 lg:grid-cols-6 gap-6 px-16">
                 <div className="lg:col-span-4">
                     <Calendar
                         selected={selectedDate}

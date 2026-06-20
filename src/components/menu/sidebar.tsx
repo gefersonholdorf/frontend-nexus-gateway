@@ -1,32 +1,14 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuGroup,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
-import { useUser } from "@/contexts/user-context";
 import {
     ChevronLeft,
     ChevronRight,
-    History,
-    LogOut,
     Menu,
-    UserPen,
-    X,
+    X
 } from "lucide-react";
 
 import { useState } from "react";
-import { useNavigate } from "react-router";
 
-import { EditUserModal } from "../modals/edit-user-modal";
-import { UpdatePasswordModal } from "../modals/change-user-modal";
-import { sidebarModules } from "./sidebar-module";
 import { SidebarItem } from "./sidebar-item";
+import { sidebarModules } from "./sidebar-module";
 
 interface SidebarProps {
     collapsed: boolean;
@@ -35,15 +17,9 @@ interface SidebarProps {
 
 export function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
     const [mobileOpen, setMobileOpen] = useState(false);
-    const { user } = useUser();
-    const navigate = useNavigate();
-
-    const [editProfileOpen, setEditProfileOpen] = useState(false);
-    const [editPasswordOpen, setEditPasswordOpen] = useState(false);
 
     return (
         <>
-            {/* BOTÃO MOBILE */}
             <button
                 onClick={() => setMobileOpen(true)}
                 className="fixed left-4 top-4 z-50 rounded-lg bg-background p-2 text-primary-text lg:hidden"
@@ -136,90 +112,14 @@ export function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
                         ))}
                     </nav>
                 </div>
-
-                {/* USER AREA */}
-                <div className="shrink-0 border-t border-border p-4">
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <div className="hover:bg-card flex items-center gap-2 p-2 rounded-lg cursor-pointer">
-                                <Avatar className="h-10 w-10">
-                                    <AvatarImage src={`${user?.logo}`} />
-                                    <AvatarFallback>CN</AvatarFallback>
-                                </Avatar>
-
-                                {!collapsed && (
-                                    <div className="flex w-full justify-between items-center">
-                                        <div className="flex flex-col">
-                                            <span className="text-sm">{user?.name}</span>
-                                            <span className="text-[.7rem] text-muted-foreground">
-                                                {user?.roleDescription}
-                                            </span>
-                                        </div>
-                                        <ChevronRight />
-                                    </div>
-                                )}
-                            </div>
-                        </DropdownMenuTrigger>
-
-                        <DropdownMenuContent className="bg-background text-primary-text">
-                            <DropdownMenuGroup>
-                                <DropdownMenuLabel>Ações</DropdownMenuLabel>
-
-                                <DropdownMenuItem
-                                    onSelect={(e) => {
-                                        e.preventDefault();
-                                        setEditProfileOpen(true);
-                                    }}
-                                >
-                                    <UserPen size={16} />
-                                    Editar Perfil
-                                </DropdownMenuItem>
-
-                                <DropdownMenuItem
-                                    onSelect={(e) => {
-                                        e.preventDefault();
-                                        setEditPasswordOpen(true);
-                                    }}
-                                >
-                                    <History size={16} />
-                                    Alterar Senha
-                                </DropdownMenuItem>
-
-                                <DropdownMenuSeparator />
-
-                                <DropdownMenuItem onClick={() => navigate("/")}>
-                                    <LogOut className="text-red-500" size={16} />
-                                    Sair do Sistema
-                                </DropdownMenuItem>
-                            </DropdownMenuGroup>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-
-                    {!collapsed && (
+                {!collapsed && (
+                    <div className="w-full items-center justify-center p-3">
                         <span className="text-[.75rem] text-muted-foreground">
                             © 2026 - Desenvolvido por Geferson
                         </span>
-                    )}
-                </div>
+                    </div>
+                )}
             </aside>
-
-            {/* MODALS */}
-            <EditUserModal
-                open={editProfileOpen}
-                onOpenChange={setEditProfileOpen}
-                user={{
-                    name: "Geferson Holdorf",
-                    email: "geferson@lusati.com.br",
-                    username: "gholdorf",
-                    id: 1,
-                }}
-            />
-
-            <UpdatePasswordModal
-                userId={1}
-                open={editPasswordOpen}
-                onOpenChange={setEditPasswordOpen}
-            />
         </>
     );
 }

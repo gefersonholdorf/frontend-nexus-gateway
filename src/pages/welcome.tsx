@@ -19,16 +19,20 @@ export function WelcomePage() {
                     <VPNStatusCard />
                 </div>
             </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <CalendarOverviewComponent />
-                <AnnouncementsComponent />
-            </div>
-
             <div>
                 <QuickAccessComponent />
             </div>
 
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                <div className="col-span-3">
+                    <CalendarOverviewComponent />
+                </div>
+                <div className="cols-span-1"></div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
+                <AnnouncementsComponent />
+            </div>
         </div>
     )
 }

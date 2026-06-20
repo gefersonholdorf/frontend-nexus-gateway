@@ -1,9 +1,9 @@
-import { Hourglass, SquareArrowOutUpRight, Ticket, TicketPercentIcon } from "lucide-react";
-import { Card, CardContent, CardHeader } from "./ui/card";
-import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
-import { Skeleton } from "./ui/skeleton";
-import { useQuery } from "@tanstack/react-query";
 import { useUser } from "@/contexts/user-context";
+import { useQuery } from "@tanstack/react-query";
+import { SquareArrowOutUpRight, Ticket, TicketIcon, XCircle } from "lucide-react";
+import { Card, CardContent, CardHeader } from "./ui/card";
+import { Skeleton } from "./ui/skeleton";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 interface TicketGLPIResponse {
     summaryTickets: {
@@ -89,40 +89,40 @@ export function GLPISummaryComponent() {
             </CardHeader>
             <CardContent className="p-6 pt-0">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                    <Card
+                    <div
                         className={`
-                                    bg-(image:--background-gradient) flex-row gap-2 rounded-lg border border-border px-6 py-5 shadow-sm transition-all duration-300 transform hover:scale-[1.01]
+                                    bg-(image:--background-gradient) flex gap-2 rounded-lg border border-border px-6 py-5 shadow-sm transition-all duration-300 transform hover:scale-[1.01]
                                     hover:shadow-lg`}
                     >
-                        <div className="w-12 h-12 rounded-md overflow-hidden flex items-center justify-center bg-card border border-border">
-                            <TicketPercentIcon className="text-primary-text size-5" />
+                        <div className="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center bg-card border border-border">
+                            <TicketIcon className="text-primary-text size-5" />
                         </div>
                         <div className="flex flex-col gap-1 justify-start">
-                            <div className="flex gap-2 items-end">
-                                <span className={`font-bold text-[1.2rem] text-primary-text`}>{query.data.summaryTickets[0].quantity}</span>
-                                <span className="text-[.9rem] font-medium text-primary-text">Chamados</span>
+                            <div className="flex gap-2 items-center">
+                                <span className={`font-bold text-[1.1rem] text-primary-text`}>{query.data.summaryTickets[0].quantity}</span>
+                                <span className="text-[.9rem] font-medium text-primary-text">Solicitações</span>
                             </div>
                             <span className="text-[.8rem] text-muted-foreground">{query.data.summaryTickets[0].category}</span>
                         </div>
-                    </Card>
+                    </div>
 
 
-                    <Card
+                    <div
                         className={`
-                                    bg-(image:--background-gradient) flex-row gap-2 rounded-lg border border-border px-6 py-5 shadow-sm transition-all duration-300 transform hover:scale-[1.01]
+                                    bg-(image:--background-gradient) flex gap-2 rounded-lg border border-border px-6 py-5 shadow-sm transition-all duration-300 transform hover:scale-[1.01]
                                     hover:shadow-lg`}
                     >
-                        <div className="w-12 h-12 rounded-md overflow-hidden flex items-center justify-center bg-card border border-border">
-                            <Hourglass className="text-primary-text size-5" />
+                        <div className="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center border border-border">
+                            <XCircle className="text-primary-text size-5" />
                         </div>
                         <div className="flex flex-col gap-1 justify-start">
-                            <div className="flex gap-2 items-end">
-                                <span className={`font-bold text-[1.2rem] text-primary-text`}>{query.data.summaryTickets[1].quantity}</span>
-                                <span className="text-[.9rem] font-medium text-primary-text">Chamados</span>
+                            <div className="flex gap-2 items-center">
+                                <span className={`font-bold text-[1.1rem] text-primary-text`}>{query.data.summaryTickets[1].quantity}</span>
+                                <span className="text-[.9rem] font-medium text-primary-text">Solicitações</span>
                             </div>
                             <span className="text-[.8rem] text-muted-foreground">{query.data.summaryTickets[1].category}</span>
                         </div>
-                    </Card>
+                    </div>
                 </div>
             </CardContent>
         </Card>
