@@ -1,5 +1,6 @@
 import { AnnouncementsComponent } from "@/components/announcements-component";
-import { CalendarOverviewComponent } from "@/components/calendar-overview-component";
+import { EventsWaitingConfirm } from "@/components/calendar/events-waiting-confirm";
+import { NextEvents } from "@/components/calendar/next-events";
 import { GLPISummaryComponent } from "@/components/glpi-summary-component";
 import { QuickAccessComponent } from "@/components/quick-access-component";
 import { QuickAccessSupportComponent } from "@/components/quick-access-support-component";
@@ -19,15 +20,16 @@ export function WelcomePage() {
                     <VPNStatusCard />
                 </div>
             </div>
-            <div>
+            <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
                 <QuickAccessComponent />
             </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                <div className="col-span-3">
-                    <CalendarOverviewComponent />
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="col-span-2">
+                    <EventsWaitingConfirm />
                 </div>
-                <div className="cols-span-1"></div>
+                <div className="col-span-1">
+                    <NextEvents />
+                </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">

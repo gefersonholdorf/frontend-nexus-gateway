@@ -4,11 +4,11 @@ import {
     DrawerClose,
     DrawerContent,
     DrawerDescription,
-    DrawerFooter,
     DrawerHeader,
     DrawerTitle,
 } from "@/components/ui/drawer";
 import { EventDetails } from "./event-details";
+import { ArrowLeftIcon } from "lucide-react";
 
 export interface Event {
     id: string;
@@ -35,12 +35,14 @@ interface DrawerScrollableContentProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     events: Event[];
+    day: string
 }
 
 export function DrawerScrollableContent({
     open,
     onOpenChange,
     events,
+    day
 }: DrawerScrollableContentProps) {
     const eventCount = events.length;
 
@@ -48,9 +50,14 @@ export function DrawerScrollableContent({
         <Drawer direction="right" open={open} onOpenChange={onOpenChange}>
             <DrawerContent className="flex h-full w-full max-w-md flex-col">
                 {/* HEADER */}
-                <DrawerHeader className="border-b bg-muted/30">
+                <DrawerHeader className="flex flex-col items-start space-y-0 gap-1 border-b border-border">
+                    <DrawerClose asChild>
+                        <Button variant="link" className="text-muted-foreground">
+                            <ArrowLeftIcon /> Voltar
+                        </Button>
+                    </DrawerClose>
                     <DrawerTitle className="text-lg font-semibold">
-                        Agenda do dia
+                        Agenda Completa do dia {day}
                     </DrawerTitle>
 
                     <DrawerDescription className="text-sm">
@@ -86,23 +93,6 @@ export function DrawerScrollableContent({
                         ))
                     )}
                 </div>
-
-                {/* FOOTER */}
-                <DrawerFooter className="border-t bg-muted/20">
-                    <div className="flex gap-2">
-                        <Button
-                            variant="outline"
-                            className="flex-1"
-                            onClick={() => onOpenChange(false)}
-                        >
-                            Fechar
-                        </Button>
-
-                        <DrawerClose asChild>
-                            <Button className="flex-1">Ok</Button>
-                        </DrawerClose>
-                    </div>
-                </DrawerFooter>
             </DrawerContent>
         </Drawer>
     );

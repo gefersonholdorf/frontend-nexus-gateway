@@ -5,30 +5,63 @@ import {
   type DayButton,
 } from "react-day-picker";
 
-import { ptBR } from "date-fns/locale";
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { ptBR } from "date-fns/locale";
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
 } from "lucide-react";
 
-/* ---------------- MOCK EVENT ---------------- */
-
-function hasEvent(date: Date) {
-  return date.getDate() % 3 === 0;
+interface EventI {
+  id: string,
+  title: string,
+  startAt: string,
+  endAt: string,
+  organizer: {
+    name: string,
+    email: string
+    logo?: string | null
+  },
+  attendees:
+  {
+    name: string,
+    email: string,
+    logo?: string | null
+    response: string
+  }[],
+  isOnline: boolean,
+  location: string,
+  webLink: string
 }
+
+/* ---------------- MOCK EVENT ---------------- */
 
 /* ---------------- CALENDAR ---------------- */
 
+function getDayEvents(date: Date, events: EventI[]) {
+  return events.filter((event) => {
+    const eventDate = new Date(event.startAt);
+
+    return (
+      eventDate.getDate() === date.getDate() &&
+      eventDate.getMonth() === date.getMonth() &&
+      eventDate.getFullYear() === date.getFullYear()
+    );
+  });
+}
+
 function Calendar({
   className,
+  events,
   classNames,
   showOutsideDays = true,
   locale = ptBR,
   components,
   ...props
-}: React.ComponentProps<typeof DayPicker>) {
+}: React.ComponentProps<typeof DayPicker> & {
+  events: EventI[]
+}) {
   const base = getDefaultClassNames();
 
   return (
@@ -161,7 +194,12 @@ function Calendar({
             </div>
           ),
 
-          DayButton: CalendarDayButton,
+          DayButton: (props) => (
+            <CalendarDayButton
+              {...props}
+              events={events}
+            />
+          ),
 
           ...components,
         }}
@@ -173,12 +211,18 @@ function Calendar({
 
 /* ---------------- DAY BUTTON ---------------- */
 
+interface CalendarDayButtonProps
+  extends React.ComponentProps<typeof DayButton> {
+  events: EventI[];
+}
+
 function CalendarDayButton({
   day,
   modifiers,
+  events,
   className,
   ...props
-}: React.ComponentProps<typeof DayButton>) {
+}: CalendarDayButtonProps) {
   const ref = React.useRef<HTMLButtonElement>(null);
 
   React.useEffect(() => {
@@ -187,7 +231,7 @@ function CalendarDayButton({
     }
   }, [modifiers.focused]);
 
-  const event = hasEvent(day.date);
+  const dayEvents = getDayEvents(day.date, events);
 
   const isSelected =
     modifiers.selected &&
@@ -203,6 +247,7 @@ function CalendarDayButton({
       data-selected={isSelected}
       className={cn(
         `
+        relative
         w-full
         h-full
         rounded-none
@@ -229,10 +274,66 @@ function CalendarDayButton({
         {day.date.getDate()}
       </span>
 
-      {event && (
-        <span className="absolute bottom-1 left-1">
-          <span className="h-1.5 w-1.5 rounded-full bg-blue-500" />
-        </span>
+      {dayEvents.length > 0 && (
+        <div className="absolute bottom-1 left-1/2 flex -translate-x-1/2 items-center gap-1">
+          {dayEvents.length <= 4 ? (
+            dayEvents.map((event) => (
+              <div
+                key={event.id}
+                title={event.title}
+                className="
+            h-2.5
+            w-2.5
+            rounded-full
+            bg-blue-500
+            cursor-pointer
+            transition-all
+            hover:scale-125
+            hover:bg-blue-400
+          "
+              />
+            ))
+          ) : (
+            <>
+              {dayEvents.slice(0, 3).map((event) => (
+                <div
+                  key={event.id}
+                  title={event.title}
+                  className="
+              h-2.5
+              w-2.5
+              rounded-full
+              bg-blue-500
+              cursor-pointer
+              transition-all
+              hover:scale-125
+              hover:bg-blue-400
+            "
+                />
+              ))}
+
+              <div
+                title={`${dayEvents.length} eventos`}
+                className="
+            flex
+            items-center
+            justify-center
+            min-w-4
+            h-4
+            px-1
+            rounded-full
+            bg-primary
+            text-[9px]
+            font-semibold
+            text-primary-foreground
+            cursor-pointer
+          "
+              >
+                +{dayEvents.length - 3}
+              </div>
+            </>
+          )}
+        </div>
       )}
     </Button>
   );

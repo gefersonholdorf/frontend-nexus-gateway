@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useUser } from "@/contexts/user-context"
 import { useQuery } from "@tanstack/react-query"
+import { formatDate } from "date-fns"
 import { Calendar1Icon, Clock, Coffee, Video } from "lucide-react"
 import { useState } from "react"
 
@@ -114,18 +115,32 @@ export function CalendarPage() {
     const [openUserAvailabilityDrawer, setOpenUserAvailabilityDrawer] = useState(false);
     const [userSelected, setUserSelected] = useState<Availability | null>(null)
 
-    const [startDate, setStartDate] = useState<string>(
-        "2026-06-01T00:00:00.000Z"
-    )
+    const [month, setMonth] = useState(new Date());
 
-    const [endDate, setEndDate] = useState<string>(
-        "2026-06-30T23:59:59.999Z"
-    )
+    const startDate = new Date(
+        month.getFullYear(),
+        month.getMonth(),
+        1,
+        0,
+        0,
+        0,
+        0
+    ).toISOString();
+
+    const endDate = new Date(
+        month.getFullYear(),
+        month.getMonth() + 1,
+        0,
+        23,
+        59,
+        59,
+        999
+    ).toISOString();
 
     const { user } = useUser()
 
     const query = useQuery({
-        queryKey: ["calendar"],
+        queryKey: ["calendar", startDate, endDate],
         queryFn: async () => {
             const response = await fetch(`${import.meta.env.VITE_API_URL}/calendar?startDate=${startDate}&endDate=${endDate}`, {
                 method: "GET",
@@ -307,19 +322,24 @@ export function CalendarPage() {
                         selected={selectedDate}
                         onSelect={handleDaySelect}
                         mode="single"
-                        captionLayout="dropdown"
+                        month={month}
+                        onMonthChange={setMonth}
                         className="rounded-lg border"
+                        events={query.data.events}
                     />
                 </div>
                 <div className="lg:col-span-2">
                     <AvailabilityComponent availabilitys={availabilitys} presences={queryPresence.data.users} onSelectedUser={handleSetUserSelected} />
                 </div>
             </div >
-            <DrawerScrollableContent
-                open={openDrawer}
-                onOpenChange={handleSetOpenDrawer}
-                events={eventsSelectedDay}
-            />
+            {selectedDate && (
+                <DrawerScrollableContent
+                    open={openDrawer}
+                    onOpenChange={handleSetOpenDrawer}
+                    events={eventsSelectedDay}
+                    day={formatDate(selectedDate, 'dd/MM/yyyy') ?? ''}
+                />
+            )}
             {userSelected && (
                 <DrawerAvailabilityContent
                     open={openUserAvailabilityDrawer}
