@@ -2,36 +2,49 @@ import { useUser } from "@/contexts/user-context";
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "./ui/card";
 import { Clock, Coffee, Video } from "lucide-react";
-
-export const calendarSummary = [
-    {
-        title: "Reuniões Hoje",
-        value: "5",
-        icon: Video,
-        colorText: 'text-blue-500'
-    },
-    {
-        title: "Horas Agendadas",
-        value: "5H",
-        icon: Clock,
-        colorText: 'text-amber-500'
-    },
-    {
-        title: "Tempo Livre",
-        value: "4H",
-        icon: Coffee,
-        colorText: 'text-purple-500'
-    }
-]
+import { useGetSummaryEvents } from "@/api/calendar/get-summary-events";
+import { Skeleton } from "./ui/skeleton";
 
 export function WelcomeCard() {
     const [now, setNow] = useState(new Date());
     const { user } = useUser()
+    const { data, isLoading } = useGetSummaryEvents({ type: 'user' })
 
     useEffect(() => {
         const timer = setInterval(() => setNow(new Date()), 1000);
         return () => clearInterval(timer);
     }, []);
+
+    if (isLoading) {
+        return (
+            <Card className="h-80 rounded-sm">
+                <Skeleton className="h-full w-full rounded-sm" />
+            </Card>
+        );
+    }
+
+    if (!data) return null;
+
+    const calendarSummary = [
+        {
+            title: "Reuniões Hoje",
+            value: data.summary.meetingsToday.toString(),
+            icon: Video,
+            colorText: "text-blue-500",
+        },
+        {
+            title: "Horas Agendadas",
+            value: `${data.summary.scheduledHoursToday.toFixed(1)}h`,
+            icon: Clock,
+            colorText: "text-amber-500",
+        },
+        {
+            title: "Tempo Livre",
+            value: `${data.summary.freeHoursToday.toFixed(1)}h`,
+            icon: Coffee,
+            colorText: "text-purple-500",
+        },
+    ];
 
     const getGreeting = () => {
         const hour = now.getHours();

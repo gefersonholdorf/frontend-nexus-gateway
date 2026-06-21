@@ -118,13 +118,12 @@ export function AvailabilityComponent({
     return (
         <Card
             className="
-                h-fit
                 w-full
-                rounded-2xl
                 border
                 border-border
                 bg-(image:--background-gradient)
                 shadow-lg
+                rounded-lg
                 transition-all
                 duration-300
                 hover:shadow-xl

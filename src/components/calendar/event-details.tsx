@@ -223,7 +223,7 @@ export function EventDetails({ event }: Props) {
                     </div>
                 </div>
                 {openAttendanceList && (
-                    <div className="mt-4 rounded-xl border border-border bg-(image:--background-gradient) p-4">
+                    <div className="mt-4 rounded-xl border border-border bg-(image:--background-gradient) p-4 text-[.8rem]">
 
                         <div className="mb-4 flex items-center justify-between">
                             <div>

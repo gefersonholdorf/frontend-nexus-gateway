@@ -12,6 +12,13 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
 } from "lucide-react";
+import { Card } from "./card";
+
+import { format } from "date-fns";
+
+function formatHour(date: string) {
+  return format(new Date(date), "HH:mm");
+}
 
 interface EventI {
   id: string,
@@ -65,16 +72,18 @@ function Calendar({
   const base = getDefaultClassNames();
 
   return (
-    <div
+    <Card
       className={cn(
         `
-        bg-(image:--background-gradient)
+        bg-(image:--background-gradient) p-0
         backdrop-blur
         text-primary-text
         border border-border
         shadow-lg
-        rounded-2xl
         overflow-hidden
+        transition-all
+        duration-300
+        hover:shadow-xl
         `,
         className
       )}
@@ -83,11 +92,10 @@ function Calendar({
         showOutsideDays={showOutsideDays}
         locale={locale}
         className="p-4"
-        captionLayout="label"
+        captionLayout="dropdown"
         hideNavigation={false}
         classNames={{
           root: cn("w-full", base.root),
-
           months: "w-full",
           month: "w-full",
           month_grid: "w-full",
@@ -109,12 +117,15 @@ function Calendar({
           `,
 
           nav: `
-            absolute
-            inset-0
-            flex
-            items-center
-            justify-between
-          `,
+  absolute
+  top-2
+  left-0
+  right-0
+  flex
+  items-start
+  justify-between
+  px-2
+`,
 
           button_previous: `
             h-9
@@ -149,25 +160,14 @@ function Calendar({
           week: "grid grid-cols-7",
 
           day: `
-            relative
-            aspect-square
-            border
-            border-border/40
-            bg-background/40
-            hover:bg-muted/40
-            transition
-          `,
+  relative
+  min-h-[110px]
+  border
+  border-border/40
+  bg-background/40
+`,
 
-          today: `
-            after:absolute
-            after:bottom-1
-            after:left-1/2
-            after:-translate-x-1/2
-            after:h-1
-            after:w-1
-            after:rounded-full
-            after:bg-primary
-          `,
+          today: '',
 
           outside: "text-muted-foreground/40",
           disabled: "opacity-30",
@@ -205,7 +205,7 @@ function Calendar({
         }}
         {...props}
       />
-    </div>
+    </Card>
   );
 }
 
@@ -239,6 +239,8 @@ function CalendarDayButton({
     !modifiers.range_end &&
     !modifiers.range_middle;
 
+  const isToday = modifiers.today;
+
   return (
     <Button
       ref={ref}
@@ -247,91 +249,96 @@ function CalendarDayButton({
       data-selected={isSelected}
       className={cn(
         `
-        relative
-        w-full
-        h-full
-        rounded-none
-        flex
-        items-start
-        justify-start
-        p-1
-        text-sm
-        font-medium
+  relative
+  w-full
+  h-full
+  rounded-none
+  flex
+  items-start
+  justify-start
+  p-1
+  text-sm
+  font-medium
 
-        hover:bg-muted/50
+  hover:bg-muted/50
 
-        data-[selected=true]:bg-primary
-        data-[selected=true]:text-primary-foreground
+  data-[selected=true]:bg-primary/10
+  data-[selected=true]:text-primary-foreground
 
-        focus-visible:ring-2
-        focus-visible:ring-primary/30
-        `,
+  focus-visible:ring-2
+  focus-visible:ring-primary/30
+  `,
+        isToday &&
+        !isSelected &&
+        "bg-primary/10",
         className
       )}
       {...props}
     >
-      <span className="text-xs">
+      <span
+        className={cn(
+          "flex h-6 w-6 items-center justify-center rounded-full text-xs transition-colors",
+          isToday &&
+          !isSelected &&
+          "bg-primary text-primary-foreground font-semibold",
+          isSelected &&
+          "bg-primary-foreground text-primary font-semibold"
+        )}
+      >
         {day.date.getDate()}
       </span>
 
       {dayEvents.length > 0 && (
-        <div className="absolute bottom-1 left-1/2 flex -translate-x-1/2 items-center gap-1">
-          {dayEvents.length <= 4 ? (
-            dayEvents.map((event) => (
-              <div
-                key={event.id}
-                title={event.title}
-                className="
-            h-2.5
-            w-2.5
-            rounded-full
-            bg-blue-500
-            cursor-pointer
-            transition-all
-            hover:scale-125
-            hover:bg-blue-400
-          "
-              />
-            ))
-          ) : (
-            <>
-              {dayEvents.slice(0, 3).map((event) => (
-                <div
-                  key={event.id}
-                  title={event.title}
-                  className="
-              h-2.5
-              w-2.5
-              rounded-full
-              bg-blue-500
-              cursor-pointer
-              transition-all
-              hover:scale-125
-              hover:bg-blue-400
-            "
-                />
-              ))}
+        <div
+          className="
+      absolute
+      top-8
+      left-1
+      right-1
+      flex
+      flex-col
+      gap-1
+    "
+        >
+          {dayEvents.slice(0, 2).map((event) => (
+            <div
+              key={event.id}
+              className="
+          flex
+          items-center
+          gap-1
+          rounded-md
+          px-1
+          py-0.5
+          bg-primary/5
+          hover:bg-primary/10
+          text-[10px]
+          truncate
+        "
+              title={event.title}
+            >
+              <div className="h-2 w-2 rounded-full bg-blue-500 shrink-0" />
 
-              <div
-                title={`${dayEvents.length} eventos`}
-                className="
-            flex
-            items-center
-            justify-center
-            min-w-4
-            h-4
-            px-1
-            rounded-full
-            bg-primary
-            text-[9px]
-            font-semibold
-            text-primary-foreground
-            cursor-pointer
-          "
-              >
-                +{dayEvents.length - 3}
-              </div>
-            </>
+              <span className="font-medium shrink-0">
+                {formatHour(event.startAt)}
+              </span>
+
+              <span className="truncate">
+                {event.title}
+              </span>
+            </div>
+          ))}
+
+          {dayEvents.length > 2 && (
+            <span
+              className="
+          text-[10px]
+          text-muted-foreground
+          px-1
+        "
+            >
+              +{dayEvents.length - 2} eventos
+            </span>
           )}
         </div>
       )}

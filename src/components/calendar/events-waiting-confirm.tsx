@@ -44,9 +44,12 @@ export function EventsWaitingConfirm() {
         return null;
     }
     return (
-        <Card className="
-                h-102 w-full rounded-2xl border border-border bg-(image:--background-gradient) shadow-lg transition-all duration-300 hover:shadow-xl
-            "
+        <Card
+            className="
+        h-102 w-full rounded-2xl border border-border
+        bg-(image:--background-gradient)
+        shadow-lg transition-all duration-300 hover:shadow-xl
+    "
         >
             <CardHeader className="pb-2">
                 <div className="flex items-center gap-3">
@@ -65,105 +68,157 @@ export function EventsWaitingConfirm() {
                     </div>
                 </div>
             </CardHeader>
-            <CardContent className="p-6 pt-0 space-y-4">
-                {data && data.events.length ? (
+
+            <CardContent className="flex-1 space-y-4 overflow-y-auto sidebar-scroll">
+                {data?.events?.length ? (
                     data.events.map((item) => (
                         <Card
                             key={item.id}
-                            className="grid grid-cols-1 lg:grid-cols-3 gap-4 p-4 space-y-1 rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl bg-(image:--background-gradient) border-l-2 border-blue-500"
+                            className="
+                        grid grid-cols-1 lg:grid-cols-3
+                        gap-4 p-4 rounded-lg
+                        shadow-lg transition-all duration-300
+                        hover:shadow-xl
+                        bg-(image:--background-gradient)
+                        border-l-2 border-blue-500
+                    "
                         >
                             <div className="col-span-2 flex flex-col gap-3">
-                                <span className="text-primary-text font-semibold">{item.title}</span>
-                                <div className="flex items-start gap-4">
-                                    <div className="text-[.8rem] text-muted-foreground flex items-center gap-1">
+                                <span className="font-semibold text-primary-text">
+                                    {item.title}
+                                </span>
+
+                                <div className="flex flex-wrap items-start gap-4">
+                                    <div className="flex items-center gap-1 text-[.8rem] text-muted-foreground">
                                         <Clock className="size-3.5" />
-                                        <span>{formatDateEvent(item.startAt, item.endAt)}</span>
+                                        <span>
+                                            {(
+                                                item.startAt,
+                                                item.endAt
+                                            )}
+                                        </span>
                                     </div>
+
                                     {item.location && (
-                                        <div className="text-[.8rem] text-muted-foreground flex items-center gap-1">
+                                        <div className="flex items-center gap-1 text-[.8rem] text-muted-foreground">
                                             <Pin className="size-3.5" />
                                             <span>{item.location}</span>
                                         </div>
                                     )}
                                 </div>
-                                <div className="flex items-start gap-4">
-                                    <AvatarGroup className="">
-                                        {item.attendees.slice(0, 4).map((a) => (
 
-                                            <Tooltip>
-                                                <TooltipTrigger>
+                                <div className="flex items-start gap-4">
+                                    <AvatarGroup>
+                                        {item.attendees.slice(0, 4).map((a) => (
+                                            <Tooltip key={a.email}>
+                                                <TooltipTrigger asChild>
                                                     <div className="relative">
                                                         <Avatar
-                                                            key={a.email}
                                                             className={cn(
-                                                                "h-8 w-8 flex items-center justify-center p-[.10rem]",
+                                                                "h-8 w-8 p-[.10rem]",
                                                                 a.response === "accepted" &&
                                                                 "bg-emerald-500",
                                                                 a.response === "declined" &&
                                                                 "bg-red-500",
-                                                                a.response === "tentativelyAccepted" &&
+                                                                a.response ===
+                                                                "tentativelyAccepted" &&
                                                                 "bg-amber-500",
-                                                                a.response === "notResponded" &&
-                                                                "bg-gray-400",
-                                                                a.response === "none" &&
-                                                                "bg-gray-500",
+                                                                (a.response ===
+                                                                    "notResponded" ||
+                                                                    a.response ===
+                                                                    "none") &&
+                                                                "bg-gray-500"
                                                             )}
                                                         >
-                                                            <AvatarImage src={`${a.logo}`} alt="@shadcn" />
-                                                            <AvatarFallback>{a.name[0]}</AvatarFallback>
+                                                            <AvatarImage
+                                                                src={a.logo ?? ""}
+                                                            />
+                                                            <AvatarFallback>
+                                                                {a.name[0]}
+                                                            </AvatarFallback>
                                                         </Avatar>
 
                                                         <div
                                                             className={cn(
                                                                 "absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-background",
-                                                                a.response === "accepted" &&
+                                                                a.response ===
+                                                                "accepted" &&
                                                                 "bg-emerald-500",
-                                                                a.response === "declined" &&
+                                                                a.response ===
+                                                                "declined" &&
                                                                 "bg-red-500",
-                                                                a.response === "tentativelyAccepted" &&
+                                                                a.response ===
+                                                                "tentativelyAccepted" &&
                                                                 "bg-amber-500",
-                                                                a.response === "notResponded" &&
-                                                                "bg-gray-400",
-                                                                a.response === "none" &&
-                                                                "bg-gray-500",
+                                                                (a.response ===
+                                                                    "notResponded" ||
+                                                                    a.response ===
+                                                                    "none") &&
+                                                                "bg-gray-500"
                                                             )}
                                                         />
                                                     </div>
                                                 </TooltipTrigger>
+
                                                 <TooltipContent>
                                                     <span>
                                                         {a.name} -
-                                                        {a.response === 'none' && ' Não respondeu'}
-                                                        {a.response === 'accepted' && ' Aceitou'}
-                                                        {a.response === 'declined' && ' Recusou'}
+                                                        {a.response === "none" &&
+                                                            " Não respondeu"}
+                                                        {a.response === "accepted" &&
+                                                            " Aceitou"}
+                                                        {a.response === "declined" &&
+                                                            " Recusou"}
+                                                        {a.response ===
+                                                            "tentativelyAccepted" &&
+                                                            " Talvez"}
                                                     </span>
                                                 </TooltipContent>
                                             </Tooltip>
                                         ))}
 
                                         {item.attendees.length > 4 && (
-                                            <AvatarGroupCount className="bg-card">+{item.attendees.length - 4}</AvatarGroupCount>
+                                            <AvatarGroupCount className="bg-card">
+                                                +{item.attendees.length - 4}
+                                            </AvatarGroupCount>
                                         )}
                                     </AvatarGroup>
-                                    <div className="text-[.8rem] text-muted-foreground flex items-center gap-1">
-                                        <span className="max-w-50 line-clamp-2">Organizado por <span className="text-primary-text font-semibold">{item.organizer.name} </span>e mais {item.attendees.length} participantes</span>
+
+                                    <div className="flex items-center gap-1 text-[.8rem] text-muted-foreground">
+                                        <span className="max-w-50 line-clamp-2">
+                                            Organizado por{" "}
+                                            <span className="font-semibold text-primary-text">
+                                                {item.organizer.name}
+                                            </span>{" "}
+                                            e mais {item.attendees.length} participantes
+                                        </span>
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-span-1 flex flex-col gap-4">
+
+                            <div className="col-span-1 flex flex-col gap-3">
                                 <ConfirmEventModal event={item}>
-                                    <Button variant="default" className="bg-emerald-500 hover:bg-emerald-600"><CircleCheck /> Aceitar</Button>
+                                    <Button className="bg-emerald-500 hover:bg-emerald-600">
+                                        <CircleCheck />
+                                        Aceitar
+                                    </Button>
                                 </ConfirmEventModal>
-                                <Button variant="outline"><CircleX /> Recusar</Button>
+
+                                <Button variant="outline">
+                                    <CircleX />
+                                    Recusar
+                                </Button>
                             </div>
                         </Card>
                     ))
                 ) : (
-                    <div className="flex h-28 flex-col items-center justify-center gap-2 text-center">
+                    <div className="flex h-full flex-col items-center justify-center gap-2 text-center">
                         <CalendarCheck className="size-8 text-muted-foreground/50" />
+
                         <p className="text-sm font-medium text-muted-foreground">
                             Nenhuma pendência encontrada
                         </p>
+
                         <p className="text-xs text-muted-foreground/70">
                             Todos os convites foram respondidos.
                         </p>

@@ -1,3 +1,4 @@
+import { useGetSummaryEvents } from "@/api/calendar/get-summary-events"
 import { BackComponent } from "@/components/back-component"
 import { AvailabilityComponent, type Availability } from "@/components/calendar/availability-component"
 import { DrawerAvailabilityContent } from "@/components/calendar/drawer-availability"
@@ -8,41 +9,8 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { useUser } from "@/contexts/user-context"
 import { useQuery } from "@tanstack/react-query"
 import { formatDate } from "date-fns"
-import { Calendar1Icon, Clock, Coffee, Video } from "lucide-react"
+import { Calendar1Icon, Clock, TrendingUp, User, Users, Video } from "lucide-react"
 import { useState } from "react"
-
-export const calendarSummary = [
-    {
-        title: "Reuniões Hoje",
-        value: "5",
-        icon: Video,
-        colorText: 'text-blue-500'
-    },
-    {
-        title: "Horas Agendadas",
-        value: "5H",
-        icon: Clock,
-        colorText: 'text-amber-500'
-    },
-    {
-        title: "Tempo Livre",
-        value: "4H",
-        icon: Coffee,
-        colorText: 'text-purple-500'
-    },
-    {
-        title: "Tempo Livre",
-        value: "4H",
-        icon: Coffee,
-        colorText: 'text-purple-500'
-    },
-    {
-        title: "Tempo Livre",
-        value: "4H",
-        icon: Coffee,
-        colorText: 'text-purple-500'
-    }
-]
 
 interface CalendarResponse {
     events:
@@ -193,6 +161,20 @@ export function CalendarPage() {
         refetchInterval: 30000,
     });
 
+    const { data: summary, isLoading: isLoadingSummary } = useGetSummaryEvents({ type: 'full', startDate, endDate })
+
+    if (isLoadingSummary) {
+        return (
+            <Card className="h-52 p-0">
+                <Skeleton className="h-full bg-gray-100" />
+            </Card>
+        );
+    }
+
+    if (!summary) {
+        return null;
+    }
+
     if (query.isLoading) {
         return (
             <Card className="h-52 p-0">
@@ -284,6 +266,39 @@ export function CalendarPage() {
         );
     });
 
+    const calendarSummary = [
+        {
+            title: "Reuniões",
+            value: summary.summary.meetingsToday,
+            icon: Video,
+            colorText: "text-blue-500",
+        },
+        {
+            title: "Horas Agendadas",
+            value: `${summary.summary.scheduledHoursToday}h`,
+            icon: Clock,
+            colorText: "text-amber-500",
+        },
+        {
+            title: "Presencial",
+            value: summary.summary.presencialMeetings,
+            icon: User,
+            colorText: "text-emerald-500",
+        },
+        {
+            title: "Online",
+            value: summary.summary.onlineMeetings,
+            icon: Video,
+            colorText: "text-emerald-500",
+        },
+        {
+            title: "Participantes",
+            value: summary.summary.uniqueAttendees,
+            icon: Users,
+            colorText: "text-purple-500",
+        },
+    ];
+
     return (
         <>
 
@@ -301,7 +316,7 @@ export function CalendarPage() {
             </div>
             <div className="grid grid-cols 1 lg:grid-cols-5 gap-6 pt-6 mb-6 px-16">
                 {calendarSummary.map((item) => (
-                    <div
+                    <Card
                         key={item.title}
                         className="flex flex-col items-center justify-center border border-border rounded-lg shadow-lg transition-all duration-300 transform hover:scale-[1.01]
                                     hover:shadow-lg p-2 gap-1 bg-(image:--background-gradient)"
@@ -313,11 +328,11 @@ export function CalendarPage() {
                             <span className="text-primary-text font-bold text-[1.1rem]">{item.value}</span>
                         </div>
                         <span className="text-[.8rem] text-muted-foreground">{item.title}</span>
-                    </div>
+                    </Card>
                 ))}
             </div>
-            <div className="flex-1 grid grid-cols-1 lg:grid-cols-6 gap-6 px-16">
-                <div className="lg:col-span-4">
+            <div className="flex-1 grid grid-cols-1 lg:grid-cols-6 gap-6 px-16 pb-8">
+                <div className="h-full lg:col-span-4">
                     <Calendar
                         selected={selectedDate}
                         onSelect={handleDaySelect}
@@ -328,7 +343,7 @@ export function CalendarPage() {
                         events={query.data.events}
                     />
                 </div>
-                <div className="lg:col-span-2">
+                <div className="h-full lg:col-span-2">
                     <AvailabilityComponent availabilitys={availabilitys} presences={queryPresence.data.users} onSelectedUser={handleSetUserSelected} />
                 </div>
             </div >

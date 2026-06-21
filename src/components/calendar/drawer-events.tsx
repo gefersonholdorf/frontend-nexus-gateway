@@ -48,7 +48,7 @@ export function DrawerScrollableContent({
 
     return (
         <Drawer direction="right" open={open} onOpenChange={onOpenChange}>
-            <DrawerContent className="flex h-full w-full max-w-md flex-col">
+            <DrawerContent className="flex h-full w-full max-w-md flex-col overflow-y-auto sidebar-scroll">
                 {/* HEADER */}
                 <DrawerHeader className="flex flex-col items-start space-y-0 gap-1 border-b border-border">
                     <DrawerClose asChild>

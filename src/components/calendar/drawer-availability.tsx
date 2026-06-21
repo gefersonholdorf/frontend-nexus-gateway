@@ -166,7 +166,7 @@ export function DrawerAvailabilityContent({
 
     return (
         <Drawer open={open} onOpenChange={onOpenChange} direction="right">
-            <DrawerContent className="max-w-xl ml-auto">
+            <DrawerContent className="max-w-xl ml-auto overflow-y-scroll sidebar-scroll">
                 <DrawerHeader className="flex flex-col items-start space-y-0 gap-1">
                     <DrawerClose asChild>
                         <Button variant="link" className="text-muted-foreground">
