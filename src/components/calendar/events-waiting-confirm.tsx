@@ -1,6 +1,6 @@
 import { useGetEventsWaitingConfirm } from "@/api/calendar/get-events-waiting-confirm";
 import { cn } from "@/lib/utils";
-import { format, isToday, isYesterday } from "date-fns";
+import { format, formatDate, isToday, isYesterday } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { CalendarCheck, CalendarClock, CircleCheck, CircleX, Clock, Pin } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarGroup, AvatarGroupCount, AvatarImage } from "../ui/avatar";
@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader } from "../ui/card";
 import { Skeleton } from "../ui/skeleton";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { ConfirmEventModal } from "./modal/confirm-event-modal";
+import { subHours } from "date-fns";
 
 export function formatDateEvent(startDate: string, endDate: string) {
     const startDateForm = new Date(startDate);
@@ -92,10 +93,9 @@ export function EventsWaitingConfirm() {
                                     <div className="flex items-center gap-1 text-[.8rem] text-muted-foreground">
                                         <Clock className="size-3.5" />
                                         <span>
-                                            {(
-                                                item.startAt,
-                                                item.endAt
-                                            )}
+                                            {formatDate(subHours(new Date(item.startAt), 3), 'dd/MM/yyyy - HH:mm')}
+                                            :
+                                            {formatDate(subHours(new Date(item.endAt), 3), 'HH:mm')}
                                         </span>
                                     </div>
 

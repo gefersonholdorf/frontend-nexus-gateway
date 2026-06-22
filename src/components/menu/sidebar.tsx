@@ -49,7 +49,7 @@ export function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
                 `}
             >
                 {/* HEADER */}
-                <div className="shrink-0">
+                <div className="shrink-0 mt-20">
                     <div className="flex h-16 items-center justify-between border-b border-border px-4">
                         <div className="flex items-center gap-2">
                             {/* <div className="w-8 h-8 rounded-md bg-primary/20 flex items-center justify-center font-bold text-primary">

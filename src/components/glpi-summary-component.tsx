@@ -65,7 +65,7 @@ export function GLPISummaryComponent() {
 
                     <div>
                         <h3 className="text-base font-semibold text-primary-text">
-                            Resumo das suas Solicitações
+                            Resumo das suas Solicitações - GLPI
                         </h3>
 
                         <p className="text-xs text-muted-foreground">
@@ -95,7 +95,7 @@ export function GLPISummaryComponent() {
                                     hover:shadow-lg`}
                     >
                         <div className="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center bg-card border border-border">
-                            <TicketIcon className="text-primary-text size-5" />
+                            <TicketIcon className="text-primary size-5" />
                         </div>
                         <div className="flex flex-col gap-1 justify-start">
                             <div className="flex gap-2 items-center">
@@ -113,7 +113,7 @@ export function GLPISummaryComponent() {
                                     hover:shadow-lg`}
                     >
                         <div className="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center border border-border">
-                            <XCircle className="text-primary-text size-5" />
+                            <XCircle className="text-primary size-5" />
                         </div>
                         <div className="flex flex-col gap-1 justify-start">
                             <div className="flex gap-2 items-center">

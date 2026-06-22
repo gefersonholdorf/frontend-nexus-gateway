@@ -126,58 +126,60 @@ export function EventDetails({ event }: Props) {
                         <div className="flex items-center justify-between pt-2">
                             <div className="flex -space-x-2 gap-6 items-center">
                                 <AvatarGroup className="">
-                                    {event.attendees.slice(0, 4).map((a) => (
+                                    {event.attendees.slice(0, 4).map((a) => {
+                                        const response = a.email === event.organizer.email ? 'accepted' : a.response
+                                        return (
+                                            <Tooltip>
+                                                <TooltipTrigger>
+                                                    <div className="relative">
+                                                        <Avatar
+                                                            key={a.email}
+                                                            className={cn(
+                                                                "h-8 w-8 flex items-center justify-center p-[.10rem]",
+                                                                response === "accepted" &&
+                                                                "bg-emerald-500",
+                                                                response === "declined" &&
+                                                                "bg-red-500",
+                                                                response === "tentativelyAccepted" &&
+                                                                "bg-amber-500",
+                                                                response === "notResponded" &&
+                                                                "bg-gray-400",
+                                                                response === "none" &&
+                                                                "bg-gray-500",
+                                                            )}
+                                                        >
+                                                            <AvatarImage src={`${a.logo}`} alt="@shadcn" />
+                                                            <AvatarFallback>{initials(a.name)}</AvatarFallback>
+                                                        </Avatar>
 
-                                        <Tooltip>
-                                            <TooltipTrigger>
-                                                <div className="relative">
-                                                    <Avatar
-                                                        key={a.email}
-                                                        className={cn(
-                                                            "h-8 w-8 flex items-center justify-center p-[.10rem]",
-                                                            a.response === "accepted" &&
-                                                            "bg-emerald-500",
-                                                            a.response === "declined" &&
-                                                            "bg-red-500",
-                                                            a.response === "tentativelyAccepted" &&
-                                                            "bg-amber-500",
-                                                            a.response === "notResponded" &&
-                                                            "bg-gray-400",
-                                                            a.response === "none" &&
-                                                            "bg-gray-500",
-                                                        )}
-                                                    >
-                                                        <AvatarImage src={`${a.logo}`} alt="@shadcn" />
-                                                        <AvatarFallback>{initials(a.name)}</AvatarFallback>
-                                                    </Avatar>
-
-                                                    <div
-                                                        className={cn(
-                                                            "absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-background",
-                                                            a.response === "accepted" &&
-                                                            "bg-emerald-500",
-                                                            a.response === "declined" &&
-                                                            "bg-red-500",
-                                                            a.response === "tentativelyAccepted" &&
-                                                            "bg-amber-500",
-                                                            a.response === "notResponded" &&
-                                                            "bg-gray-400",
-                                                            a.response === "none" &&
-                                                            "bg-gray-500",
-                                                        )}
-                                                    />
-                                                </div>
-                                            </TooltipTrigger>
-                                            <TooltipContent>
-                                                <span>
-                                                    {a.name} -
-                                                    {a.response === 'none' && ' Não respondeu'}
-                                                    {a.response === 'accepted' && ' Aceitou'}
-                                                    {a.response === 'declined' && ' Recusou'}
-                                                </span>
-                                            </TooltipContent>
-                                        </Tooltip>
-                                    ))}
+                                                        <div
+                                                            className={cn(
+                                                                "absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-background",
+                                                                response === "accepted" &&
+                                                                "bg-emerald-500",
+                                                                response === "declined" &&
+                                                                "bg-red-500",
+                                                                response === "tentativelyAccepted" &&
+                                                                "bg-amber-500",
+                                                                response === "notResponded" &&
+                                                                "bg-gray-400",
+                                                                response === "none" &&
+                                                                "bg-gray-500",
+                                                            )}
+                                                        />
+                                                    </div>
+                                                </TooltipTrigger>
+                                                <TooltipContent>
+                                                    <span>
+                                                        {a.name} -
+                                                        {response === 'none' && ' Não respondeu'}
+                                                        {response === 'accepted' && ' Aceitou'}
+                                                        {response === 'declined' && ' Recusou'}
+                                                    </span>
+                                                </TooltipContent>
+                                            </Tooltip>
+                                        )
+                                    })}
 
                                     {count > 4 && (
                                         <AvatarGroupCount className="bg-card">+{count - 4}</AvatarGroupCount>

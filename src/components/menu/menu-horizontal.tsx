@@ -28,7 +28,7 @@ export function MenuComponent({ onSetFiltering }: { onSetFiltering?: (value: str
 
     const isWelcomePage = window.location.pathname !== "/gateway"
     return (
-        <div className="w-full grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-6 justify-between px-10 py-2 min-h-20 bg-(image:--background-gradient) items-center border-b border-border shadow-lg">
+        <div className="fixed top-0 left-0 right-0 z-50 w-full grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-6 justify-between px-10 py-2 min-h-20 bg-(image:--background-gradient) items-center border-b border-border shadow-lg">
             <img src={`${theme === 'clean' ? './logo-dark.png' : './logo.png'}`} className="w-50 p-2 cursor-pointer" onClick={() => navigate('/welcome')} />
             <div>
                 {!isWelcomePage && (

@@ -13,7 +13,7 @@ export function LayoutPages() {
     return (
         <div
             className={cn(
-                "min-h-screen bg-cover bg-center bg-fixed bg-no-repeat",
+                "mt-20 min-h-screen bg-cover bg-center bg-fixed bg-no-repeat",
                 theme === "clean" && "bg-background",
                 theme === "dark" && "bg-background"
             )}

@@ -4,11 +4,13 @@ import { Card, CardContent } from "./ui/card";
 import { Clock, Coffee, Video } from "lucide-react";
 import { useGetSummaryEvents } from "@/api/calendar/get-summary-events";
 import { Skeleton } from "./ui/skeleton";
+import { useTheme } from "@/contexts/theme-context";
 
 export function WelcomeCard() {
     const [now, setNow] = useState(new Date());
     const { user } = useUser()
     const { data, isLoading } = useGetSummaryEvents({ type: 'user' })
+    const { theme } = useTheme()
 
     useEffect(() => {
         const timer = setInterval(() => setNow(new Date()), 1000);
@@ -33,7 +35,7 @@ export function WelcomeCard() {
             colorText: "text-blue-500",
         },
         {
-            title: "Horas Agendadas",
+            title: "Agendadas",
             value: `${data.summary.scheduledHoursToday.toFixed(1)}h`,
             icon: Clock,
             colorText: "text-amber-500",
@@ -55,23 +57,23 @@ export function WelcomeCard() {
     };
 
     return (
-        <Card
-            className="
-                h-80
-                relative p-4
-                overflow-hidden
-                rounded-3xl
-                border
-                border-border/50
-                bg-(image:--background-gradient)
-                shadow-lg
-                transition-all
-                duration-300
-                hover:shadow-xl
-            "
-        >
+        <Card className="h-80 relative overflow-hidden rounded-3xl p-4">
+            <div
+                className={`
+            absolute inset-0
+            ${theme === 'dark' ? "bg-[url('./dark-lusati-back.png')]" : "bg-[url('./light-lusati-back.png')]"}
+            bg-cover bg-right
+        `}
+            />
 
-            <CardContent className="relative px-3">
+            <div
+                className={`
+                    absolute inset-0 bg-linear-to-r
+                    ${theme === 'dark' ? 'from-[#18233D] via-[#18233D] to-[#18233D]/20' : 'from-[#FFF] via-[#FFF] to-[#FFF]/20'}        
+                `}
+            />
+
+            <CardContent className="relative pt-4 px-3">
                 {/* HEADER TEXT */}
                 <div className="flex flex-col gap-1">
                     <p className="text-sm text-muted-foreground">
@@ -94,8 +96,8 @@ export function WelcomeCard() {
                         })}
                     </p>
 
-                    <p className="mt-4 text-[.8rem] text-muted-foreground leading-relaxed text-justify">
-                        Plataforma centralizada de intranet da Lusati, desenvolvida para integrar sistemas e centralizar informações corporativas em um único ambiente seguro e eficiente.
+                    <p className="mt-4 text-[.8rem] line-clamp-2 max-w-90 text-muted-foreground leading-relaxed text-justify">
+                        Plataforma centralizada de intranet da Lusati, desenvolvida para integrar sistemas e centralizar informações corporativas.
                     </p>
                 </div>
 
@@ -103,16 +105,18 @@ export function WelcomeCard() {
                     {calendarSummary.map((item) => (
                         <div
                             key={item.title}
-                            className="flex flex-col items-center justify-center border border-border rounded-sm shadow-lg transition-all duration-300 transform hover:scale-[1.01]
-                                    hover:shadow-lg p-2 gap-1"
+                            className="bg-(image:--background-gradient) py-4 flex flex-col items-start justify-center border-2 border-border rounded-lg shadow-lg transition-all duration-300 transform hover:scale-[1.01]
+                                    hover:shadow-lg px-4 gap-1"
                         >
-                            <div className="flex items-center gap-2">
-                                <div className={`${item.colorText} p-2 rounded-lg border border-border bg-card`}>
+                            <div className="flex items-start gap-2">
+                                <div className={`${item.colorText} p-3 rounded-full border border-border bg-card/50`}>
                                     <item.icon className="size-4" />
                                 </div>
-                                <span className="text-primary-text font-bold text-[1.1rem]">{item.value}</span>
+                                <div className="flex flex-col">
+                                    <span className="text-primary-text font-bold text-[.9rem]">{item.value}</span>
+                                    <span className="text-[.8rem] text-muted-foreground">{item.title}</span>
+                                </div>
                             </div>
-                            <span className="text-[.8rem] text-muted-foreground">{item.title}</span>
                         </div>
                     ))}
                     {/* <Card className="rounded-sm p-4 border-none border-transparent shadow-sm transition-all duration-300 transform hover:scale-[1.01]
