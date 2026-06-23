@@ -50,7 +50,7 @@ export function VPNStatusCard() {
     return (
         <Card
             className="
-            h-52
+            h-58
                 w-full
                 rounded-2xl
                 border border-border

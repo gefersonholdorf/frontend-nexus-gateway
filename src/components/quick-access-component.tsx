@@ -9,6 +9,7 @@ interface QuickAccess {
     icon: LucideIcon;
     bgColor: string;
     iconColor: string;
+    url: string
 }
 
 const quickAccess: QuickAccess[] = [
@@ -18,6 +19,7 @@ const quickAccess: QuickAccess[] = [
         icon: Clock,
         bgColor: "bg-emerald-50 dark:bg-emerald-500/10",
         iconColor: "text-emerald-500",
+        url: "https://app2.pontomais.com.br/registrar-ponto",
     },
     {
         id: 2,
@@ -25,6 +27,7 @@ const quickAccess: QuickAccess[] = [
         icon: Bug,
         bgColor: "bg-blue-50 dark:bg-blue-500/10",
         iconColor: "text-blue-500",
+        url: "https://lusati.atlassian.net",
     },
     {
         id: 3,
@@ -32,6 +35,7 @@ const quickAccess: QuickAccess[] = [
         icon: GitBranch,
         bgColor: "bg-purple-50 dark:bg-purple-500/10",
         iconColor: "text-purple-500",
+        url: "https://gitea.lusati.com.br"
     },
     {
         id: 4,
@@ -39,13 +43,7 @@ const quickAccess: QuickAccess[] = [
         icon: Book,
         bgColor: "bg-cyan-50 dark:bg-cyan-500/10",
         iconColor: "text-cyan-500",
-    },
-    {
-        id: 5,
-        title: "Monitoramento",
-        icon: Server,
-        bgColor: "bg-indigo-50 dark:bg-indigo-500/10",
-        iconColor: "text-indigo-500",
+        url: "https://lusati.sharepoint.com/_layouts/15/sharepoint.aspx",
     },
     {
         id: 6,
@@ -53,6 +51,7 @@ const quickAccess: QuickAccess[] = [
         icon: Server,
         bgColor: "bg-orange-50 dark:bg-orange-500/10",
         iconColor: "text-orange-500",
+        url: "https://glpi.lusati.com.br/Helpdesk",
     },
 ];
 
@@ -97,7 +96,7 @@ export function QuickAccessComponent() {
                         gap-4
                         sm:grid-cols-3
                         lg:grid-cols-4
-                        xl:grid-cols-6
+                        xl:grid-cols-5
                     "
                 >
                     {quickAccess.map((access) => {
@@ -125,6 +124,7 @@ export function QuickAccessComponent() {
                                     hover:border-primary/30
                                     hover:shadow-md cursor-pointer
                                 "
+                                onClick={() => window.open(`${access.url}`, "_black")}
                             >
                                 <div
                                     className={`

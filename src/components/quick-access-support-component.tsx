@@ -25,7 +25,7 @@ const actions = [
     },
     {
         title: "E-mail Comitê SGCI",
-        description: "Envie um e-mail relacionado a segurança da informação",
+        description: "Envie um e-mail ao SGCI",
         icon: ShieldCheck,
         color: 'text-purple-500',
         href: "mailto:sgci@lusati.com.br",

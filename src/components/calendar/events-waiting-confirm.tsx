@@ -10,6 +10,7 @@ import { Skeleton } from "../ui/skeleton";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { ConfirmEventModal } from "./modal/confirm-event-modal";
 import { subHours } from "date-fns";
+import { DeclinedEventModal } from "./modal/declined-event-modal";
 
 export function formatDateEvent(startDate: string, endDate: string) {
     const startDateForm = new Date(startDate);
@@ -35,7 +36,7 @@ export function EventsWaitingConfirm() {
 
     if (isLoading) {
         return (
-            <Card className="h-52 p-0">
+            <Card className="h-110 p-0">
                 <Skeleton className="h-full bg-gray-100" />
             </Card>
         );
@@ -47,7 +48,7 @@ export function EventsWaitingConfirm() {
     return (
         <Card
             className="
-        h-102 w-full rounded-2xl border border-border
+        h-110 w-full rounded-2xl border border-border
         bg-(image:--background-gradient)
         shadow-lg transition-all duration-300 hover:shadow-xl
     "
@@ -203,11 +204,12 @@ export function EventsWaitingConfirm() {
                                         Aceitar
                                     </Button>
                                 </ConfirmEventModal>
-
-                                <Button variant="outline">
-                                    <CircleX />
-                                    Recusar
-                                </Button>
+                                <DeclinedEventModal event={item}>
+                                    <Button variant="outline">
+                                        <CircleX />
+                                        Recusar
+                                    </Button>
+                                </DeclinedEventModal>
                             </div>
                         </Card>
                     ))

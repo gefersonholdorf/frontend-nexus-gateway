@@ -57,7 +57,7 @@ export function NextEventsDetails() {
     return (
         <Card
             className="
-        h-102 w-full rounded-2xl border border-border
+        h-110 w-full rounded-2xl border border-border
         bg-(image:--background-gradient)
         shadow-lg transition-all duration-300 hover:shadow-xl
     "
@@ -80,13 +80,13 @@ export function NextEventsDetails() {
                 </div>
             </CardHeader>
 
-            <CardContent className="w-full flex-1 space-y-4 pt-1 overflow-y-scroll sidebar-scroll">
+            <CardContent className="w-full flex-1 space-y-4 pt-2 pb-2 overflow-y-scroll sidebar-scroll">
                 {data?.events?.length ? (
                     data.events.map((item) => (
                         <Card
                             key={item.id}
                             className={cn(
-                                "w-full flex flex-row items-center justify-between gap-4 p-4 rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl bg-(image:--background-gradient) border border-border border-l-4",
+                                "w-full flex flex-row items-center justify-between gap-4 px-4 pt-4 rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl bg-(image:--background-gradient) border border-border border-l-4",
                                 item.organizer.email === user?.email && "border-l-emerald-500",
                                 item.attendees.some(
                                     (a) => a.email === user?.email && a.response === "accepted"
@@ -129,86 +129,61 @@ export function NextEventsDetails() {
                                             {item.attendees.slice(0, 4).map((a) => (
                                                 <Tooltip key={a.email}>
                                                     <TooltipTrigger asChild>
-                                                        <div className="relative">
-                                                            <Avatar
-                                                                className={cn(
-                                                                    "h-8 w-8 p-0.5 bg-background",
-                                                                    a.response === "accepted" && "ring-2 ring-emerald-500",
-                                                                    a.response === "declined" && "ring-2 ring-red-500",
-                                                                    a.response === "tentativelyAccepted" && "ring-2 ring-amber-500",
-                                                                    (a.response === "notResponded" || a.response === "none") &&
-                                                                    "ring-2 ring-gray-500"
-                                                                )}
-                                                            >
-                                                                <AvatarImage
-                                                                    src={a.logo ?? ""}
-                                                                />
-                                                                <AvatarFallback>
-                                                                    {a.name[0]}
-                                                                </AvatarFallback>
-                                                            </Avatar>
-
-                                                            <div
-                                                                className={cn(
-                                                                    "absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-background",
-                                                                    a.response ===
-                                                                    "accepted" &&
-                                                                    "bg-emerald-500",
-                                                                    a.response ===
-                                                                    "declined" &&
-                                                                    "bg-red-500",
-                                                                    a.response ===
-                                                                    "tentativelyAccepted" &&
-                                                                    "bg-amber-500",
-                                                                    (a.response ===
-                                                                        "notResponded" ||
-                                                                        a.response ===
-                                                                        "none") &&
-                                                                    "bg-gray-500"
-                                                                )}
+                                                        <Avatar
+                                                            className={cn(
+                                                                "h-8 w-8 bg-background",
+                                                            )}
+                                                        >
+                                                            <AvatarImage
+                                                                src={a.logo ?? ""}
                                                             />
-                                                        </div>
+                                                            <AvatarFallback>
+                                                                {a.name[0]}
+                                                            </AvatarFallback>
+                                                        </Avatar>
                                                     </TooltipTrigger>
 
                                                     <TooltipContent>
                                                         <span>
-                                                            {a.name} -
-                                                            {a.response === "none" &&
-                                                                " Não respondeu"}
-                                                            {a.response === "accepted" &&
-                                                                " Aceitou"}
-                                                            {a.response === "declined" &&
-                                                                " Recusou"}
-                                                            {a.response ===
-                                                                "tentativelyAccepted" &&
-                                                                " Talvez"}
+                                                            {a.name}
                                                         </span>
                                                     </TooltipContent>
                                                 </Tooltip>
                                             ))}
 
                                             {item.attendees.length > 4 && (
-                                                <AvatarGroupCount className="bg-card">
+                                                <AvatarGroupCount className="bg-card border border-border">
                                                     +{item.attendees.length - 4}
                                                 </AvatarGroupCount>
                                             )}
                                         </AvatarGroup>
 
-                                        <div className="flex items-center gap-1 text-[.8rem] text-muted-foreground">
-                                            <span className="max-w-50 line-clamp-2">
-                                                Organizado por{" "}
-                                                <span className="font-semibold text-primary-text">
-                                                    {item.organizer.name}
-                                                </span>{" "}
-                                                e mais {item.attendees.length} participantes
-                                            </span>
-                                        </div>
+                                        {item.attendees.length <= 1 ? (
+                                            <div className="flex items-center gap-1 text-[.8rem] text-muted-foreground">
+                                                <span className="max-w-80 line-clamp-2">
+                                                    Organizado por{" "}
+                                                    <span className="font-semibold text-primary-text">
+                                                        {item.organizer.name}
+                                                    </span>
+                                                </span>
+                                            </div>
+                                        ) : (
+                                            <div className="flex items-center gap-1 text-[.8rem] text-muted-foreground">
+                                                <span className="max-w-70 line-clamp-2">
+                                                    Organizado por{" "}
+                                                    <span className="font-semibold text-primary-text">
+                                                        {item.organizer.name}
+                                                    </span>{" "}
+                                                    e mais {item.attendees.length - 1} participantes
+                                                </span>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="h-full flex flex-col justify-between gap-4 border items-end">
-                                <div className="flex flex-col gap-3">
+                            <div className="self-stretch flex flex-col justify-between items-end">
+                                <div className="flex flex-col justify-between items-end self-stretch">
                                     {
                                         (
                                             item.organizer.email === user?.email ||
@@ -219,20 +194,24 @@ export function NextEventsDetails() {
                                             )
                                         ) ? (
                                             <Badge className="bg-emerald-500/10 text-emerald-600 text-[.8rem] font-medium px-2 py-2">
-                                                <div className="w-2 h-2 rounded-full bg-emerald-400" />
-                                                <span className="font-medium">Confirmado</span>
+                                                <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                                                <span className="font-medium">Presença Confirmada</span>
                                             </Badge>
                                         ) : (
-                                            <Badge className="bg-amber-500/10 text-amber-600 text-[.8rem] font-medium px-2 py-2">
-                                                <div className="w-2 h-2 rounded-full bg-amber-600" />
-                                                <span className="font-medium">Pedente</span>
+                                            <Badge className="bg-amber-500/10 text-amber-500 text-[.8rem] font-medium px-2 py-2">
+                                                <div className="w-2 h-2 rounded-full bg-amber-500" />
+                                                <span className="font-medium">Aguardando sua Confirmação</span>
                                             </Badge>
                                         )
                                     }
                                 </div>
-                                <div className="w-full">
-                                    <Button className="w-full text-primary-text cursor-pointer" variant="link"><Video /> Acessar Reunião</Button>
-                                </div>
+                                <Button
+                                    className="w-full flex items-center justify-end text-muted-foreground cursor-pointer p-0 hover:text-primary"
+                                    variant="link"
+                                >
+                                    <Video />
+                                    Acessar Reunião
+                                </Button>
                             </div>
                         </Card>
                     ))

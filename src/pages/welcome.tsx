@@ -1,4 +1,4 @@
-import { AnnouncementsComponent } from "@/components/announcements-component";
+import { AvailabilityComponent } from "@/components/calendar/availability-component";
 import { EventsWaitingConfirm } from "@/components/calendar/events-waiting-confirm";
 import { NextEventsDetails } from "@/components/calendar/next-events-details";
 import { NextEvents } from "@/components/calendar/next-events-summary";
@@ -14,31 +14,26 @@ export function WelcomePage() {
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
                 <div className="lg:col-span-3 space-y-6">
                     <WelcomeCard />
+                    <GLPISummaryComponent />
+                    <div className="grid grid-cols-2 gap-6">
+                        <NextEvents />
+                        <QuickAccessSupportComponent />
+                    </div>
+                    <NextEventsDetails />
                 </div>
-                <div className="lg:col-span-2">
-                    <QuickAccessSupportComponent />
+                <div className="lg:col-span-2 space-y-6">
+                    <AvailabilityComponent />
+                    <VPNStatusCard />
+                    <EventsWaitingConfirm />
                 </div>
             </div>
-            <div className="grid grid-cols-2 gap-6">
-                <GLPISummaryComponent />
-                <VPNStatusCard />
-            </div>
+
             <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
                 <QuickAccessComponent />
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="col-span-2">
-                    <NextEventsDetails />
-                </div>
-                <div className="col-span-1">
-                    <NextEvents />
-                </div>
-            </div>
-            <EventsWaitingConfirm />
-
-            <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
+            {/* <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
                 <AnnouncementsComponent />
-            </div>
+            </div> */}
         </div>
     )
 }

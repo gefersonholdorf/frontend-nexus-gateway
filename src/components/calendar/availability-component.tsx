@@ -11,6 +11,11 @@ import {
 
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Card, CardContent, CardHeader } from "../ui/card";
+import { useGetPresence } from "@/api/calendar/get-presence";
+import { Skeleton } from "../ui/skeleton";
+import { useGetAvailabilityUsers } from "@/api/calendar/get-availability-users";
+import { DrawerAvailabilityContent } from "./drawer-availability";
+import { useState } from "react";
 
 export interface Availability {
     name: string;
@@ -49,9 +54,6 @@ export interface Presence {
 }
 
 interface AvailabilityComponentProps {
-    presences: Presence[];
-    availabilitys: Availability[];
-    onSelectedUser: (user: Availability) => void;
 }
 
 const availabilityConfig = {
@@ -111,61 +113,99 @@ const availabilityConfig = {
 };
 
 export function AvailabilityComponent({
-    presences,
-    availabilitys,
-    onSelectedUser,
 }: AvailabilityComponentProps) {
+    const { data, isLoading } = useGetPresence()
+    const { data: dataAvailability, isLoading: IsLoadingAvailability } = useGetAvailabilityUsers()
+    const [userSelected, setUserSelected] = useState<Availability | null>(null)
+    const [openUserAvailabilityDrawer, setOpenUserAvailabilityDrawer] = useState(false);
+
+    function handleSetUserSelected(userAvailability: Availability) {
+        setUserSelected(userAvailability)
+        setOpenUserAvailabilityDrawer(true)
+    }
+
+    function handleSetOpenUserAvailabilityDrawer() {
+        setOpenUserAvailabilityDrawer(!openUserAvailabilityDrawer)
+    }
+
+    if (!data || !dataAvailability) {
+        return null;
+    }
+
+    if (isLoading || IsLoadingAvailability) {
+        return (
+            <Card className="h-52 p-0">
+                <Skeleton className="h-full bg-gray-100" />
+            </Card>
+        );
+    }
+
+    const availabilitys: Availability[] =
+        dataAvailability.availabilitys.map((availability) => {
+            const presence = data.users.find(
+                (user) =>
+                    user.email.toLowerCase() ===
+                    availability.scheduleId.toLowerCase()
+            );
+
+            return {
+                ...availability,
+                presence: presence!,
+            };
+        });
     return (
-        <Card
-            className="
+        <>
+            <Card
+                className="
+                h-160
                 w-full
                 border
                 border-border
                 bg-(image:--background-gradient)
                 shadow-lg
-                rounded-lg
+                rounded-2xl
                 transition-all
                 duration-300
                 hover:shadow-xl
             "
-        >
-            <CardHeader className="flex justify-between items-center gap-6">
-                <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-md border border-primary hover:bg-background">
-                        <CalendarCheckIcon className="size-5 text-primary" />
+            >
+                <CardHeader className="flex justify-between items-center gap-6">
+                    <div className="flex items-center gap-3">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-md border border-primary hover:bg-background">
+                            <CalendarCheckIcon className="size-5 text-primary" />
+                        </div>
+
+                        <div>
+                            <h3 className="text-base font-semibold text-primary-text">
+                                Disponibilidade da Equipe
+                            </h3>
+
+                            <p className="text-xs text-muted-foreground">
+                                Status em Tempo Real - Microsoft Teams
+                            </p>
+                        </div>
                     </div>
+                </CardHeader>
 
-                    <div>
-                        <h3 className="text-base font-semibold text-primary-text">
-                            Disponibilidade da Equipe
-                        </h3>
+                <CardContent className="p-6 pt-0 space-y-3">
+                    {data.users.map((user) => {
+                        const availability =
+                            availabilityConfig[
+                            user.availability as keyof typeof availabilityConfig
+                            ] ?? availabilityConfig.PresenceUnknown;
 
-                        <p className="text-xs text-muted-foreground">
-                            Status em Tempo Real - Microsoft Teams
-                        </p>
-                    </div>
-                </div>
-            </CardHeader>
+                        const StatusIcon = availability.icon;
 
-            <CardContent className="p-6 pt-0 space-y-3">
-                {presences.map((user) => {
-                    const availability =
-                        availabilityConfig[
-                        user.availability as keyof typeof availabilityConfig
-                        ] ?? availabilityConfig.PresenceUnknown;
+                        const availabilityUser = availabilitys.find(
+                            (item) =>
+                                item.scheduleId.toLowerCase() ===
+                                user.email.toLowerCase()
+                        );
 
-                    const StatusIcon = availability.icon;
-
-                    const availabilityUser = availabilitys.find(
-                        (item) =>
-                            item.scheduleId.toLowerCase() ===
-                            user.email.toLowerCase()
-                    );
-
-                    return (
-                        <div
-                            key={user.id}
-                            className="
+                        return (
+                            <div
+                                key={user.id}
+                                className="
                                 flex
                                 justify-between
                                 items-center
@@ -178,29 +218,29 @@ export function AvailabilityComponent({
                                 cursor-pointer
                                 transition-colors
                             "
-                            onClick={() => {
-                                if (availabilityUser) {
-                                    onSelectedUser(availabilityUser);
-                                }
-                            }}
-                        >
-                            <div className="flex items-center gap-3">
-                                <div className="relative">
-                                    <Avatar className="h-12 w-12">
-                                        <AvatarImage
-                                            src={user.logo ?? ""}
-                                        />
-                                        <AvatarFallback>
-                                            {user.name
-                                                .split(" ")
-                                                .slice(0, 2)
-                                                .map((v) => v[0])
-                                                .join("")}
-                                        </AvatarFallback>
-                                    </Avatar>
+                                onClick={() => {
+                                    if (availabilityUser) {
+                                        handleSetUserSelected(availabilityUser);
+                                    }
+                                }}
+                            >
+                                <div className="flex items-center gap-3">
+                                    <div className="relative">
+                                        <Avatar className="h-12 w-12">
+                                            <AvatarImage
+                                                src={user.logo ?? ""}
+                                            />
+                                            <AvatarFallback>
+                                                {user.name
+                                                    .split(" ")
+                                                    .slice(0, 2)
+                                                    .map((v) => v[0])
+                                                    .join("")}
+                                            </AvatarFallback>
+                                        </Avatar>
 
-                                    <div
-                                        className={`
+                                        <div
+                                            className={`
                                             absolute
                                             bottom-0
                                             right-0
@@ -211,30 +251,40 @@ export function AvailabilityComponent({
                                             border-background
                                             ${availability.color}
                                         `}
-                                    />
+                                        />
+                                    </div>
+
+                                    <div className="flex flex-col">
+                                        <span className="text-[.85rem] font-semibold">
+                                            {user.name}
+                                        </span>
+
+                                        <span className="text-[.7rem] text-muted-foreground">
+                                            {user.roleDescription}
+                                        </span>
+                                    </div>
                                 </div>
 
-                                <div className="flex flex-col">
-                                    <span className="text-[.85rem] font-semibold">
-                                        {user.name}
-                                    </span>
-
-                                    <span className="text-[.7rem] text-muted-foreground">
-                                        {user.roleDescription}
+                                <div className="flex flex-col items-end">
+                                    <span className="flex items-center gap-1 text-[.75rem]">
+                                        <StatusIcon className="size-4" />
+                                        {availability.label}
                                     </span>
                                 </div>
                             </div>
-
-                            <div className="flex flex-col items-end">
-                                <span className="flex items-center gap-1 text-[.75rem]">
-                                    <StatusIcon className="size-4" />
-                                    {availability.label}
-                                </span>
-                            </div>
-                        </div>
-                    );
-                })}
-            </CardContent>
-        </Card>
+                        );
+                    })}
+                </CardContent>
+            </Card>
+            {
+                userSelected && (
+                    <DrawerAvailabilityContent
+                        open={openUserAvailabilityDrawer}
+                        onOpenChange={handleSetOpenUserAvailabilityDrawer}
+                        userAvailability={userSelected}
+                    />
+                )
+            }
+        </>
     );
 }

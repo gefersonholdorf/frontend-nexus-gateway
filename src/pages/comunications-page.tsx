@@ -1,22 +1,22 @@
-import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
-    Megaphone,
-    Plus,
-    Rocket,
-    Users,
     Calendar,
     Clock3,
+    Megaphone,
     Pencil,
+    Plus,
+    Rocket,
+    Send,
     Trash2,
-    Send
+    Users
 } from "lucide-react";
+import { useState } from "react";
 
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 type EventType = "DEPLOYMENT" | "MEETING" | "GENERAL";
 
