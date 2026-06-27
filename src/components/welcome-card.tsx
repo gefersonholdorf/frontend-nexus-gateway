@@ -57,7 +57,7 @@ export function WelcomeCard() {
     };
 
     return (
-        <Card className="h-80 relative overflow-hidden rounded-3xl p-4">
+        <Card className="h-55 relative overflow-hidden rounded-3xl p-4">
             <div
                 className={`
             absolute inset-0
@@ -101,7 +101,7 @@ export function WelcomeCard() {
                     </p>
                 </div>
 
-                <div className="mt-4 grid grid-cols-1 lg:grid-cols-3 gap-4 py-4">
+                {/* <div className="mt-4 grid grid-cols-1 lg:grid-cols-3 gap-4 py-4">
                     {calendarSummary.map((item) => (
                         <div
                             key={item.title}
@@ -119,7 +119,7 @@ export function WelcomeCard() {
                             </div>
                         </div>
                     ))}
-                    {/* <Card className="rounded-sm p-4 border-none border-transparent shadow-sm transition-all duration-300 transform hover:scale-[1.01]
+                    <Card className="rounded-sm p-4 border-none border-transparent shadow-sm transition-all duration-300 transform hover:scale-[1.01]
                                     hover:shadow-lg outline-none flex flex-col items-start justify-center">
                         <div className="text-left">
                             <p className="text-2xl font-semibold tabular-nums italic">
@@ -136,8 +136,8 @@ export function WelcomeCard() {
                             </p>
                         </div>
                     </Card>
-                    <WeatherCard /> */}
-                </div>
+                    <WeatherCard />
+                </div> */}
             </CardContent>
         </Card>
     );

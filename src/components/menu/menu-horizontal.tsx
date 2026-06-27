@@ -27,8 +27,14 @@ export function MenuComponent({ onSetFiltering }: { onSetFiltering?: (value: str
     const [aboutSystemModalOpen, setAboutSystemModalOpen] = useState(false);
 
     const isWelcomePage = window.location.pathname !== "/gateway"
+    const app = import.meta.env.VITE_APP
+    const version = import.meta.env.VITE_VERSION
     return (
-        <div className="fixed top-0 left-0 right-0 z-50 w-full grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-6 justify-between px-10 py-2 min-h-20 bg-(image:--background-gradient) items-center border-b border-border shadow-lg">
+        <>
+        <div className={`fixed flex items-center justify-center h-4 top-0 left-0 right-0 w-full z-50 ${app === 'homolog' ? 'bg-blue-500' : 'bg-emerald-500'}`}>
+            <span className="text-[.8rem] text-gray-100">{app === 'homolog' ? 'Ambiente de Homologação' : 'Ambiente de Produção'} - Versão {version}</span>
+        </div>
+        <div className="fixed top-4 left-0 right-0 z-50 w-full grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-6 justify-between px-10 py-2 min-h-20 bg-(image:--background-gradient) items-center border-b border-border shadow-lg">
             <img src={`${theme === 'clean' ? './logo-dark.png' : './logo.png'}`} className="w-50 p-2 cursor-pointer" onClick={() => navigate('/welcome')} />
             <div>
                 {!isWelcomePage && (
@@ -145,5 +151,6 @@ export function MenuComponent({ onSetFiltering }: { onSetFiltering?: (value: str
                 onOpenChange={setAboutSystemModalOpen}
             />
         </div>
+        </>
     )
 }

@@ -1,132 +1,29 @@
+import { useFetchDocuments } from "@/api/documents/fetch-documents";
+import { useFetchSummarys } from "@/api/documents/fetch-summary";
 import { BackComponent } from "@/components/back-component";
 import { CardDocuments } from "@/components/documents/cards-documents";
 import { CreateDocumentModal } from "@/components/documents/create-document-modal";
-import { FilteringDocuments } from "@/components/documents/filtering-documents";
+import { FilteringDocuments, type Filters } from "@/components/documents/filtering-documents";
 import { TableComponent, type Column } from "@/components/table-component";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Skeleton } from "@/components/ui/skeleton";
 import { formatDate } from "date-fns";
-import { CheckCircle, Clock, Edit, Eye, FileText, MoreHorizontalIcon, Plus, X, XCircle } from "lucide-react";
+import { CheckCircle, Clock, Edit, Eye, FileText, IdCard, MoreHorizontalIcon, Plus, X, XCircle } from "lucide-react";
 import {
   User,
   Shield,
   Calendar,
   Tag,
 } from "lucide-react"
-
-const documents: Document[] = [
-  {
-    id: 1,
-    code: "POL-001",
-    title: "Política de Segurança da Informação",
-    documentUrl: "/documents/pol-001.pdf",
-    category: "Política",
-    version: "2.3",
-    status: "Vigente",
-    responsible: "Equipe de Segurança",
-    createdAt: "2025-01-15",
-    updatedAt: "2026-05-10",
-    url: "https://lusati.sharepoint.com/:w:/r/sites/PROJETOS/_layouts/15/Doc.aspx?sourcedoc=%7BE2659F4E-AAE8-47DC-964F-A363B86ABEA1%7D&file=PROC%20SGSI%20004%20-%20Gest%C3%A3o%20de%20Indicadores%20do%20SGSI.docx&action=default&mobileredirect=true"
-  },
-  {
-    id: 2,
-    code: "POL-002",
-    title: "Política de Controle de Acesso",
-    documentUrl: "/documents/pol-002.pdf",
-    category: "Política",
-    version: "1.8",
-    status: "Vigente",
-    responsible: "Infraestrutura",
-    createdAt: "2025-02-20",
-    updatedAt: "2026-04-18",
-    url: "https://lusati.sharepoint.com/:w:/r/sites/PROJETOS/_layouts/15/Doc.aspx?sourcedoc=%7BE2659F4E-AAE8-47DC-964F-A363B86ABEA1%7D&file=PROC%20SGSI%20004%20-%20Gest%C3%A3o%20de%20Indicadores%20do%20SGSI.docx&action=default&mobileredirect=true"
-  },
-  {
-    id: 3,
-    code: "PRC-001",
-    title: "Procedimento de Backup e Recuperação",
-    documentUrl: "/documents/prc-001.pdf",
-    category: "Procedimento",
-    version: "3.1",
-    status: "Vigente",
-    responsible: "Infraestrutura",
-    createdAt: "2025-03-10",
-    updatedAt: "2026-06-01",
-    url: "https://lusati.sharepoint.com/:w:/r/sites/PROJETOS/_layouts/15/Doc.aspx?sourcedoc=%7BE2659F4E-AAE8-47DC-964F-A363B86ABEA1%7D&file=PROC%20SGSI%20004%20-%20Gest%C3%A3o%20de%20Indicadores%20do%20SGSI.docx&action=default&mobileredirect=true"
-  },
-  {
-    id: 4,
-    code: "PRC-002",
-    title: "Procedimento de Gestão de Incidentes",
-    documentUrl: "/documents/prc-002.pdf",
-    category: "Procedimento",
-    version: "2.0",
-    status: "Em Revisão",
-    responsible: "Segurança da Informação",
-    createdAt: "2025-04-05",
-    updatedAt: "2026-06-15",
-    url: "https://lusati.sharepoint.com/:w:/r/sites/PROJETOS/_layouts/15/Doc.aspx?sourcedoc=%7BE2659F4E-AAE8-47DC-964F-A363B86ABEA1%7D&file=PROC%20SGSI%20004%20-%20Gest%C3%A3o%20de%20Indicadores%20do%20SGSI.docx&action=default&mobileredirect=true"
-  },
-  {
-    id: 5,
-    code: "MAN-001",
-    title: "Manual de Uso do Sistema SentinelLog",
-    documentUrl: "/documents/man-001.pdf",
-    category: "Manual",
-    version: "1.2",
-    status: "Vigente",
-    responsible: "Desenvolvimento",
-    createdAt: "2025-06-12",
-    updatedAt: "2026-05-22",
-    url: "https://lusati.sharepoint.com/:w:/r/sites/PROJETOS/_layouts/15/Doc.aspx?sourcedoc=%7BE2659F4E-AAE8-47DC-964F-A363B86ABEA1%7D&file=PROC%20SGSI%20004%20-%20Gest%C3%A3o%20de%20Indicadores%20do%20SGSI.docx&action=default&mobileredirect=true"
-  },
-  {
-    id: 6,
-    code: "MAN-002",
-    title: "Manual de Deploy Automatizado",
-    documentUrl: "/documents/man-002.pdf",
-    category: "Manual",
-    version: "1.0",
-    status: "Em Andamento",
-    responsible: "DevOps",
-    createdAt: "2026-01-08",
-    updatedAt: "2026-06-20",
-    url: "https://lusati.sharepoint.com/:w:/r/sites/PROJETOS/_layouts/15/Doc.aspx?sourcedoc=%7BE2659F4E-AAE8-47DC-964F-A363B86ABEA1%7D&file=PROC%20SGSI%20004%20-%20Gest%C3%A3o%20de%20Indicadores%20do%20SGSI.docx&action=default&mobileredirect=true"
-  },
-  {
-    id: 7,
-    code: "POL-003",
-    title: "Política de Uso Aceitável de Recursos",
-    documentUrl: "/documents/pol-003.pdf",
-    category: "Política",
-    version: "1.4",
-    status: "Vigente",
-    responsible: "Recursos Humanos",
-    createdAt: "2025-07-14",
-    updatedAt: "2026-03-12",
-    url: "https://lusati.sharepoint.com/:w:/r/sites/PROJETOS/_layouts/15/Doc.aspx?sourcedoc=%7BE2659F4E-AAE8-47DC-964F-A363B86ABEA1%7D&file=PROC%20SGSI%20004%20-%20Gest%C3%A3o%20de%20Indicadores%20do%20SGSI.docx&action=default&mobileredirect=true"
-  },
-  {
-    id: 8,
-    code: "PRC-003",
-    title: "Procedimento de Gestão de Mudanças",
-    documentUrl: "/documents/prc-003.pdf",
-    category: "Procedimento",
-    version: "2.5",
-    status: "Pendente",
-    responsible: "Comitê de Mudanças",
-    createdAt: "2025-08-21",
-    updatedAt: "2026-06-23",
-    url: "https://lusati.sharepoint.com/:w:/r/sites/PROJETOS/_layouts/15/Doc.aspx?sourcedoc=%7BE2659F4E-AAE8-47DC-964F-A363B86ABEA1%7D&file=PROC%20SGSI%20004%20-%20Gest%C3%A3o%20de%20Indicadores%20do%20SGSI.docx&action=default&mobileredirect=true"
-  },
-]
+import { useState } from "react";
 
 const columns: Column<Document>[] = [
   {
     key: "code",
     title: "Código",
-    icon: Tag,
+    icon: IdCard,
     render: (value) => (
       <div className="flex items-center gap-1 text-[.8rem]">
         <span>{value}</span>
@@ -146,6 +43,7 @@ const columns: Column<Document>[] = [
   {
     key: "category",
     title: "Categoria",
+    icon: Tag,
   },
   {
     key: "status",
@@ -209,20 +107,50 @@ interface Document {
   id: number
   code: string
   title: string
-  documentUrl: string
-  category: "Manual" | "Política" | "Procedimento"
-  version: string
-  status: "Vigente" | "Em Revisão" | "Pendente" | "Em Andamento"
   url: string
+  category: string
+  status: string
   responsible: string
-  createdAt: string
   updatedAt: string
 }
 
 export function DocumentsPage() {
+  const [openCreateModal, setOpenCreateModal] = useState(false)
+  const [page, setPage] = useState(1)
+  const [filters, setFilters] = useState<Filters>({
+    text: "",
+    category: "",
+    status: "",
+    department: "",
+  });
+
+  const { isLoading, data } = useFetchDocuments({
+    page,
+    perPage: 10,
+    text: filters.text,
+    category: filters.category,
+    status: filters.status,
+    department: filters.department,
+  })
+
+  const { isLoading: isLoadingSummary, data: dataSummary } = useFetchSummarys({
+    page,
+    perPage: 10,
+    text: filters.text,
+    category: filters.category,
+    status: filters.status,
+    department: filters.department,
+  })
+
+  const documents: Document[] = data ? data.documents : []
+
+  function handleSetOpenCreateModal() {
+    setOpenCreateModal(!openCreateModal)
+  }
+
   return (
     <>
-      <div className="px-10 flex justify-start items-start border-b border-border bg-background p-4 rounded-b-lg">
+      <div className="px-10 pt-6 flex justify-start items-start border-b border-border bg-background p-4 rounded-b-lg">
         <div className="w-full flex gap-3 items-center justify-between">
           <div className="flex gap-3 items-center">
             <BackComponent />
@@ -235,49 +163,79 @@ export function DocumentsPage() {
             </div>
           </div>
         </div>
-        <Button><Plus /> Adicionar Documento</Button>
+        <Button
+          onClick={() => setOpenCreateModal(true)}
+        >
+          <Plus />
+          Adicionar Documento
+        </Button>
       </div>
       <div className="flex-1 px-16 py-8 space-y-6">
-        <CardDocuments />
-        <FilteringDocuments />
-        <TableComponent
-          data={documents}
-          columns={columns}
-          caption="Documentos ISO"
-          actions={(document) => (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="size-8"
-                >
-                  <MoreHorizontalIcon />
-                </Button>
-              </DropdownMenuTrigger>
-
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem
-                  onClick={() => window.open(`${document.url}`, "_blank")}
-                >
-                  <Eye />
-                  Visualizar
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <Edit />
-                  Editar
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <X />
-                  Excluir
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
+        {isLoadingSummary || !dataSummary ? (
+          <Skeleton />
+        ) : (
+          <CardDocuments onData={dataSummary.summary} />
+        )}
+        <FilteringDocuments
+          onFilterChange={(newFilters) => {
+            setFilters(newFilters);
+            setPage(1);
+          }}
         />
+        {isLoading && (
+          <Skeleton />
+        )}
+        {!data && (
+          <div>
+            Erro ao listar dados
+          </div>
+        )}
+        {data && data.documents.length > 0 ? (
+          <TableComponent
+            data={documents}
+            columns={columns}
+            caption="Documentos ISO"
+            pagination={data.pagination}
+            onPageChange={setPage}
+            actions={(document) => (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="size-8"
+                  >
+                    <MoreHorizontalIcon />
+                  </Button>
+                </DropdownMenuTrigger>
+
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem
+                    onClick={() => window.open(`${document.url}`, "_blank")}
+                  >
+                    <Eye />
+                    Visualizar
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>
+                    <Edit />
+                    Editar
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <X />
+                    Excluir
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+          />
+        ) : (
+          <div>
+            Nenhum resultado
+          </div>
+        )}
       </div>
-      <CreateDocumentModal open={false} onOpenChange={() => {}} />
+      <CreateDocumentModal open={openCreateModal} onOpenChange={handleSetOpenCreateModal} />
     </>
   )
 }

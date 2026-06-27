@@ -17,94 +17,78 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { Save } from "lucide-react";
-import React, { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
 import { toast } from "sonner";
+import z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { Save } from "lucide-react";
+import { useCreateDocument } from "@/api/documents/create-document";
 
 interface CreateDocumentModalProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
 }
 
-type DocumentForm = {
-    code: string;
-    title: string;
-    category: string;
-    status: string;
-    updatedAt: string;
-    responsible: string;
-};
+const createDocumentSchema = z.object({
+    code: z.string().min(1, "Código obrigatório"),
+    title: z.string().min(1, "Título obrigatório"),
+    category: z.string().min(1, "Categoria obrigatória"),
+    status: z.string().min(1, "Status obrigatório"),
+    url: z.url("URL inválida"),
+    responsible: z.string().min(1, "Responsável obrigatório"),
+});
+
+type CreateDocumentSchema = z.infer<typeof createDocumentSchema>;
 
 export function CreateDocumentModal({
     open,
     onOpenChange,
 }: CreateDocumentModalProps) {
-    const [form, setForm] = useState<DocumentForm>({
-        code: "",
-        title: "",
-        category: "",
-        status: "",
-        updatedAt: "",
-        responsible: "",
-    });
+    const [formError, setFormError] = useState<string | null>(null);
+    const { mutateAsync, isPending } = useCreateDocument()
 
-    const { mutateAsync, isPending } = useMutation({
-        mutationKey: ["create-document"],
-        mutationFn: async (data: DocumentForm) => {
-            const response = await fetch("http://127.0.0.1:3336/documents", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(data),
-            });
-
-            if (!response.ok) {
-                throw new Error("Erro ao criar documento");
-            }
-
-            return response.json();
+    const {
+        register,
+        setValue,
+        handleSubmit,
+        reset,
+        formState: { errors, isSubmitting },
+    } = useForm<CreateDocumentSchema>({
+        resolver: zodResolver(createDocumentSchema),
+        defaultValues: {
+            code: "",
+            category: "",
+            responsible: "",
+            status: "",
+            title: "",
+            url: "",
         },
     });
 
-    const handleChange = (field: keyof DocumentForm, value: string) => {
-        setForm((prev) => ({
-            ...prev,
-            [field]: value,
-        }));
-    };
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-
+    async function handleCreateDocumentSubmit(data: CreateDocumentSchema) {
         try {
-            await mutateAsync(form);
+            setFormError(null);
+
+            await mutateAsync(data);
 
             toast.success("Documento criado com sucesso!", {
                 position: "top-center",
                 richColors: true,
             });
 
+            reset();
             onOpenChange(false);
-
-            setForm({
-                code: "",
-                title: "",
-                category: "",
-                status: "",
-                updatedAt: "",
-                responsible: "",
-            });
         } catch (error) {
             console.error(error);
+            setFormError("Erro ao criar documento.");
 
             toast.error("Erro ao criar documento.", {
                 position: "top-center",
                 richColors: true,
             });
         }
-    };
+    }
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -116,26 +100,39 @@ export function CreateDocumentModal({
                     </DialogDescription>
                 </DialogHeader>
 
-                <form onSubmit={handleSubmit} className="space-y-6 p-6">
+                <form
+                    onSubmit={handleSubmit(handleCreateDocumentSubmit)}
+                    className="space-y-6 p-6"
+                >
+                    {formError && (
+                        <p className="text-sm text-red-500">{formError}</p>
+                    )}
+
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
                             <Label>Código</Label>
                             <Input
-                                value={form.code}
-                                onChange={(e) =>
-                                    handleChange("code", e.target.value)
-                                }
+                                placeholder="Informe o código..."
+                                {...register("code")}
                             />
+                            {errors.code && (
+                                <p className="text-sm text-red-500">
+                                    {errors.code.message}
+                                </p>
+                            )}
                         </div>
 
                         <div className="space-y-2">
                             <Label>Documento</Label>
                             <Input
-                                value={form.title}
-                                onChange={(e) =>
-                                    handleChange("title", e.target.value)
-                                }
+                                placeholder="Informe o título..."
+                                {...register("title")}
                             />
+                            {errors.title && (
+                                <p className="text-sm text-red-500">
+                                    {errors.title.message}
+                                </p>
+                            )}
                         </div>
                     </div>
 
@@ -144,7 +141,7 @@ export function CreateDocumentModal({
                             <Label>Categoria</Label>
                             <Select
                                 onValueChange={(value) =>
-                                    handleChange("category", value)
+                                    setValue("category", value)
                                 }
                             >
                                 <SelectTrigger>
@@ -152,25 +149,30 @@ export function CreateDocumentModal({
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectGroup>
-                                        <SelectItem value="pol">
+                                        <SelectItem value="Política">
                                             Política
                                         </SelectItem>
-                                        <SelectItem value="proc">
+                                        <SelectItem value="Procedimento">
                                             Procedimento
                                         </SelectItem>
-                                        <SelectItem value="man">
+                                        <SelectItem value="Manual">
                                             Manual
                                         </SelectItem>
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>
+                            {errors.category && (
+                                <p className="text-sm text-red-500">
+                                    {errors.category.message}
+                                </p>
+                            )}
                         </div>
 
                         <div className="space-y-2">
                             <Label>Status</Label>
                             <Select
                                 onValueChange={(value) =>
-                                    handleChange("status", value)
+                                    setValue("status", value)
                                 }
                             >
                                 <SelectTrigger>
@@ -178,41 +180,48 @@ export function CreateDocumentModal({
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectGroup>
-                                        <SelectItem value="vigente">
+                                        <SelectItem value="Vigente">
                                             Vigente
                                         </SelectItem>
-                                        <SelectItem value="andamento">
+                                        <SelectItem value="Em Andamento">
                                             Em Andamento
                                         </SelectItem>
-                                        <SelectItem value="revisao">
+                                        <SelectItem value="Em Revisão">
                                             Em Revisão
                                         </SelectItem>
-                                        <SelectItem value="pendente">
+                                        <SelectItem value="Pendente">
                                             Pendente
                                         </SelectItem>
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>
+                            {errors.status && (
+                                <p className="text-sm text-red-500">
+                                    {errors.status.message}
+                                </p>
+                            )}
                         </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
-                            <Label>Atualizado</Label>
+                            <Label>Localização do Documento</Label>
                             <Input
-                                type="date"
-                                value={form.updatedAt}
-                                onChange={(e) =>
-                                    handleChange("updatedAt", e.target.value)
-                                }
+                                placeholder="Informe a url do documento..."
+                                {...register("url")}
                             />
+                            {errors.url && (
+                                <p className="text-sm text-red-500">
+                                    {errors.url.message}
+                                </p>
+                            )}
                         </div>
 
                         <div className="space-y-2">
                             <Label>Responsável</Label>
                             <Select
                                 onValueChange={(value) =>
-                                    handleChange("responsible", value)
+                                    setValue("responsible", value)
                                 }
                             >
                                 <SelectTrigger>
@@ -220,19 +229,24 @@ export function CreateDocumentModal({
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectGroup>
-                                        <SelectItem value="rh">RH</SelectItem>
-                                        <SelectItem value="infra">
+                                        <SelectItem value="RH">RH</SelectItem>
+                                        <SelectItem value="Infra">
                                             Infra
                                         </SelectItem>
-                                        <SelectItem value="suporte">
+                                        <SelectItem value="Suporte">
                                             Suporte
                                         </SelectItem>
-                                        <SelectItem value="dev">
+                                        <SelectItem value="Desenvolvedor">
                                             Desenvolvedor
                                         </SelectItem>
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>
+                            {errors.responsible && (
+                                <p className="text-sm text-red-500">
+                                    {errors.responsible.message}
+                                </p>
+                            )}
                         </div>
                     </div>
 
@@ -245,8 +259,8 @@ export function CreateDocumentModal({
                             Cancelar
                         </Button>
 
-                        <Button type="submit" disabled={isPending}>
-                            <Save />
+                        <Button type="submit" disabled={isSubmitting}>
+                            <Save className="w-4 h-4 mr-2" />
                             {isPending
                                 ? "Salvando..."
                                 : "Criar Documento"}

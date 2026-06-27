@@ -46,7 +46,7 @@ export function GLPISummaryComponent() {
 
     return (
         <Card className="
-                h-52
+                h-74
                 w-full
                 rounded-2xl
                 border
@@ -65,7 +65,7 @@ export function GLPISummaryComponent() {
 
                     <div>
                         <h3 className="text-base font-semibold text-primary-text">
-                            Resumo das suas Solicitações - GLPI
+                            Minhas Solicitações - GLPI
                         </h3>
 
                         <p className="text-xs text-muted-foreground">

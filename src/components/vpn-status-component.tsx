@@ -37,7 +37,7 @@ export function VPNStatusCard() {
 
     if (query.isLoading) {
         return (
-            <Card className="h-52 p-0">
+            <Card className="h-74 p-0">
                 <Skeleton className="h-full bg-gray-100" />
             </Card>
         );
@@ -50,7 +50,7 @@ export function VPNStatusCard() {
     return (
         <Card
             className="
-            h-58
+            h-fit
                 w-full
                 rounded-2xl
                 border border-border
@@ -74,11 +74,11 @@ export function VPNStatusCard() {
 
                     <div>
                         <h3 className="text-base font-semibold text-primary-text">
-                            Status do Certificado da VPN
+                            VPN
                         </h3>
 
                         <p className="text-xs text-muted-foreground">
-                            Monitoramento do certificado em tempo real
+                            Monitoramento da VPN
                         </p>
                     </div>
                 </div>
@@ -139,15 +139,17 @@ export function VPNStatusCard() {
                     </div>
                 </div>
 
-                <div className="mt-3 flex justify-between text-xs text-muted-foreground border border-border p-3 rounded-sm bg-card">
-                    <div className="flex items-center gap-1">
-                        <Clock className="size-3" />
-                        <span>Data de Expiração</span>
-                    </div>
+                <div className="mt-3 flex flex-col gap-4 justify-between">
+                    <div className="flex flex-col gap-1">
+                        <div className="flex items-center gap-1">
+                            <Clock className="size-3 text-muted-foreground" />
 
-                    <span className="text-muted-foreground font-semibold">
-                        {formatLastLogin(query.data.vpnDetails.expirationDate)}
-                    </span>
+                            <span className="text-xs text-muted-foreground">Data de Expiração</span>
+                        </div>
+                        <span className="text-sm font-medium text-primary-text">
+                            {formatLastLogin(query.data.vpnDetails.expirationDate)}
+                        </span>
+                    </div>
                 </div>
             </CardContent>
         </Card>
