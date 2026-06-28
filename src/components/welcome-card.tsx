@@ -1,10 +1,9 @@
+import { useGetSummaryEvents } from "@/api/calendar/get-summary-events";
+import { useTheme } from "@/contexts/theme-context";
 import { useUser } from "@/contexts/user-context";
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "./ui/card";
-import { Clock, Coffee, Video } from "lucide-react";
-import { useGetSummaryEvents } from "@/api/calendar/get-summary-events";
 import { Skeleton } from "./ui/skeleton";
-import { useTheme } from "@/contexts/theme-context";
 
 export function WelcomeCard() {
     const [now, setNow] = useState(new Date());
@@ -27,26 +26,26 @@ export function WelcomeCard() {
 
     if (!data) return null;
 
-    const calendarSummary = [
-        {
-            title: "Reuniões Hoje",
-            value: data.summary.meetingsToday.toString(),
-            icon: Video,
-            colorText: "text-blue-500",
-        },
-        {
-            title: "Agendadas",
-            value: `${data.summary.scheduledHoursToday.toFixed(1)}h`,
-            icon: Clock,
-            colorText: "text-amber-500",
-        },
-        {
-            title: "Tempo Livre",
-            value: `${data.summary.freeHoursToday.toFixed(1)}h`,
-            icon: Coffee,
-            colorText: "text-purple-500",
-        },
-    ];
+    // const calendarSummary = [
+    //     {
+    //         title: "Reuniões Hoje",
+    //         value: data.summary.meetingsToday.toString(),
+    //         icon: Video,
+    //         colorText: "text-blue-500",
+    //     },
+    //     {
+    //         title: "Agendadas",
+    //         value: `${data.summary.scheduledHoursToday.toFixed(1)}h`,
+    //         icon: Clock,
+    //         colorText: "text-amber-500",
+    //     },
+    //     {
+    //         title: "Tempo Livre",
+    //         value: `${data.summary.freeHoursToday.toFixed(1)}h`,
+    //         icon: Coffee,
+    //         colorText: "text-purple-500",
+    //     },
+    // ];
 
     const getGreeting = () => {
         const hour = now.getHours();

@@ -44,14 +44,14 @@ export function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
                     border-r shadow-lg border-border
                     transition-all duration-300
 
-                    ${collapsed ? "w-23" : "w-73"}
+                    ${collapsed ? "w-26" : "w-73"}
                     ${mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
                 `}
             >
                 {/* HEADER */}
                 <div className="shrink-0 mt-20">
                     <div className="flex h-16 items-center justify-between border-b border-border px-4">
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center pt-4 justify-center gap-2">
                             {/* <div className="w-8 h-8 rounded-md bg-primary/20 flex items-center justify-center font-bold text-primary">
                                 <img src="./logo-nexus.png" alt="" />
                             </div> */}
@@ -63,7 +63,7 @@ export function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
                             )}
                         </div>
 
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center justify-center gap-2">
                             <button
                                 className="lg:hidden"
                                 onClick={() => setMobileOpen(false)}
@@ -73,7 +73,7 @@ export function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
 
                             <button
                                 onClick={() => setCollapsed(!collapsed)}
-                                className="hidden lg:block"
+                                className="hidden lg:block justify-center items-center pt-3"
                             >
                                 {collapsed ? (
                                     <ChevronRight size={20} />

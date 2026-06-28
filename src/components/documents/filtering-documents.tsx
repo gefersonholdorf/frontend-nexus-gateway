@@ -31,9 +31,9 @@ export function FilteringDocuments({
 }: FilteringDocumentsProps) {
     const [filters, setFilters] = useState<Filters>({
         text: "",
-        category: "",
-        status: "",
-        department: "",
+        category: "all",
+        status: "all",
+        department: "all",
     });
 
     const [searchText, setSearchText] = useState("");
@@ -44,17 +44,25 @@ export function FilteringDocuments({
         updateFilter("text", debouncedSearch || "");
     }, [debouncedSearch]);
 
+    useEffect(() => {
+  console.log("MONTADO");
+
+  return () => {
+    console.log("DESMONTADO");
+  };
+}, []);
+
     function updateFilter<K extends keyof Filters>(
         key: K,
         value: Filters[K]
     ) {
-        const newFilters = {
+        const next = {
             ...filters,
             [key]: value,
         };
 
-        setFilters(newFilters);
-        onFilterChange?.(newFilters);
+        setFilters(next);
+        onFilterChange?.(next);
     }
 
     function clearFilters() {
@@ -62,9 +70,9 @@ export function FilteringDocuments({
 
         const newFilters: Filters = {
             text: "",
-            category: "",
-            status: "",
-            department: "",
+            category: "all",
+            status: "all",
+            department: "all",
         };
 
         setFilters(newFilters);
@@ -73,13 +81,11 @@ export function FilteringDocuments({
 
     return (
         <Card
-            className="h-fit rounded-sm p-4 space-y-1 border-none border-transparent shadow-sm
+            className="h-fit rounded-t-sm rounded-b-none p-4 space-y-1 border-none border-transparent shadow-sm
       transition-all duration-300 hover:shadow-sm
       bg-(image:--background-gradient)"
         >
             <div className="flex flex-col gap-2">
-                <span className="text-[.8rem]">Filtrar por:</span>
-
                 <div className="w-full grid grid-cols-1 lg:grid-cols-7 gap-4">
                     <div className="col-span-3">
                         <Input
@@ -110,6 +116,9 @@ export function FilteringDocuments({
                                 <SelectItem value="Manual">
                                     Manual
                                 </SelectItem>
+                                <SelectItem value="all">
+                                    Todos
+                                </SelectItem>
                             </SelectGroup>
                         </SelectContent>
                     </Select>
@@ -132,11 +141,14 @@ export function FilteringDocuments({
                                 <SelectItem value="Em Andamento">
                                     Em Andamento
                                 </SelectItem>
-                                <SelectItem value="Em Revisao">
+                                <SelectItem value="Em Revisão">
                                     Em Revisão
                                 </SelectItem>
                                 <SelectItem value="Pendente">
                                     Pendente
+                                </SelectItem>
+                                <SelectItem value="all">
+                                    Todos
                                 </SelectItem>
                             </SelectGroup>
                         </SelectContent>
@@ -161,6 +173,9 @@ export function FilteringDocuments({
                                 </SelectItem>
                                 <SelectItem value="Desenvolvimento">
                                     Desenvolvimento
+                                </SelectItem>
+                                <SelectItem value="all">
+                                    Todos
                                 </SelectItem>
                             </SelectGroup>
                         </SelectContent>

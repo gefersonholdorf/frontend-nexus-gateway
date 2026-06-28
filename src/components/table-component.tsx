@@ -15,15 +15,17 @@ import {
   TableHeader,
   TableRow
 } from "@/components/ui/table"
-import { Cog, FileText, type LucideIcon } from "lucide-react"
+import { FileText, TriangleAlert, type LucideIcon } from "lucide-react"
 import { Card } from "./ui/card"
+import { Skeleton } from "@/components/ui/skeleton"
+import { Button } from "./ui/button"
 
-export type Column<T> = {
-  key: keyof T
+export type Column<T, K extends keyof T = keyof T> = {
+  key: K
   title: string
   className?: string
   cellClassName?: string
-  render?: (value: T[keyof T], row: T) => React.ReactNode
+  render?: (value: T[K], row: T) => React.ReactNode
   icon?: LucideIcon
 }
 
@@ -41,6 +43,11 @@ export interface TableComponentProps<T> {
     hasPreviousPage: boolean,
   }
   onPageChange?: (page: number) => void
+  filteringComponent: React.ReactNode
+  registerName: string
+  isLoading: boolean
+  isError: boolean
+  onRetry?: () => void
 }
 
 export function TableComponent<T>({
@@ -48,16 +55,22 @@ export function TableComponent<T>({
   columns,
   actions,
   pagination,
-  onPageChange
+  onPageChange,
+  filteringComponent,
+  registerName,
+  isLoading,
+  isError,
+  onRetry
 }: TableComponentProps<T>) {
   const pages = Array.from(
     { length: pagination.totalPages },
     (_, index) => index + 1
   )
   return (
-    <Card className="h-fit flex-row rounded-sm p-0 border-none border-transparent shadow-sm transition-all duration-300 transform hover:scale-[1.00]
+    <Card className="h-fit flex gap-0 rounded-b-2xl p-0 border-none border-transparent shadow-sm transition-all duration-300 transform hover:scale-[1.00]
                                     hover:shadow-sm outline-none bg-(image:--background-gradient)">
-      <Table className="bg-(image:--background-gradient) rounded-lg p-12 shadow-sm">
+      {filteringComponent}
+      <Table className="bg-(image:--background-gradient) rounded-b-lg p-12 shadow-sm">
         <TableHeader className="bg-card">
           <TableRow>
             {columns.map((column) => (
@@ -74,7 +87,6 @@ export function TableComponent<T>({
             {actions && (
               <TableHead className={`text-right px-6 py-4 `}>
                 <div className="flex items-center justify-end gap-1 text-right">
-                  <Cog className="size-4" />
                   Ações
                 </div>
               </TableHead>
@@ -83,20 +95,74 @@ export function TableComponent<T>({
         </TableHeader>
 
         <TableBody>
-          {data.length === 0 ? (
+          {isLoading ? (
+            Array.from({ length: 8 }).map((_, rowIndex) => (
+              <TableRow key={rowIndex}>
+                {columns.map((column) => (
+                  <TableCell
+                    key={String(column.key)}
+                    className={`px-6 py-4 ${column.cellClassName ?? ""}`}
+                  >
+                    <Skeleton className="h-5 w-full rounded-md" />
+                  </TableCell>
+                ))}
+
+                {actions && (
+                  <TableCell className="px-6 py-4 text-right">
+                    <Skeleton className="ml-auto h-8 w-8 rounded-md" />
+                  </TableCell>
+                )}
+              </TableRow>
+            ))
+          ) : isError ? (
             <TableRow>
               <TableCell
                 colSpan={columns.length + (actions ? 1 : 0)}
-                className="h-40 text-center"
+                className="h-40"
               >
-                <div className="flex flex-col items-center gap-2">
-                  <FileText className="size-8 text-muted-foreground" />
-                  <span className="font-medium">
-                    Nenhum documento encontrado
-                  </span>
-                  <span className="text-sm text-muted-foreground">
-                    Tente alterar os filtros ou cadastrar um novo documento.
-                  </span>
+                <div className="flex flex-col items-center justify-center gap-3">
+                  <TriangleAlert className="size-10 text-destructive" />
+
+                  <div className="text-center">
+                    <p className="font-semibold">
+                      Ocorreu um erro ao carregar os dados
+                    </p>
+
+                    <p className="text-sm text-muted-foreground">
+                      Tente novamente em alguns instantes.
+                    </p>
+                  </div>
+
+                  {onRetry && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={onRetry}
+                    >
+                      Tentar novamente
+                    </Button>
+                  )}
+                </div>
+              </TableCell>
+            </TableRow>
+          ) : data.length === 0 ? (
+            <TableRow>
+              <TableCell
+                colSpan={columns.length + (actions ? 1 : 0)}
+                className="h-40"
+              >
+                <div className="flex flex-col items-center justify-center gap-3">
+                  <FileText className="size-10 text-muted-foreground" />
+
+                  <div className="text-center">
+                    <p className="font-semibold">
+                      Nenhum registro encontrado
+                    </p>
+
+                    <p className="text-sm text-muted-foreground">
+                      Tente alterar os filtros ou cadastrar um novo item.
+                    </p>
+                  </div>
                 </div>
               </TableCell>
             </TableRow>
@@ -127,7 +193,7 @@ export function TableComponent<T>({
           <TableRow>
             <TableCell colSpan={2}>
               <div className="pl-4">
-                <span className="text-[.8rem] text-muted-foreground">{data.length} de {pagination.total} documentos</span>
+                <span className="text-[.8rem] text-muted-foreground">{data.length} de {pagination.total} {registerName}</span>
               </div>
             </TableCell>
             <TableCell colSpan={999}>

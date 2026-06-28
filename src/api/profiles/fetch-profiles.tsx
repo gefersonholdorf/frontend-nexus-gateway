@@ -1,28 +1,31 @@
 import { useUser } from "@/contexts/user-context";
 import { useQuery } from "@tanstack/react-query";
 
-interface Document {
+interface Profile {
     id: number
-    code: string,
-    category: string,
-    responsible: string,
-    status: string,
     title: string,
-    url: string,
-    updatedAt: string,
+    description: string | null,
+    createdAt: string,
+    status: boolean,
+    countUsers: number,
+    countTotalPermissions: number,
+    permissions:
+    {
+        id: number,
+        key: string,
+        description: string | null
+    }[]
 }
 
-interface FetchDocumentsRequest {
+interface FetchProfilesRequest {
     page: number;
     perPage: number;
-    text?: string;
-    category?: string;
+    title?: string;
     status?: string;
-    department?: string;
 }
 
-interface FetchDocumentsResponse {
-    documents: Document[]
+interface FetchProfilesResponse {
+    profiles: Profile[]
     pagination: {
         page: number,
         perPage: number,
@@ -31,20 +34,19 @@ interface FetchDocumentsResponse {
         hasNextPage: boolean,
         hasPreviousPage: boolean,
     }
+    countPermissions: number
 }
 
-export function useFetchDocuments({ page = 1, perPage = 10, category, department, status, text }: FetchDocumentsRequest) {
+export function useFetchProfiles({ page = 1, perPage = 10, status, title }: FetchProfilesRequest) {
     const { user } = useUser()
 
     return useQuery({
         queryKey: [
-            "fetch-documents",
+            "fetch-profiles",
             page,
             perPage,
-            text,
-            category,
+            title,
             status,
-            department,
         ],
         queryFn: async () => {
             const query = new URLSearchParams();
@@ -52,14 +54,8 @@ export function useFetchDocuments({ page = 1, perPage = 10, category, department
             query.append("page", String(page));
             query.append("perPage", String(perPage));
 
-            if (text) {
-                query.append("text", text);
-            }
-
-            if (category) {
-                if (category !== "all") {
-                    query.append("category", category);
-                }
+            if (title) {
+                query.append("title", title);
             }
 
             if (status) {
@@ -68,13 +64,7 @@ export function useFetchDocuments({ page = 1, perPage = 10, category, department
                 }
             }
 
-            if (department) {
-                if (department !== "all") {
-                    query.append("department", department);
-                }
-            }
-
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/documents?${query.toString()}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/profiles?${query.toString()}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -83,10 +73,10 @@ export function useFetchDocuments({ page = 1, perPage = 10, category, department
             })
 
             if (response.status !== 200) {
-                throw new Error("Erro ao listar documentos")
+                throw new Error("Erro ao listar perfis")
             }
 
-            const result: FetchDocumentsResponse = await response.json()
+            const result: FetchProfilesResponse = await response.json()
 
             return result
         },

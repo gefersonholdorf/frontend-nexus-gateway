@@ -7,7 +7,7 @@ import { useTheme } from "./contexts/theme-context";
 
 
 export function LayoutPages() {
-    const [collapsed, setCollapsed] = useState(false);
+    const [collapsed, setCollapsed] = useState(true);
     const { theme } = useTheme()
 
     return (

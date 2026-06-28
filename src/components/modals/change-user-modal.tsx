@@ -1,3 +1,4 @@
+import { useChangePaswordRequest } from "@/api/users/use-change-password";
 import { Button } from "@/components/ui/button";
 import {
     Dialog,
@@ -10,7 +11,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
 import {
     Eye,
     EyeOff,
@@ -61,7 +61,6 @@ type UpdatePasswordForm = z.infer<
 export function UpdatePasswordModal({
     open,
     onOpenChange,
-    userId,
 }: UpdatePasswordModalProps) {
     const [showCurrent, setShowCurrent] =
         useState(false);
@@ -83,42 +82,16 @@ export function UpdatePasswordModal({
         ),
     });
 
-    const { mutateAsync, isPending } =
-        useMutation({
-            mutationKey: [
-                "update-password",
-                userId,
-            ],
-            mutationFn: async (
-                data: UpdatePasswordForm
-            ) => {
-                const response = await fetch(
-                    `http://127.0.0.1:3336/users/${userId}/password`,
-                    {
-                        method: "PUT",
-                        headers: {
-                            "Content-Type":
-                                "application/json",
-                        },
-                        body: JSON.stringify(data),
-                    }
-                );
-
-                if (!response.ok) {
-                    throw new Error(
-                        "Erro ao atualizar senha"
-                    );
-                }
-
-                return response.json();
-            },
-        });
+    const {isPending, mutateAsync } = useChangePaswordRequest()
 
     async function handleUpdate(
         data: UpdatePasswordForm
     ) {
         try {
-            await mutateAsync(data);
+            await mutateAsync({
+                currentPassword: data.currentPassword,
+                newPassword: data.newPassword
+            });
 
             toast.success(
                 "Senha atualizada com sucesso",

@@ -20,6 +20,9 @@ import { ProtectedRoute } from './protected-router.tsx'
 import { CommunicationsPage } from './pages/comunications-page.tsx'
 import { ForbiddenPage } from './pages/forbidden-page.tsx'
 import { DocumentsPage } from './pages/documents-page.tsx'
+import { UsersPage } from './pages/users-page.tsx'
+import { ProfilePage } from './pages/profiles-page.tsx'
+import { EditProfilePage } from './pages/edit-profile-page.tsx'
 
 const queryClient = new QueryClient()
 
@@ -44,6 +47,9 @@ createRoot(document.getElementById('root')!).render(
                     <Route path="/servers" element={<ServersPage />} />
                     <Route path="/comunications" element={<CommunicationsPage />} />
                     <Route path="/documents" element={<DocumentsPage />} />
+                    <Route path="/users" element={<UsersPage />} />
+                    <Route path="/profiles" element={<ProfilePage />} />
+                    <Route path="/profiles/:id" element={<EditProfilePage />} />
                   </Route>
                 </Route>
               </Routes>

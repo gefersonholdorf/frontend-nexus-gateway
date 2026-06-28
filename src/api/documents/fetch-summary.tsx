@@ -54,15 +54,21 @@ export function useFetchSummarys({ page = 1, perPage = 10, category, department,
             }
 
             if (category) {
-                query.append("category", category);
+                if (category !== "all") {
+                    query.append("category", category);
+                }
             }
 
             if (status) {
-                query.append("status", status);
+                if (status !== "all") {
+                    query.append("status", status);
+                }
             }
 
             if (department) {
-                query.append("department", department);
+                if (department !== "all") {
+                    query.append("department", department);
+                }
             }
 
             const response = await fetch(`${import.meta.env.VITE_API_URL}/documents/summary?${query.toString()}`, {

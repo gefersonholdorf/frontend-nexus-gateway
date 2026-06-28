@@ -41,6 +41,10 @@ export function useCreateDocument() {
             await queryClient.invalidateQueries({
                 queryKey: ['fetch-documents']
             })
+
+            await queryClient.invalidateQueries({
+                queryKey: ["fetch-summarys"]
+            })
         }
     })
 }

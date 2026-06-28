@@ -1,0 +1,221 @@
+import { useFetchSummarys } from "@/api/documents/fetch-summary";
+import { useFetchProfiles } from "@/api/profiles/fetch-profiles";
+import { CardDocuments } from "@/components/documents/cards-documents";
+import { CreateDocumentModal } from "@/components/documents/create-document-modal";
+import { DeleteDocumentModal } from "@/components/documents/delete-document";
+import { FilteringDocuments, type Filters } from "@/components/documents/filtering-documents";
+import { HeaderPage } from "@/components/header-page";
+import { TableComponent, type Column } from "@/components/table-component";
+import { Badge } from "@/components/ui/badge";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import { Button } from "@/components/ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { formatDate } from "date-fns";
+import { CheckCircle, Edit, MoreHorizontalIcon, Plus, UserKey, X, XCircle } from "lucide-react";
+import { useState } from "react";
+
+const columns: Column<Profile>[] = [
+    {
+        key: "id",
+        title: "Id",
+        render: (value) => (
+            <div className="flex items-center gap-1 text-[.8rem]">
+                <span>{value!.toString()}</span>
+            </div>
+        )
+    },
+    {
+        key: "title",
+        title: "Perfil",
+        render: (value, row) => (
+            <div className="truncate max-w-70 flex flex-col">
+                <span>{value?.toString()}</span>
+                <span className="text-[.8rem] text-muted-foreground">{row.description}</span>
+            </div>
+        )
+    },
+    {
+        key: "countUsers",
+        title: "Usuários",
+        render: (value) => (
+            <div className="truncate max-w-70 flex flex-col">
+                <span>{value?.toString()}</span>
+            </div>
+        )
+    },
+    {
+        key: "permissions",
+        title: "Permissões",
+        render: (value, row) => {
+            if (!Array.isArray(value)) return null;
+
+            return (
+                <div className="flex flex-col gap-1">
+                    <span>{value.length} / {row.countTotalPermissions}</span>
+                    <span className="text-[.8rem] text-muted-foreground">{(value.length / row.countTotalPermissions) * 100}%</span>
+                </div>
+            );
+        },
+    },
+    {
+        key: "status",
+        title: "Status",
+        render: (value) => (
+            <div className="flex items-center gap-1">
+                {value && (
+                    <>
+                        <Badge className="bg-transparent text-emerald-500 border border-emerald-500">
+                            <CheckCircle className="size-3 text-emerald-500" />
+                            <span className="">Ativo</span>
+                        </Badge>
+                    </>
+                )}
+                {value === false && (
+                    <>
+                        <Badge className="bg-transparent text-red-500 border border-red-500">
+                            <XCircle className="size-3" />
+                            Inativo
+                        </Badge>
+                    </>
+                )}
+            </div>
+        )
+    },
+    {
+        key: "createdAt",
+        title: "Criado em",
+        render: (value) => (
+            <div>
+                {formatDate(value!.toString(), "dd/MM/yyyy - HH:mm")}
+            </div>
+        )
+    },
+]
+
+export interface Profile {
+    id: number
+    title: string,
+    description: string | null,
+    createdAt: string,
+    status: boolean,
+    countUsers: number,
+    countTotalPermissions: number
+    permissions:
+    {
+        id: number,
+        key: string,
+        description: string | null
+    }[]
+}
+
+export function ProfilePage() {
+    const [openCreateModal, setOpenCreateModal] = useState(false)
+    const [page, setPage] = useState(1)
+    const [filters, setFilters] = useState<Filters>({
+        text: "",
+        category: "all",
+        status: "all",
+        department: "all",
+    });
+
+    const { isLoading, data, isError, refetch } = useFetchProfiles({
+        page,
+        perPage: 10,
+        title: filters.text,
+        status: filters.status,
+    })
+
+    const { isLoading: isLoadingSummary, data: dataSummary } = useFetchSummarys({
+        page,
+        perPage: 10,
+        text: filters.text,
+        category: filters.category,
+        status: filters.status,
+        department: filters.department,
+    })
+
+    function handleSetOpenCreateModal() {
+        setOpenCreateModal(!openCreateModal)
+    }
+
+    function handleFiltering(newFilters: Filters) {
+        setFilters(newFilters);
+        setPage(1);
+    }
+
+    return (
+        <>
+            <HeaderPage
+                title="Perfis"
+                description="Gerencie os perfis da sua empresa."
+                icon={UserKey}
+                actions={
+                    <Button
+                        onClick={() => setOpenCreateModal(true)}
+                    >
+                        <Plus />
+                        Adicionar Perfil
+                    </Button>
+                }
+                breadcrumb={
+                    <Breadcrumb>
+                        <BreadcrumbList>
+                            <BreadcrumbItem>
+                                <BreadcrumbLink href="/welcome">Página Inicial</BreadcrumbLink>
+                            </BreadcrumbItem>
+                            <BreadcrumbSeparator />
+                            <BreadcrumbItem>
+                                <BreadcrumbPage>Perfis</BreadcrumbPage>
+                            </BreadcrumbItem>
+                        </BreadcrumbList>
+                    </Breadcrumb>
+                }
+            />
+            <div className="flex-1 px-16 py-8 space-y-6">
+                <CardDocuments isLoading={isLoadingSummary} summary={dataSummary?.summary} />
+                <TableComponent
+                    data={data?.profiles ?? []}
+                    registerName="Perfis"
+                    isLoading={isLoading}
+                    isError={isError}
+                    onRetry={refetch}
+                    filteringComponent={
+                        <FilteringDocuments onFilterChange={handleFiltering} />
+                    }
+                    columns={columns}
+                    pagination={
+                        data?.pagination ?? {
+                            page: 1,
+                            perPage: 10,
+                            total: 0,
+                            totalPages: 1,
+                            hasNextPage: false,
+                            hasPreviousPage: false,
+                        }
+                    }
+                    onPageChange={setPage}
+                    actions={(document) => (
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="icon" className="size-8" >
+                                    <MoreHorizontalIcon />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem>
+                                    <Edit />
+                                    Editar
+                                </DropdownMenuItem> <DeleteDocumentModal id={document.id}>
+                                    <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                                        <X />
+                                        Excluir
+                                    </DropdownMenuItem>
+                                </DeleteDocumentModal>
+                            </DropdownMenuContent>
+                        </DropdownMenu>)} />
+            </div>
+            <CreateDocumentModal open={openCreateModal} onOpenChange={handleSetOpenCreateModal} />
+        </>
+    )
+}

@@ -9,6 +9,8 @@ import {
     Network,
     Rocket,
     Server,
+    UserRoundKey,
+    Users
 } from "lucide-react";
 
 export const sidebarModules = [
@@ -88,4 +90,19 @@ export const sidebarModules = [
             },
         ],
     },
+    {
+        title: "Administração",
+        items: [
+            {
+                label: "Usuários",
+                path: "/users",
+                icon: Users
+            },
+            {
+                label: "Perfis",
+                path: "/profiles",
+                icon: UserRoundKey
+            }
+        ]
+    }
 ];
