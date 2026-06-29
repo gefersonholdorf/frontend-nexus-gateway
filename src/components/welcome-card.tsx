@@ -56,11 +56,11 @@ export function WelcomeCard() {
     };
 
     return (
-        <Card className="h-55 relative overflow-hidden rounded-3xl p-4">
+        <Card className="h-52 relative overflow-hidden rounded-3xl p-4">
             <div
                 className={`
             absolute inset-0
-            ${theme === 'dark' ? "bg-[url('./dark-lusati-back.png')]" : "bg-[url('./light-lusati-back.png')]"}
+            ${theme === 'dark' ? "bg-[url('https://api2.lusati.com.br/repositorio/nexus/dark-lusati-back.png')]" : "bg-[url('https://api2.lusati.com.br/repositorio/nexus/light-lusati-back.png')]"}
             bg-cover bg-right
         `}
             />

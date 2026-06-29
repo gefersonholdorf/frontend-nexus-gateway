@@ -1,6 +1,7 @@
 import { useGetNextEvents } from "@/api/calendar/get-next-events-by-user";
 import {
     format,
+    formatDate,
     formatDistanceToNowStrict,
     isToday,
     isYesterday,
@@ -17,6 +18,8 @@ import {
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader } from "../ui/card";
 import { Skeleton } from "../ui/skeleton";
+import { useUser } from "@/contexts/user-context";
+import { Badge } from "../ui/badge";
 
 export function formatDateEvent(
     startDate: string,
@@ -50,6 +53,8 @@ export function formatDateEvent(
 }
 
 export function NextEvents() {
+
+    const { user } = useUser()
     const now = new Date();
 
     const nextWeek = new Date();
@@ -83,6 +88,8 @@ export function NextEvents() {
             new Date(event.startAt).getTime() > Date.now()
     );
 
+    const prensence = nextEvent?.attendees.find((next) => next.email === user?.email)?.response
+
     const timeUntilNextEvent = nextEvent
         ? formatDistanceToNowStrict(
             new Date(
@@ -99,7 +106,7 @@ export function NextEvents() {
     return (
         <Card
             className="
-                h-80
+                h-74
                 w-full
                 rounded-2xl
                 border
@@ -112,17 +119,7 @@ export function NextEvents() {
         >
             <CardHeader className="">
                 <div className="flex items-center gap-3">
-                    <div
-                        className="
-                            flex
-                            h-11
-                            w-11
-                            items-center
-                            justify-center
-                            rounded-xl
-                            bg-primary/10
-                        "
-                    >
+                    <div className="flex h-10 w-10 items-center justify-center rounded-md border border-primary bg-background/10">
                         <CalendarCheck className="size-5 text-primary" />
                     </div>
 
@@ -138,22 +135,11 @@ export function NextEvents() {
                 </div>
             </CardHeader>
 
-            <CardContent className="flex h-full flex-col gap-4">
+            <CardContent className="flex h-full flex-col">
                 {data.events.length > 0 ? (
                     <>
-                        {nextEvent ? (
-                            <div
-                                className="
-                                    flex-1
-                                    rounded-xl
-                                    border
-                                    p-4
-                                    transition-colors
-                                    hover:bg-muted/20
-                                "
-                            >
-                                <div
-                                    className="
+                        <div
+                            className="
                                         mb-3
                                         flex
                                         items-center
@@ -162,59 +148,37 @@ export function NextEvents() {
                                         font-medium
                                         text-primary
                                     "
-                                >
-                                    <Clock className="size-3.5" />
+                        >
+                            <Clock className="size-3.5" />
 
-                                    <span>
-                                        Próximo evento em{" "}
-                                        {timeUntilNextEvent}
+                            <span>
+                                Próximo evento em{" "}
+                                {timeUntilNextEvent}
+                            </span>
+                        </div>
+                        <div className="flex items-center justify-between gap-4 border border-border rounded-sm p-4">
+                            <div className="flex items-center">
+                                {/* <div className="border border-border p-2 rounded-full">
+                                    <Calendar className="size-4 text-blue-400" />
+                                </div> */}
+                                <div className="flex flex-col gap-1">
+                                    <span className="font-semibold line-clamp-2 max-w-60">{nextEvent?.title}</span>
+                                    <span className="text-[.8rem] text-muted-foreground">
+                                        {nextEvent &&
+                                            formatDate(
+                                                nextEvent.startAt,
+                                                "EEEE, dd 'de' MMMM 'às' HH:mm",
+                                                {
+                                                    locale: ptBR,
+                                                }
+                                            )}
                                     </span>
-                                </div>
-
-                                <h4
-                                    className="
-                                        line-clamp-2
-                                        text-base
-                                        font-semibold
-                                        text-primary-text
-                                    "
-                                >
-                                    {nextEvent.title}
-                                </h4>
-
-                                <p
-                                    className="
-                                        mt-2
-                                        text-sm
-                                        text-muted-foreground
-                                    "
-                                >
-                                    {formatDateEvent(
-                                        nextEvent.startAt,
-                                        nextEvent.endAt
-                                    )}
-                                </p>
-                            </div>
-                        ) : (
-                            <div
-                                className="
-                                    flex
-                                    flex-1
-                                    items-center
-                                    justify-center
-                                    rounded-xl
-                                    border
-                                "
-                            >
-                                <div className="text-center">
-                                    <CalendarCheck className="mx-auto mb-2 size-8 text-muted-foreground/50" />
-
-                                    <p className="text-sm text-muted-foreground">
-                                        Nenhum próximo evento
-                                    </p>
+                                    <Badge className={`bg-transparent border ${prensence === 'accepted' && 'border-emerald-500 text-emerald-500'}`}>
+                                        {prensence === 'accepted' && 'Confirmado'}
+                                    </Badge>
                                 </div>
                             </div>
-                        )}
+                        </div>
                     </>
                 ) : (
                     <div className="flex flex-1 flex-col items-center justify-center gap-2">
@@ -229,10 +193,11 @@ export function NextEvents() {
                 {/* FOOTER FIXO */}
                 <Button
                     variant="outline"
-                    className="mt-auto w-full"
+                    className="mt-4 w-full"
+                    onClick={() => window.open("https://outlook.office.com/calendar/view/month", "_black")}
                 >
                     <Calendar className="size-4" />
-                    Ver Agenda Completa
+                    Ver Calendário Completo
                     <ChevronRight className="ml-auto size-4" />
                 </Button>
             </CardContent>

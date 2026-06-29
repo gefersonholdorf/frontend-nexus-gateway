@@ -13,6 +13,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { formatDate } from "date-fns";
 import { CheckCircle, Edit, MoreHorizontalIcon, Plus, UserKey, X, XCircle } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 
 const columns: Column<Profile>[] = [
     {
@@ -111,6 +112,7 @@ export interface Profile {
 export function ProfilePage() {
     const [openCreateModal, setOpenCreateModal] = useState(false)
     const [page, setPage] = useState(1)
+    const navigate = useNavigate()
     const [filters, setFilters] = useState<Filters>({
         text: "",
         category: "all",
@@ -194,7 +196,7 @@ export function ProfilePage() {
                         }
                     }
                     onPageChange={setPage}
-                    actions={(document) => (
+                    actions={(profile) => (
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button variant="ghost" size="icon" className="size-8" >
@@ -203,10 +205,13 @@ export function ProfilePage() {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem>
+                                <DropdownMenuItem
+                                    onClick={() => navigate(`/profiles/${profile.id}`)}
+                                >
                                     <Edit />
                                     Editar
-                                </DropdownMenuItem> <DeleteDocumentModal id={document.id}>
+                                </DropdownMenuItem> 
+                                <DeleteDocumentModal id={profile.id}>
                                     <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                                         <X />
                                         Excluir

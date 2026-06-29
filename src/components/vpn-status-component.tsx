@@ -37,7 +37,7 @@ export function VPNStatusCard() {
 
     if (query.isLoading) {
         return (
-            <Card className="h-74 p-0">
+            <Card className="h-52 p-0">
                 <Skeleton className="h-full bg-gray-100" />
             </Card>
         );
@@ -50,7 +50,7 @@ export function VPNStatusCard() {
     return (
         <Card
             className="
-            h-fit
+            h-52
                 w-full
                 rounded-2xl
                 border border-border

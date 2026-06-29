@@ -104,7 +104,6 @@ export function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
                                             label={item.label}
                                             path={item.path}
                                             collapsed={collapsed}
-                                            isBlocked={item.isBlocked}
                                         />
                                     ))}
                                 </div>

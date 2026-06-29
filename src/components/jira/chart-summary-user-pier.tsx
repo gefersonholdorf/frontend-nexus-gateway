@@ -15,19 +15,19 @@ const chartConfig = {
   },
   Pendente: {
     label: "Pendente",
-    color: "#D4A017",
+    color: "#F59E0B",
   },
   "Em Andamento": {
     label: "Em Andamento",
-    color: "#3B82F6",
+    color: "#2F81F7",
   },
   Correção: {
     label: "Correção",
-    color: "#E11D48",
+    color: "#ff2c2c",
   },
   Concluído: {
     label: "Concluído",
-    color: "#10B981",
+    color: "#10b981",
   },
 } satisfies ChartConfig
 
@@ -43,27 +43,27 @@ interface ChartSummaryUserPieProps {
 export function ChartSummaryUserPie({ summary }: ChartSummaryUserPieProps) {
 
   const chartData = [
-    {
-      status: "Pendente",
-      total: summary.pending,
-      fill: "#D4A017", // Amber Gold Premium
-    },
-    {
-      status: "Em Andamento",
-      total: summary.inProgress,
-      fill: "#3B82F6", // Blue
-    },
-    {
-      status: "Correção",
-      total: summary.correction,
-      fill: "#E11D48", // Rose Red Premium
-    },
-    {
-      status: "Concluído",
-      total: summary.completed,
-      fill: "#10B981", // Emerald
-    },
-  ]
+  {
+    status: "Pendente",
+    total: summary.pending,
+    fill: "#F59E0B",
+  },
+  {
+    status: "Em Andamento",
+    total: summary.inProgress,
+    fill: "#2563EB",
+  },
+  {
+    status: "Correção",
+    total: summary.correction,
+    fill: "#ff2c2c",
+  },
+  {
+    status: "Concluído",
+    total: summary.completed,
+    fill: "#10b981",
+  },
+]
 
   const totalTasks = React.useMemo(() => {
     return chartData.reduce(

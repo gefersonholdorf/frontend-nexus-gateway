@@ -45,7 +45,7 @@ export function UserProvider({ children }: UserProviderProps) {
         }
     }, [user]);
 
-    const isAuthenticated = !!user?.token;
+    const isAuthenticated = user?.token ? true : false;
 
     return (
         <UserContext.Provider

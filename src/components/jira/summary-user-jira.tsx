@@ -51,7 +51,7 @@ export function SummaryUserJira() {
     ]
     return (
         <Card
-            className={`h-74 flex flex-col items-center justify-start border border-border rounded-lg shadow-sm transition-all duration-300 transform hover:scale-[1.01]
+            className={`h-74 flex flex-col items-center justify-start border border-border rounded-2xl shadow-sm transition-all duration-300 transform hover:scale-[1.01]
                         hover:shadow-sm gap-6 bg-(image:--background-gradient)`}
         >
             <CardHeader className="w-full flex justify-between items-center gap-6">
@@ -66,7 +66,7 @@ export function SummaryUserJira() {
                         </h3>
 
                         <p className="text-xs text-muted-foreground">
-                            Confira o resumo das suas tarefas no JIRA
+                            Confira o resumo das suas tarefas no JIRA no mês atual
                         </p>
                     </div>
                 </div>

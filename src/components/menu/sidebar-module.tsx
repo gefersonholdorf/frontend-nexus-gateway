@@ -1,14 +1,9 @@
 import {
-    AlertTriangle,
     AppWindow,
-    Calendar,
     Cctv,
     FileText,
     LayoutDashboard,
     MonitorCloud,
-    Network,
-    Rocket,
-    Server,
     UserRoundKey,
     Users
 } from "lucide-react";
@@ -22,11 +17,11 @@ export const sidebarModules = [
                 path: "/welcome",
                 icon: LayoutDashboard,
             },
-            {
-                label: "Calendário",
-                path: "/calendar",
-                icon: Calendar,
-            },
+            // {
+            //     label: "Calendário",
+            //     path: "/calendar",
+            //     icon: Calendar,
+            // },
             {
                 label: "Documentos ISO",
                 path: "/documents",
@@ -48,17 +43,17 @@ export const sidebarModules = [
                 path: "/services",
                 icon: MonitorCloud,
             },
-            {
-                label: "Servidores",
-                path: "/servers",
-                icon: Server,
-            },
-            {
-                label: "IP Map",
-                path: "/ipmap",
-                icon: Network,
-                isBlocked: true,
-            },
+            // {
+            //     label: "Servidores",
+            //     path: "/servers",
+            //     icon: Server,
+            // },
+            // {
+            //     label: "IP Map",
+            //     path: "/ipmap",
+            //     icon: Network,
+            //     isBlocked: true,
+            // },
         ],
     },
 
@@ -70,26 +65,26 @@ export const sidebarModules = [
                 path: "/security-center",
                 icon: Cctv,
             },
-            {
-                label: "Incidentes",
-                path: "/incidents",
-                icon: AlertTriangle,
-                isBlocked: true,
-            },
+            // {
+            //     label: "Incidentes",
+            //     path: "/incidents",
+            //     icon: AlertTriangle,
+            //     isBlocked: true,
+            // },
         ],
     },
 
-    {
-        title: "Automação",
-        items: [
-            {
-                label: "Deploy Automatizado",
-                path: "/deploy",
-                icon: Rocket,
-                isBlocked: true,
-            },
-        ],
-    },
+    // {
+    //     title: "Automação",
+    //     items: [
+    //         {
+    //             label: "Deploy Automatizado",
+    //             path: "/deploy",
+    //             icon: Rocket,
+    //             isBlocked: true,
+    //         },
+    //     ],
+    // },
     {
         title: "Administração",
         items: [

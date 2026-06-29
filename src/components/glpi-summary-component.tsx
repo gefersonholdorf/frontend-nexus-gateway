@@ -1,6 +1,7 @@
 import { useUser } from "@/contexts/user-context";
 import { useQuery } from "@tanstack/react-query";
-import { SquareArrowOutUpRight, Ticket, TicketIcon, XCircle } from "lucide-react";
+import { SquareArrowOutUpRight, Ticket } from "lucide-react";
+import { GLPIChartBarHorizontal } from "./glpi-radial-chart";
 import { Card, CardContent, CardHeader } from "./ui/card";
 import { Skeleton } from "./ui/skeleton";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
@@ -34,7 +35,7 @@ export function GLPISummaryComponent() {
 
     if (query.isLoading) {
         return (
-            <Card className="h-52 p-0">
+            <Card className="h-80 p-0">
                 <Skeleton className="h-full bg-gray-100" />
             </Card>
         );
@@ -46,7 +47,7 @@ export function GLPISummaryComponent() {
 
     return (
         <Card className="
-                h-74
+                h-80
                 w-full
                 rounded-2xl
                 border
@@ -88,7 +89,7 @@ export function GLPISummaryComponent() {
                 </div>
             </CardHeader>
             <CardContent className="p-6 pt-0">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                     <div
                         className={`
                                     bg-(image:--background-gradient) flex gap-2 rounded-lg border border-border px-6 py-5 shadow-sm transition-all duration-300 transform hover:scale-[1.01]
@@ -100,7 +101,6 @@ export function GLPISummaryComponent() {
                         <div className="flex flex-col gap-1 justify-start">
                             <div className="flex gap-2 items-center">
                                 <span className={`font-bold text-[1.1rem] text-primary-text`}>{query.data.summaryTickets[0].quantity}</span>
-                                <span className="text-[.9rem] font-medium text-primary-text">Solicitações</span>
                             </div>
                             <span className="text-[.8rem] text-muted-foreground">{query.data.summaryTickets[0].category}</span>
                         </div>
@@ -118,12 +118,12 @@ export function GLPISummaryComponent() {
                         <div className="flex flex-col gap-1 justify-start">
                             <div className="flex gap-2 items-center">
                                 <span className={`font-bold text-[1.1rem] text-primary-text`}>{query.data.summaryTickets[1].quantity}</span>
-                                <span className="text-[.9rem] font-medium text-primary-text">Solicitações</span>
                             </div>
                             <span className="text-[.8rem] text-muted-foreground">{query.data.summaryTickets[1].category}</span>
                         </div>
                     </div>
-                </div>
+                </div> */}
+                <GLPIChartBarHorizontal />
             </CardContent>
         </Card>
     )

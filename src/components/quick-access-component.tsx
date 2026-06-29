@@ -1,4 +1,4 @@
-import { Link, GitBranch, Bug, Clock, Server, Book } from "lucide-react";
+import { Link, GitBranch, Bug, Clock, Server, Book, Mail } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 import { Card, CardContent, CardHeader } from "./ui/card";
@@ -53,6 +53,14 @@ const quickAccess: QuickAccess[] = [
         iconColor: "text-orange-500",
         url: "https://glpi.lusati.com.br/Helpdesk",
     },
+    {
+        id: 7,
+        title: "Outlook",
+        icon: Mail,
+        bgColor: "bg-blue-50 dark:bg-blue-500/10",
+        iconColor: "text-blue-500",
+        url: "https://outlook.office.com/mail"
+    }
 ];
 
 export function QuickAccessComponent() {
@@ -95,8 +103,8 @@ export function QuickAccessComponent() {
                         grid-cols-2
                         gap-4
                         sm:grid-cols-3
-                        lg:grid-cols-4
-                        xl:grid-cols-5
+                        lg:grid-cols-6
+                        xl:grid-cols-6
                     "
                 >
                     {quickAccess.map((access) => {

@@ -17,7 +17,7 @@ export function useGetSummaryJiraUser() {
     const { user } = useUser()
 
     return useQuery({
-        queryKey: ["fetch-summary"],
+        queryKey: ["fetch-summary", user?.email],
         queryFn: async () => {
             const response = await fetch(`${import.meta.env.VITE_API_URL}/jira`, {
                 method: "GET",
