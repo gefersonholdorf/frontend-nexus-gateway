@@ -9,7 +9,7 @@ export function SummaryUserJira() {
 
     if (isLoading) {
         return (
-            <Skeleton className="h-60" />
+            <Skeleton className="h-78" />
         )
     }
 
@@ -49,9 +49,14 @@ export function SummaryUserJira() {
             bgColor: "bg-emerald-400"
         },
     ]
+
+    const progress =
+        totalTasks > 0
+            ? (data.summary.completed / totalTasks) * 100
+            : 0
     return (
         <Card
-            className={`h-74 flex flex-col items-center justify-start border border-border rounded-2xl shadow-sm transition-all duration-300 transform hover:scale-[1.01]
+            className={`h-78 flex flex-col items-center justify-start border border-border rounded-2xl shadow-sm transition-all duration-300 transform hover:scale-[1.01]
                         hover:shadow-sm gap-6 bg-(image:--background-gradient)`}
         >
             <CardHeader className="w-full flex justify-between items-center gap-6">
@@ -71,7 +76,7 @@ export function SummaryUserJira() {
                     </div>
                 </div>
             </CardHeader>
-            <CardContent className="grid grid-cols-3 gap-4 px-2 pr-4">
+            <CardContent className="grid grid-cols-3 gap-4 px-4 pr-4">
                 <div className="w-full col-span-1">
                     <ChartSummaryUserPie summary={{
                         pending: data.summary.pending,
@@ -107,6 +112,36 @@ export function SummaryUserJira() {
                             </div>
                         </div>
                     ))}
+                    <div className="mt-4 space-y-2">
+                        <div className="flex items-center justify-between text-xs">
+                            <span className="text-muted-foreground">
+                                Progresso do mês
+                            </span>
+
+                            <span className="font-medium text-primary-text">
+                                {progress.toFixed(0)}%
+                            </span>
+                        </div>
+
+                        <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
+                            <div
+                                className="h-full rounded-full bg-emerald-500 transition-all duration-700"
+                                style={{
+                                    width: `${progress}%`,
+                                }}
+                            />
+                        </div>
+
+                        <div className="flex justify-between text-xs text-muted-foreground">
+                            <span>
+                                {data.summary.completed} concluídas
+                            </span>
+
+                            <span>
+                                {totalTasks} tarefas
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </CardContent>
         </Card>

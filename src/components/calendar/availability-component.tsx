@@ -157,7 +157,7 @@ export function AvailabilityComponent({
         <>
             <Card
                 className="
-                h-160
+                h-164
                 w-full
                 border
                 border-border

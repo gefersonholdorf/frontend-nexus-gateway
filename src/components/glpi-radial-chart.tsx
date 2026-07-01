@@ -10,13 +10,6 @@ import {
 } from "@/components/ui/chart"
 import { useTheme } from "@/contexts/theme-context"
 
-const chartData = [
-    { status: "Aberto", total: 0 },
-    { status: "Em Andamento", total: 0 },
-    { status: "Aguardando Encerrar", total: 0 },
-    { status: "Fechado", total: 1 },
-]
-
 const chartConfig = {
     total: {
         label: "Chamados",
@@ -24,8 +17,38 @@ const chartConfig = {
     },
 } satisfies ChartConfig
 
-export function GLPIChartBarHorizontal() {
+interface GLPIChartBarHorizontalProps {
+    summary: {
+        status: 'Aberto' | 'Em andamento' | 'Resolvido' | 'Fechado'
+        value: number
+    }[]
+}
+
+export function GLPIChartBarHorizontal({ summary }: GLPIChartBarHorizontalProps) {
     const { theme } = useTheme()
+
+    const values = Object.fromEntries(
+        summary.map(item => [item.status, item.value])
+    )
+
+    const chartData = [
+        {
+            status: "Aberto",
+            total: values["Aberto"] ?? 0,
+        },
+        {
+            status: "Em andamento",
+            total: values["Em andamento"] ?? 0,
+        },
+        {
+            status: "Aguardando Encerrar",
+            total: values["Resolvido"] ?? 0,
+        },
+        {
+            status: "Fechado",
+            total: values["Fechado"] ?? 0,
+        },
+    ]
     return (
         <div>
             <div className="w-full flex flex-col">

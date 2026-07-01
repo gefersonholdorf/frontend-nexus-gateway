@@ -1,14 +1,21 @@
 import {
     AppWindow,
-    Cctv,
-    FileText,
     LayoutDashboard,
     MonitorCloud,
-    UserRoundKey,
-    Users
+    type LucideIcon
 } from "lucide-react";
 
-export const sidebarModules = [
+interface SidebarModule {
+    title: string
+    items: {
+        label: string
+        path: string
+        icon: LucideIcon
+        isBlocked?: boolean
+    }[]
+}
+
+export const sidebarModules:SidebarModule[] = [
     {
         title: "Geral",
         items: [
@@ -22,11 +29,11 @@ export const sidebarModules = [
             //     path: "/calendar",
             //     icon: Calendar,
             // },
-            {
-                label: "Documentos ISO",
-                path: "/documents",
-                icon: FileText,
-            },
+            // {
+            //     label: "Documentos ISO",
+            //     path: "/documents",
+            //     icon: FileText,
+            // },
         ],
     },
 
@@ -57,22 +64,23 @@ export const sidebarModules = [
         ],
     },
 
-    {
-        title: "Operações",
-        items: [
-            {
-                label: "Central de Segurança",
-                path: "/security-center",
-                icon: Cctv,
-            },
-            // {
-            //     label: "Incidentes",
-            //     path: "/incidents",
-            //     icon: AlertTriangle,
-            //     isBlocked: true,
-            // },
-        ],
-    },
+    // {
+    //     title: "Operações",
+    //     items: [
+    //         {
+    //             label: "Central de Segurança",
+    //             path: "/security-center",
+    //             icon: Cctv,
+    //             isBlocked: true
+    //         },
+    //         {
+    //             label: "Incidentes",
+    //             path: "/incidents",
+    //             icon: AlertTriangle,
+    //             isBlocked: true,
+    //         },
+    //     ],
+    // },
 
     // {
     //     title: "Automação",
@@ -85,19 +93,19 @@ export const sidebarModules = [
     //         },
     //     ],
     // },
-    {
-        title: "Administração",
-        items: [
-            {
-                label: "Usuários",
-                path: "/users",
-                icon: Users
-            },
-            {
-                label: "Perfis",
-                path: "/profiles",
-                icon: UserRoundKey
-            }
-        ]
-    }
+    // {
+    //     title: "Administração",
+    //     items: [
+    //         {
+    //             label: "Usuários",
+    //             path: "/users",
+    //             icon: Users
+    //         },
+    //         {
+    //             label: "Perfis",
+    //             path: "/profiles",
+    //             icon: UserRoundKey
+    //         }
+    //     ]
+    // }
 ];

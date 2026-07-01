@@ -9,17 +9,14 @@ import {
 } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import {
-    Calendar,
     CalendarCheck,
-    ChevronRight,
-    Clock,
+    Clock
 } from "lucide-react";
 
-import { Button } from "../ui/button";
-import { Card, CardContent, CardHeader } from "../ui/card";
-import { Skeleton } from "../ui/skeleton";
 import { useUser } from "@/contexts/user-context";
 import { Badge } from "../ui/badge";
+import { Card, CardContent, CardHeader } from "../ui/card";
+import { Skeleton } from "../ui/skeleton";
 
 export function formatDateEvent(
     startDate: string,
@@ -67,7 +64,7 @@ export function NextEvents() {
 
     if (isLoading) {
         return (
-            <Card className="h-80 overflow-hidden p-0">
+            <Card className="h-78 overflow-hidden p-0">
                 <Skeleton className="h-full w-full" />
             </Card>
         );
@@ -83,10 +80,13 @@ export function NextEvents() {
             new Date(b.startAt).getTime()
     );
 
-    const nextEvent = sortedEvents.find(
-        event =>
-            new Date(event.startAt).getTime() > Date.now()
-    );
+    const nextEvent = sortedEvents.find(event => {
+        const start = new Date(
+            new Date(event.startAt).getTime() - 3 * 60 * 60 * 1000
+        );
+
+        return start.getTime() > Date.now();
+    });
 
     const prensence = nextEvent?.attendees.find((next) => next.email === user?.email)?.response
 
@@ -103,10 +103,17 @@ export function NextEvents() {
         )
         : null;
 
+    const nextEventStart = nextEvent
+        ? formatDate(new Date(
+            new Date(nextEvent.startAt).getTime() -
+            3 * 60 * 60 * 1000
+        ), 'dd/MM/yyyy - HH:mm')
+        : null;
+
     return (
         <Card
             className="
-                h-74
+                h-78
                 w-full
                 rounded-2xl
                 border
@@ -138,25 +145,15 @@ export function NextEvents() {
             <CardContent className="flex h-full flex-col">
                 {data.events.length > 0 ? (
                     <>
-                        <div
-                            className="
-                                        mb-3
-                                        flex
-                                        items-center
-                                        gap-2
-                                        text-xs
-                                        font-medium
-                                        text-primary
-                                    "
-                        >
-                            <Clock className="size-3.5" />
 
-                            <span>
-                                Próximo evento em{" "}
-                                {timeUntilNextEvent}
-                            </span>
-                        </div>
-                        <div className="flex items-center justify-between gap-4 border border-border rounded-sm p-4">
+                        <div className="flex flex-col items-start justify-between border border-border rounded-sm p-4">
+                            <div className="mb-3 flex items-center gap-2 text-xs font-medium text-primary">
+                                <Clock className="size-3.5" />
+                                <span>
+                                    Próximo evento em{" "}
+                                    {timeUntilNextEvent}
+                                </span>
+                            </div>
                             <div className="flex items-center">
                                 {/* <div className="border border-border p-2 rounded-full">
                                     <Calendar className="size-4 text-blue-400" />
@@ -164,14 +161,9 @@ export function NextEvents() {
                                 <div className="flex flex-col gap-1">
                                     <span className="font-semibold line-clamp-2 max-w-60">{nextEvent?.title}</span>
                                     <span className="text-[.8rem] text-muted-foreground">
-                                        {nextEvent &&
-                                            formatDate(
-                                                nextEvent.startAt,
-                                                "EEEE, dd 'de' MMMM 'às' HH:mm",
-                                                {
-                                                    locale: ptBR,
-                                                }
-                                            )}
+                                        {nextEvent && (
+                                            nextEventStart ?? '---'
+                                        )}
                                     </span>
                                     <Badge className={`bg-transparent border ${prensence === 'accepted' && 'border-emerald-500 text-emerald-500'}`}>
                                         {prensence === 'accepted' && 'Confirmado'}
@@ -190,7 +182,7 @@ export function NextEvents() {
                     </div>
                 )}
 
-                {/* FOOTER FIXO */}
+                {/* FOOTER FIXO
                 <Button
                     variant="outline"
                     className="mt-4 w-full"
@@ -199,7 +191,7 @@ export function NextEvents() {
                     <Calendar className="size-4" />
                     Ver Calendário Completo
                     <ChevronRight className="ml-auto size-4" />
-                </Button>
+                </Button> */}
             </CardContent>
         </Card>
     );

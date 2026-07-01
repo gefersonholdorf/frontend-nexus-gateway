@@ -108,6 +108,15 @@
         "logo": "proxy.png"
     },
     {
+        "id": "nginx-proxy-manager-hom+",
+        "name": "Nginx Proxy Manager HOM",
+        "description": "Gerenciador de proxy reverso para aplicações",
+        "ip": "10.188.25.1",
+        "port": 81,
+        "domain": "http://10.188.25.1:81",
+        "logo": "proxy.png"
+    },
+    {
         "id": "evolution",
         "name": "Evolution",
         "description": "Gerenciamento de Whatsapp e automação de mensagens",
@@ -133,5 +142,23 @@
         "port": 8080,
         "domain": "https://sftp-app.lusati.com.br",
         "logo": "sftp.png"
+    },
+    {
+        "id": "sftp-hom",
+        "name": "SFTP HOM",
+        "description": "Servidor SFTP para aplicações",
+        "ip": "10.188.25.93",
+        "port": 8080,
+        "domain": "https://sftp-hom.lusati.com.br",
+        "logo": "sftp.png"
+    },
+    {
+        "id": "bitdefender",
+        "name": "GRAVITYZONE - BITDEFENDER",
+        "description": "Antivírus Corporativo",
+        "ip": "10.188.25.93",
+        "port": 8080,
+        "domain": "gravityzone.bitdefender.com",
+        "logo": "bitdefender.png"
     }
 ]

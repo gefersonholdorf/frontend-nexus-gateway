@@ -14,7 +14,7 @@
         "type": "production",
         "name": "Biller Produção",
         "description": "Sistema de tarifagem de telefonia.",
-        "ip": "10.188.25.101",
+        "ip": "10.188.20.2",
         "port": 80,
         "domain": "https://biller.lusati.com.br",
         "logo": "biller.png"
@@ -34,7 +34,7 @@
         "type": "homolog",
         "name": "Diamante Homologação",
         "description": "Sistema para corretores de seguros.",
-        "ip": "10.188.25.101",
+        "ip": "10.188.25.9",
         "port": 80,
         "domain": "https://diamante-hom.lusati.com.br",
         "logo": "diamante.png"
@@ -44,7 +44,7 @@
         "type": "production",
         "name": "Diamante Produção",
         "description": "Sistema para corretores de seguros.",
-        "ip": "10.188.25.101",
+        "ip": "10.188.20.4",
         "port": 80,
         "domain": "https://diamante.lusati.com.br",
         "logo": "diamante.png"
@@ -54,7 +54,7 @@
         "type": "homolog",
         "name": "Bot Homologação",
         "description": "Sistema de messageria.",
-        "ip": "10.188.25.101",
+        "ip": "10.188.25.11",
         "port": 80,
         "domain": "https://bot-hom.lusati.com.br",
         "logo": "bot.png"
@@ -64,9 +64,68 @@
         "type": "production",
         "name": "Bot Produção",
         "description": "Sistema de messageria.",
-        "ip": "10.188.25.101",
+        "ip": "---",
         "port": 80,
         "domain": "https://bot.lusati.com.br",
         "logo": "bot.png"
+    },{
+        "id": "8",
+        "type": "homolog",
+        "name": "DOE Homologação",
+        "description": "Sistema do Diário Oficial.",
+        "ip": "10.188.10.8",
+        "port": 80,
+        "domain": "https://homologa.doe.sea.sc.gov.br",
+        "logo": "doe.png"
+    },
+    {
+        "id": "9",
+        "type": "production",
+        "name": "DOE Produção",
+        "description": "Sistema do Diário Oficial.",
+        "ip": "---",
+        "port": 80,
+        "domain": "https://doe.sea.sc.gov.br",
+        "logo": "doe.png"
+    },
+    {
+        "id": "10",
+        "type": "homolog",
+        "name": "Acervo Homologação",
+        "description": "Sistema do Acervo Público de Uberlândia.",
+        "ip": "10.188.25.13",
+        "port": 80,
+        "domain": "https://acervo-hom.lusati.com.br/",
+        "logo": "acervo.png"
+    },
+    {
+        "id": "11",
+        "type": "production",
+        "name": "Acervo Produção",
+        "description": "Sistema do Acervo Público de Uberlândia.",
+        "ip": "---",
+        "port": 80,
+        "domain": "https://acervopublico.uberlandia.mg.gov.br/",
+        "logo": "acervo.png"
+    },
+    {
+        "id": "10",
+        "type": "homolog",
+        "name": "Cadsol Homologação",
+        "description": "Sistema do Cadsol.",
+        "ip": "---",
+        "port": 443,
+        "domain": "https://homologa.cadsol.sicos.sc.gov.br/",
+        "logo": "cadsol.png"
+    },
+    {
+        "id": "11",
+        "type": "production",
+        "name": "Cadsol Produção",
+        "description": "Sistema do Cadsol.",
+        "ip": "---",
+        "port": 443,
+        "domain": "https://cadsol.sicos.sc.gov.br/",
+        "logo": "cadsol.png"
     }
 ]

@@ -26,7 +26,7 @@ export function LayoutPages() {
             <div
                 className={cn(
                     "transition-all duration-300",
-                    collapsed ? "lg:ml-20" : "lg:ml-72"
+                    collapsed ? "lg:ml-26" : "lg:ml-72"
                 )}
             >
                 <MenuComponent />

@@ -85,7 +85,7 @@ export function ChartSummaryUserPie({ summary }: ChartSummaryUserPieProps) {
               content={
                 <ChartTooltipContent
                   formatter={(value, name) => [
-                    `${value} tarefas`,
+                    `${value} Tarefas `,
                     name,
                   ]}
                 />

@@ -161,7 +161,7 @@ export function LoginPage() {
                 <div className="mt-8 w-full flex items-end justify-between">
                     <div></div>
                     <div className="px-2 border border-primary bg-primary/10 text-primary rounded-sm">
-                        <span className="text-[.8rem] font-medium">v1.4.0</span>
+                        <span className="text-[.8rem] font-medium">v1.5.0</span>
                     </div>
                 </div>
             </div>
@@ -250,7 +250,7 @@ export function LoginPage() {
                 </form>
                 <div className="w-full text-center pt-8">
                     <span className="text-[.8rem] font-normal text-primary-text">
-                        Problemas com acesso? <span className="text-blue-600 cursor-pointer hover:underline">Contate o suporte</span>
+                        Problemas com acesso? <span className="text-blue-600 cursor-pointer hover:underline" onClick={() => window.open("https://wa.me/554896366798", "_blank")}>Contate o suporte</span>
                     </span>
                 </div>
             </div>

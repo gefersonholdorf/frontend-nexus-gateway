@@ -1,10 +1,10 @@
 import { useUser } from "@/contexts/user-context";
 import { useQuery } from "@tanstack/react-query";
 import { SquareArrowOutUpRight, Ticket } from "lucide-react";
-import { GLPIChartBarHorizontal } from "./glpi-radial-chart";
 import { Card, CardContent, CardHeader } from "./ui/card";
 import { Skeleton } from "./ui/skeleton";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
+import { cn } from "@/lib/utils";
 
 interface TicketGLPIResponse {
     summaryTickets: {
@@ -45,6 +45,21 @@ export function GLPISummaryComponent() {
         return null;
     }
 
+    const summary = query.data.summaryTickets.map((item) => ({
+        status: item.category as
+            | "Aberto"
+            | "Em andamento"
+            | "Resolvido"
+            | "Fechado",
+        value: item.quantity,
+    }));
+
+    const total = summary.reduce((acc, item) => acc + item.value, 0)
+
+    function percentage(total: number, value: number) {
+        return total > 0 ? (value / total) * 100 : 0
+    }
+
     return (
         <Card className="
                 h-80
@@ -78,7 +93,7 @@ export function GLPISummaryComponent() {
                     <Tooltip>
                         <TooltipTrigger>
                             <div className="flex gap-1 items-center cursor-pointer group" onClick={() => window.open('https://glpi.lusati.com.br/front/ticket.php', "_blank")}>
-                                <span className="text-muted-foreground text-[.7rem] group-hover:text-primary/80">Ver Solicitações</span>
+                                <span className="text-muted-foreground text-[.8rem] group-hover:text-primary/80">Ver Mais</span>
                                 <SquareArrowOutUpRight className="size-3 text-muted-foreground cursor-pointer group-hover:text-primary/80" />
                             </div>
                         </TooltipTrigger>
@@ -88,42 +103,47 @@ export function GLPISummaryComponent() {
                     </Tooltip>
                 </div>
             </CardHeader>
-            <CardContent className="p-6 pt-0">
-                {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <CardContent className="pt-4 px-8 space-y-6">
+                {summary.map((item) => (
                     <div
-                        className={`
-                                    bg-(image:--background-gradient) flex gap-2 rounded-lg border border-border px-6 py-5 shadow-sm transition-all duration-300 transform hover:scale-[1.01]
-                                    hover:shadow-lg`}
+                        key={item.status}
+                        className="flex items-center gap-3"
                     >
-                        <div className="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center bg-card border border-border">
-                            <TicketIcon className="text-primary size-5" />
-                        </div>
-                        <div className="flex flex-col gap-1 justify-start">
-                            <div className="flex gap-2 items-center">
-                                <span className={`font-bold text-[1.1rem] text-primary-text`}>{query.data.summaryTickets[0].quantity}</span>
-                            </div>
-                            <span className="text-[.8rem] text-muted-foreground">{query.data.summaryTickets[0].category}</span>
-                        </div>
-                    </div>
+                        <span className="w-30 text-primary-text">
+                            {item.status}
+                        </span>
 
+                        <div className="flex-1 h-4 rounded-full bg-muted overflow-hidden">
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <div
+                                        className={cn(
+                                            "h-full rounded-full transition-all duration-500",
+                                            item.status === "Aberto" && "bg-amber-500",
+                                            item.status === "Em andamento" && "bg-blue-500",
+                                            item.status === "Resolvido" && "bg-red-500",
+                                            item.status === "Fechado" && "bg-emerald-500"
+                                        )}
+                                        style={{
+                                            width: `${percentage(total, item.value)}%`,
+                                        }}
+                                    />
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    {item.value} solicitaç{item.value !== 1 ? "ões" : 'ão'} - 
+                                    {item.status === 'Aberto' && ' Aguarde que o suporte irá responder'}
+                                    {item.status === 'Em andamento' && ' Chamado estão em andamento'}
+                                    {item.status === 'Resolvido' && ' Você precisa encerrar estes chamados'}
+                                    {item.status === 'Fechado' && ' Chamados fechados com sucesso'}
+                                </TooltipContent>
+                            </Tooltip>
+                        </div>
 
-                    <div
-                        className={`
-                                    bg-(image:--background-gradient) flex gap-2 rounded-lg border border-border px-6 py-5 shadow-sm transition-all duration-300 transform hover:scale-[1.01]
-                                    hover:shadow-lg`}
-                    >
-                        <div className="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center border border-border">
-                            <XCircle className="text-primary size-5" />
-                        </div>
-                        <div className="flex flex-col gap-1 justify-start">
-                            <div className="flex gap-2 items-center">
-                                <span className={`font-bold text-[1.1rem] text-primary-text`}>{query.data.summaryTickets[1].quantity}</span>
-                            </div>
-                            <span className="text-[.8rem] text-muted-foreground">{query.data.summaryTickets[1].category}</span>
-                        </div>
+                        <span className="font-semibold">
+                            {item.value}
+                        </span>
                     </div>
-                </div> */}
-                <GLPIChartBarHorizontal />
+                ))}
             </CardContent>
         </Card>
     )

@@ -1,4 +1,4 @@
-import { Link, GitBranch, Bug, Clock, Server, Book, Mail } from "lucide-react";
+import { Link, GitBranch, Bug, Clock, Server, Book, Mail, LockIcon } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 import { Card, CardContent, CardHeader } from "./ui/card";
@@ -61,6 +61,15 @@ const quickAccess: QuickAccess[] = [
         iconColor: "text-blue-500",
         url: "https://outlook.office.com/mail"
     }
+    ,
+    {
+        id: 8,
+        title: "Cofre de Senha",
+        icon: LockIcon,
+        bgColor: "bg-red-50 dark:bg-red-500/10",
+        iconColor: "text-red-500",
+        url: "https://pass.lusati.com.br"
+    }
 ];
 
 export function QuickAccessComponent() {
@@ -103,8 +112,8 @@ export function QuickAccessComponent() {
                         grid-cols-2
                         gap-4
                         sm:grid-cols-3
-                        lg:grid-cols-6
-                        xl:grid-cols-6
+                        lg:grid-cols-7
+                        xl:grid-cols-7
                     "
                 >
                     {quickAccess.map((access) => {

@@ -6,22 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Save, UserKey } from "lucide-react";
 import { useParams } from "react-router";
 
-interface Profile {
-    id: number
-    title: string,
-    description: string | null,
-    createdAt: string,
-    status: boolean,
-    countUsers: number,
-    countTotalPermissions: number
-    permissions:
-    {
-        id: number,
-        key: string,
-        description: string | null
-    }[]
-}
-
 export function EditProfilePage() {
     const { id } = useParams<{ id: string }>();
     console.log(id)

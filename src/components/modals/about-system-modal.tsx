@@ -26,8 +26,8 @@ export function AboutSystemModal({
     open,
     onOpenChange,
 }: AboutSystemModalProps) {
-    const frontendVersion = "v1.4.0";
-    const backendVersion = "v1.4.0";
+    const frontendVersion = "v1.5.0";
+    const backendVersion = "v1.5.0";
 
     const environment = "Produção";
 

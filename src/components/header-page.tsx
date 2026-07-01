@@ -13,7 +13,7 @@ export function HeaderPage({ actions, breadcrumb, description, icon: Icon, title
     return (
         <div className="px-10 pt-8">
             {breadcrumb}
-            <div className="pt-4 flex flex-col lg:flex-row justify-start items-start border-b border-border bg-background pb-4 rounded-b-lg">
+            <div className="pt-4 flex flex-col lg:flex-row justify-start items-start border-b border-border bg-background pb-4">
                 <div className="w-full flex flex-col lg:flex-row gap-3 items-center justify-between">
                     <div className="flex gap-3 items-center">
                         <BackComponent />
