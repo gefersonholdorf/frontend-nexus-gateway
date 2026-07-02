@@ -9,8 +9,10 @@ export function SummaryUserJira() {
 
     if (isLoading) {
         return (
-            <Skeleton className="h-78" />
-        )
+            <Card className="h-78 overflow-hidden p-0">
+                <Skeleton className="h-full w-full" />
+            </Card>
+        );
     }
 
     if (!data) {

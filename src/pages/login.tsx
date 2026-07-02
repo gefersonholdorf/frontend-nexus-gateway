@@ -161,7 +161,7 @@ export function LoginPage() {
                 <div className="mt-8 w-full flex items-end justify-between">
                     <div></div>
                     <div className="px-2 border border-primary bg-primary/10 text-primary rounded-sm">
-                        <span className="text-[.8rem] font-medium">v1.5.0</span>
+                        <span className="text-[.8rem] font-medium">v1.6.0</span>
                     </div>
                 </div>
             </div>

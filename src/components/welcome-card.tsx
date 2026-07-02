@@ -4,8 +4,14 @@ import { useUser } from "@/contexts/user-context";
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "./ui/card";
 import { Skeleton } from "./ui/skeleton";
+import { PlayCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
-export function WelcomeCard() {
+interface WelcomeCardProps {
+    onInitTour: () => void
+}
+
+export function WelcomeCard({ onInitTour }: WelcomeCardProps) {
     const [now, setNow] = useState(new Date());
     const { user } = useUser()
     const { data, isLoading } = useGetSummaryEvents({ type: 'user' })
@@ -18,7 +24,7 @@ export function WelcomeCard() {
 
     if (isLoading) {
         return (
-            <Card className="h-80 rounded-sm">
+            <Card className="h-62 rounded-sm">
                 <Skeleton className="h-full w-full rounded-sm" />
             </Card>
         );
@@ -56,7 +62,7 @@ export function WelcomeCard() {
     };
 
     return (
-        <Card className="h-52 relative overflow-hidden rounded-3xl p-4">
+        <Card className="h-62 relative overflow-hidden rounded-3xl p-4">
             <div
                 className={`
             absolute inset-0
@@ -72,7 +78,7 @@ export function WelcomeCard() {
                 `}
             />
 
-            <CardContent className="relative pt-4 px-3">
+            <CardContent className="relative pt-4 px-3 space-y-4">
                 {/* HEADER TEXT */}
                 <div className="flex flex-col gap-1">
                     <p className="text-sm text-muted-foreground">
@@ -137,6 +143,14 @@ export function WelcomeCard() {
                     </Card>
                     <WeatherCard />
                 </div> */}
+                <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={onInitTour}
+                    >
+                        <PlayCircle className="h-4 w-4 mr-2" />
+                        Iniciar Tour
+                    </Button>
             </CardContent>
         </Card>
     );

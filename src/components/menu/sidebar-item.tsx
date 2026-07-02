@@ -1,3 +1,4 @@
+import { useUser } from "@/contexts/user-context";
 import { cn } from "@/lib/utils";
 import type { LucideIcon } from "lucide-react";
 import { NavLink } from "react-router";
@@ -8,6 +9,7 @@ interface SidebarItemProps {
     path: string;
     collapsed: boolean;
     isBlocked?: boolean;
+    profiles: string[];
 }
 
 export function SidebarItem({
@@ -16,7 +18,18 @@ export function SidebarItem({
     path,
     collapsed,
     isBlocked,
+    profiles
 }: SidebarItemProps) {
+    const { user } = useUser()
+    const hasPermission = user?.roles?.some(permission =>
+    profiles.includes(permission)
+);
+
+console.log({
+    permissions: user?.permissions,
+    profiles,
+    hasPermission,
+});
     return (
         <NavLink
             to={isBlocked ? "#" : path}
@@ -31,7 +44,8 @@ export function SidebarItem({
                     isActive &&
                     "bg-primary/20 text-primary border-l-2 border-primary",
                     isBlocked &&
-                    "hidden"
+                    "hidden",
+                    !hasPermission && 'hidden'
                 )
             }
         >

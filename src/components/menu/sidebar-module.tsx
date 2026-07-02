@@ -1,7 +1,10 @@
 import {
     AppWindow,
+    FileText,
     LayoutDashboard,
     MonitorCloud,
+    UserRoundKey,
+    Users,
     type LucideIcon
 } from "lucide-react";
 
@@ -12,10 +15,11 @@ interface SidebarModule {
         path: string
         icon: LucideIcon
         isBlocked?: boolean
+        profiles: string[]
     }[]
 }
 
-export const sidebarModules:SidebarModule[] = [
+export const sidebarModules: SidebarModule[] = [
     {
         title: "Geral",
         items: [
@@ -23,6 +27,7 @@ export const sidebarModules:SidebarModule[] = [
                 label: "Página Inicial",
                 path: "/welcome",
                 icon: LayoutDashboard,
+                profiles: ['Administrador', 'Suporte', 'Desenvolvedor', 'Infraestrutura']
             },
             // {
             //     label: "Calendário",
@@ -33,6 +38,7 @@ export const sidebarModules:SidebarModule[] = [
             //     label: "Documentos ISO",
             //     path: "/documents",
             //     icon: FileText,
+            //     profiles: ['Administrador']
             // },
         ],
     },
@@ -44,11 +50,13 @@ export const sidebarModules:SidebarModule[] = [
                 label: "Sistemas",
                 path: "/systems",
                 icon: AppWindow,
+                profiles: ['Administrador', 'Suporte', 'Desenvolvedor', 'Infraestrutura']
             },
             {
                 label: "Serviços",
                 path: "/services",
                 icon: MonitorCloud,
+                profiles: ['Administrador', 'Suporte', 'Desenvolvedor', 'Infraestrutura']
             },
             // {
             //     label: "Servidores",
@@ -99,12 +107,14 @@ export const sidebarModules:SidebarModule[] = [
     //         {
     //             label: "Usuários",
     //             path: "/users",
-    //             icon: Users
+    //             icon: Users,
+    //             profiles: ['Administrador']
     //         },
     //         {
     //             label: "Perfis",
     //             path: "/profiles",
-    //             icon: UserRoundKey
+    //             icon: UserRoundKey,
+    //             profiles: ['Administrador']
     //         }
     //     ]
     // }

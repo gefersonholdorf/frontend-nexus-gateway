@@ -16,6 +16,13 @@ import { Skeleton } from "../ui/skeleton";
 import { useGetAvailabilityUsers } from "@/api/calendar/get-availability-users";
 import { DrawerAvailabilityContent } from "./drawer-availability";
 import { useState } from "react";
+import { Cloud } from "lucide-react";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export interface Availability {
     name: string;
@@ -112,6 +119,13 @@ const availabilityConfig = {
     },
 };
 
+const activityLabel = {
+    InACall: "Em chamada ativa",
+    Available: "Disponível",
+    Away: "Ausente",
+    DoNotDisturb: "Não perturbar",
+};
+
 export function AvailabilityComponent({
 }: AvailabilityComponentProps) {
     const { data, isLoading } = useGetPresence()
@@ -134,7 +148,7 @@ export function AvailabilityComponent({
 
     if (isLoading || IsLoadingAvailability) {
         return (
-            <Card className="h-52 p-0">
+            <Card className="h-168 p-0">
                 <Skeleton className="h-full bg-gray-100" />
             </Card>
         );
@@ -157,7 +171,7 @@ export function AvailabilityComponent({
         <>
             <Card
                 className="
-                h-164
+                h-174
                 w-full
                 border
                 border-border
@@ -227,9 +241,7 @@ export function AvailabilityComponent({
                                 <div className="flex items-center gap-3">
                                     <div className="relative">
                                         <Avatar className="h-12 w-12">
-                                            <AvatarImage
-                                                src={user.logo ?? ""}
-                                            />
+                                            <AvatarImage src={user.logo ?? ""} />
                                             <AvatarFallback>
                                                 {user.name
                                                     .split(" ")
@@ -241,17 +253,31 @@ export function AvailabilityComponent({
 
                                         <div
                                             className={`
-                                            absolute
-                                            bottom-0
-                                            right-0
-                                            h-3
-                                            w-3
-                                            rounded-full
-                                            border-2
-                                            border-background
-                                            ${availability.color}
-                                        `}
+                                                absolute bottom-0 right-0
+                                                h-3 w-3 rounded-full
+                                                border-2 border-background
+                                                ${availability.color}
+                                            `}
                                         />
+
+                                        {user.activity === "InACall" && (
+                                            <TooltipProvider>
+                                                <Tooltip>
+                                                    <TooltipTrigger asChild>
+                                                        <div className="absolute -top-1 -right-1 bg-background rounded-full p-0.5 shadow-sm cursor-help">
+                                                            <Cloud className="h-3 w-3 text-sky-500" />
+                                                        </div>
+                                                    </TooltipTrigger>
+
+                                                    <TooltipContent>
+                                                        <p>
+                                                            {activityLabel[user.activity as keyof typeof activityLabel] ??
+                                                                "Atividade desconhecida"}
+                                                        </p>
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                            </TooltipProvider>
+                                        )}
                                     </div>
 
                                     <div className="flex flex-col">

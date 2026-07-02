@@ -1,7 +1,6 @@
 import {
     Mail,
     MessageCircle,
-    ShieldCheck,
     ChevronRight,
     Link,
 } from "lucide-react";
@@ -23,13 +22,13 @@ const actions = [
         color: 'text-blue-500',
         href: "mailto:suporte@lusati.com.br",
     },
-    {
-        title: "E-mail Comitê SGCI",
-        description: "Envie um e-mail ao SGCI",
-        icon: ShieldCheck,
-        color: 'text-purple-500',
-        href: "mailto:sgci@lusati.com.br",
-    },
+    // {
+    //     title: "E-mail Comitê SGSI",
+    //     description: "Envie um e-mail ao SGCI",
+    //     icon: ShieldCheck,
+    //     color: 'text-purple-500',
+    //     href: "mailto:sgsi@lusati.com.br",
+    // },
 ];
 
 export function QuickAccessSupportComponent() {
@@ -37,7 +36,7 @@ export function QuickAccessSupportComponent() {
         <Card
             className="
                 p-6
-                h-80
+                h-58
                 rounded-3xl
                 border-border/50
                 bg-card

@@ -166,10 +166,6 @@
 //             </div>
 //         )
 //     },
-//     {
-//         key: "responsible",
-//         title: "Responsável",
-//     },
 // ]
 
 // interface User {
@@ -253,19 +249,6 @@
 //                 }
 //             />
 //             <div className="flex-1 px-16 py-8 space-y-6">
-//                 {isLoadingSummary || !dataSummary ? (
-//                     <Skeleton />
-//                 ) : (
-//                     <CardDocuments onData={dataSummary.summary} />
-//                 )}
-//                 {isLoading && (
-//                     <Skeleton />
-//                 )}
-//                 {!data && (
-//                     <div>
-//                         Erro ao listar dados
-//                     </div>
-//                 )}
 //                 {data && (
 //                     <TableComponent
 //                         data={users}
@@ -287,24 +270,10 @@
 //                                 </DropdownMenuTrigger>
 
 //                                 <DropdownMenuContent align="end">
-//                                     <DropdownMenuItem
-//                                         onClick={() => window.open(`${document.url}`, "_blank")}
-//                                     >
-//                                         <Eye />
-//                                         Visualizar
-//                                     </DropdownMenuItem>
-//                                     <DropdownMenuSeparator />
 //                                     <DropdownMenuItem>
 //                                         <Edit />
 //                                         Editar
 //                                     </DropdownMenuItem>
-//                                     <DeleteDocumentModal id={document.id}>
-//                                         <DropdownMenuItem
-//                                             onSelect={(e) => e.preventDefault()}>
-//                                             <X />
-//                                             Excluir
-//                                         </DropdownMenuItem>
-//                                     </DeleteDocumentModal>
 //                                 </DropdownMenuContent>
 //                             </DropdownMenu>
 //                         )}

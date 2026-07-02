@@ -1,6 +1,8 @@
+import { useGetPermissions } from "@/api/profiles/get-permissions";
 import { useGetProfilesById } from "@/api/profiles/get-profile-by-id";
 import { HeaderPage } from "@/components/header-page";
 import { ProfileDeatilsComponent } from "@/components/profiles/profile-details-component";
+import { ProfileMatrizComponent } from "@/components/profiles/profile-matriz-component";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Save, UserKey } from "lucide-react";
@@ -8,8 +10,9 @@ import { useParams } from "react-router";
 
 export function EditProfilePage() {
     const { id } = useParams<{ id: string }>();
-    console.log(id)
+
     const { data, isLoading, isError } = useGetProfilesById({id: Number(id)})
+    const { data: datPermissions, isLoading: isLoadingPermissions, isError: isErrorPermissions} = useGetPermissions()
 
     return (
         <>
@@ -44,9 +47,15 @@ export function EditProfilePage() {
                 }
             />
             <div className="flex-1 px-16 py-8 space-y-6">
-                <div className="w-full grid grid-cols-1 lg:grid-cols-3">
-                    <ProfileDeatilsComponent profile={data?.profile} isError={isError} isLoading={isLoading} />
+                <div className="w-full gap-6 grid grid-cols-1 lg:grid-cols-3">
+                    <div className="lg:col-span-1">
+                        <ProfileDeatilsComponent profile={data?.profile} isError={isError} isLoading={isLoading} />
+                    </div>
+                    <div className="lg:col-span-2">
+                        <ProfileMatrizComponent profile={data?.profile} permissions={datPermissions?.permissions} isError={isErrorPermissions} isLoading={isLoadingPermissions} />
+                    </div>
                 </div>
+
             </div>
         </>
     )

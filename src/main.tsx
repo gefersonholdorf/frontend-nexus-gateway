@@ -22,6 +22,8 @@ import { ServicesPage } from './pages/services-page.tsx'
 import { SystemsPage } from './pages/systems.tsx'
 import { WelcomePage } from './pages/welcome.tsx'
 import { ProtectedRoute } from './protected-router.tsx'
+// import { UsersPage } from "./pages/users-page.tsx"
+import { ScrollToTop } from "./scroll-to-top.tsx"
 
 const queryClient = new QueryClient()
 
@@ -29,6 +31,7 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
+        <ScrollToTop />
         <ThemeProvider>
           <UserProvider>
             <RootLayout>

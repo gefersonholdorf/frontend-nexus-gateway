@@ -43,7 +43,7 @@ export function NextEventsDetails() {
 
     if (isLoading) {
         return (
-            <Card className="h-52 p-0">
+            <Card className="h-110 p-0">
                 <Skeleton className="h-full bg-gray-100" />
             </Card>
         );
