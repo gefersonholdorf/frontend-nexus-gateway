@@ -7,7 +7,7 @@ export function BackComponent() {
         <>
             <div
                 className="flex gap-1 items-center cursor-pointer text-primary-text hover:text-muted-foreground"
-                onClick={() => navigate('/welcome')}
+                onClick={() => navigate(-1)}
             >
                 <ArrowLeft className="size-4" />
                 <span className="text-sm">Voltar</span>

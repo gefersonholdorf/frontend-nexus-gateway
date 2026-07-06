@@ -1,6 +1,5 @@
 import { useFetchDocuments } from "@/api/documents/fetch-documents";
 import { useFetchSummarys } from "@/api/documents/fetch-summary";
-import { CardDocuments } from "@/components/documents/cards-documents";
 import { CreateDocumentModal } from "@/components/documents/create-document-modal";
 import { DeleteDocumentModal } from "@/components/documents/delete-document";
 import { FilteringDocuments, type Filters } from "@/components/documents/filtering-documents";
@@ -140,6 +139,46 @@ export function DocumentsPage() {
     setPage(1);
   }
 
+  const summarys = dataSummary
+    ? [
+      {
+        title: "Total",
+        value: dataSummary.summary.total,
+        icon: FileText,
+        colorText: "text-primary",
+        borderColor: "hover:border-primary",
+      },
+      {
+        title: "Vigentes",
+        value: dataSummary.summary.present,
+        icon: CheckCircle,
+        colorText: "text-emerald-500",
+        borderColor: "hover:border-emerald-500",
+      },
+      {
+        title: "Em Revisão",
+        value: dataSummary.summary.revision,
+        icon: Edit,
+        colorText: "text-amber-500",
+        borderColor: "hover:border-amber-500",
+      },
+      {
+        title: "Em Andamento",
+        value: dataSummary.summary.progress,
+        icon: Clock,
+        colorText: "text-blue-500",
+        borderColor: "hover:border-blue-500",
+      },
+      {
+        title: "Pendentes",
+        value: dataSummary.summary.pending,
+        icon: XCircle,
+        colorText: "text-red-500",
+        borderColor: "hover:border-red-500",
+      },
+    ]
+    : [];
+
   return (
     <>
       <HeaderPage
@@ -169,9 +208,12 @@ export function DocumentsPage() {
         }
       />
       <div className="flex-1 px-16 py-8 space-y-6">
-        <CardDocuments isLoading={isLoadingSummary} summary={dataSummary?.summary}  />
         <TableComponent
           data={data?.documents ?? []}
+          cardsQuantity={{
+            summarys: summarys ?? [],
+            isLoading: isLoadingSummary,
+          }}
           registerName="Documentos"
           isLoading={isLoading}
           isError={isError}

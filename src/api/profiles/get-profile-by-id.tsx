@@ -29,6 +29,7 @@ export function useGetProfilesById({id}: {id: number}) {
             "get-profile-by-id",
             id
         ],
+        enabled: !!id,
         queryFn: async () => {
             const response = await fetch(`${import.meta.env.VITE_API_URL}/profiles/${id}`, {
                 method: "GET",

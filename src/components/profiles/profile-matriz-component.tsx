@@ -1,5 +1,5 @@
 import type { Permission } from "@/api/profiles/get-permissions";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 import {
     Card,
@@ -11,6 +11,7 @@ import { Badge } from "../ui/badge";
 import { Input } from "../ui/input";
 import { Switch } from "../ui/switch";
 
+import type { ProfileDetailsSchema } from "@/pages/profile-updated-page";
 import type { Profile } from "@/pages/profiles-page";
 import {
     ChevronDown,
@@ -18,10 +19,12 @@ import {
     FolderLock,
     Search,
 } from "lucide-react";
+import { type UseFormReturn } from "react-hook-form";
 
 interface ProfileMatrizComponentProps {
     permissions?: Permission[];
-    profile?: Profile
+    profile?: Profile;
+    form: UseFormReturn<ProfileDetailsSchema>;
     isLoading: boolean;
     isError: boolean;
 }
@@ -33,38 +36,14 @@ interface GroupedPermission {
 
 export function ProfileMatrizComponent({
     permissions = [],
-    profile,
+    form
 }: ProfileMatrizComponentProps) {
     const [search, setSearch] = useState("");
     const [expanded, setExpanded] = useState<Record<string, boolean>>({});
-    const initialValues = useMemo(() => {
-        if (!profile) return {};
 
-        return profile.permissions.reduce(
-            (acc, permission) => {
-                acc[permission.id] = true;
-                return acc;
-            },
-            {} as Record<number, boolean>
-        );
-    }, [profile]);
+    const { watch, setValue } = form;
 
-    const [values, setValues] = useState<Record<number, boolean>>(initialValues);
-
-
-    useEffect(() => {
-        if (!profile) return;
-
-        const profilePermissions = profile.permissions.reduce(
-            (acc, permission) => {
-                acc[permission.id] = true;
-                return acc;
-            },
-            {} as Record<number, boolean>
-        );
-
-        setValues(profilePermissions);
-    }, [profile]);
+    const selectedPermissions = watch("permissions");
 
     const grouped = useMemo<GroupedPermission[]>(() => {
         const groups: Record<string, Permission[]> = {};
@@ -140,7 +119,7 @@ export function ProfileMatrizComponent({
                     return (
                         <div
                             key={group.module}
-                            className="border rounded-xl bg-card"
+                            className="border rounded-xl bg-transparent"
                         >
                             <button
                                 className="w-full flex items-center justify-between p-5"
@@ -162,7 +141,7 @@ export function ProfileMatrizComponent({
                                         </h3>
 
                                         <Badge
-                                            variant="secondary"
+                                            variant="outline"
                                             className="mt-1"
                                         >
                                             {group.permissions.length} permissões
@@ -173,11 +152,8 @@ export function ProfileMatrizComponent({
                                 <div className="flex items-center gap-3">
                                     <Badge>
                                         {
-                                            group.permissions.filter(
-                                                (permission) =>
-                                                    values[
-                                                    permission.id
-                                                    ]
+                                            group.permissions.filter(permission =>
+                                                selectedPermissions.includes(permission.id)
                                             ).length
                                         }
                                         /
@@ -209,41 +185,38 @@ export function ProfileMatrizComponent({
                                                     className="flex items-center justify-between p-4 border-b last:border-b-0 md:odd:border-r"
                                                 >
                                                     <div>
-                                                        <h4 className="font-medium">
+                                                        <h4 className="font-medium flex items-center gap-4">
                                                             {prettify(
                                                                 action
-                                                            )}
+                                                            )} - <p className="text-xs text-muted-foreground">
+                                                                {
+                                                                    permission.key
+                                                                }
+                                                            </p>
                                                         </h4>
 
-                                                        <p className="text-xs text-muted-foreground">
-                                                            {
-                                                                permission.key
-                                                            }
-                                                        </p>
+                                                        <span className="text-[.8rem] text-muted-foreground">{permission.description}</span>
+
+
                                                     </div>
 
                                                     <Switch
-                                                        checked={
-                                                            values[
-                                                            permission.id
-                                                            ] ??
-                                                            false
-                                                        }
-                                                        onCheckedChange={(
-                                                            checked
-                                                        ) =>
-                                                            setValues(
-                                                                (
-                                                                    old
-                                                                ) => ({
-                                                                    ...old,
-                                                                    [
-                                                                        permission.id
-                                                                    ]:
-                                                                        checked,
-                                                                })
-                                                            )
-                                                        }
+                                                        checked={selectedPermissions.includes(permission.id)}
+                                                        onCheckedChange={(checked) => {
+                                                            if (checked) {
+                                                                setValue("permissions", [
+                                                                    ...selectedPermissions,
+                                                                    permission.id,
+                                                                ]);
+                                                            } else {
+                                                                setValue(
+                                                                    "permissions",
+                                                                    selectedPermissions.filter(
+                                                                        id => id !== permission.id
+                                                                    )
+                                                                );
+                                                            }
+                                                        }}
                                                     />
                                                 </div>
                                             );

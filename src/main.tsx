@@ -11,7 +11,7 @@ import RootLayout from './layout.tsx'
 import { CalendarPage } from './pages/calendar-page.tsx'
 import { CommunicationsPage } from './pages/comunications-page.tsx'
 import { DocumentsPage } from './pages/documents-page.tsx'
-import { EditProfilePage } from './pages/edit-profile-page.tsx'
+import { ProfilesUpdatedPage } from './pages/profile-updated-page.tsx'
 import { ForbiddenPage } from './pages/forbidden-page.tsx'
 import { IpMapPage } from './pages/ip-map.tsx'
 import { LoginPage } from './pages/login.tsx'
@@ -24,6 +24,7 @@ import { WelcomePage } from './pages/welcome.tsx'
 import { ProtectedRoute } from './protected-router.tsx'
 // import { UsersPage } from "./pages/users-page.tsx"
 import { ScrollToTop } from "./scroll-to-top.tsx"
+import OrganogramaPage from "./pages/organograma-page.tsx"
 
 const queryClient = new QueryClient()
 
@@ -51,7 +52,9 @@ createRoot(document.getElementById('root')!).render(
                     <Route path="/documents" element={<DocumentsPage />} />
                     {/* <Route path="/users" element={<UsersPage />} /> */}
                     <Route path="/profiles" element={<ProfilePage />} />
-                    <Route path="/profiles/:id" element={<EditProfilePage />} />
+                    <Route path="/profiles/:id" element={<ProfilesUpdatedPage />} />
+                    <Route path="/profiles/create" element={<ProfilesUpdatedPage />} />
+                    <Route path="/organograma" element={<OrganogramaPage />} />
                   </Route>
                 </Route>
               </Routes>

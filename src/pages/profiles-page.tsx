@@ -11,7 +11,7 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbP
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { formatDate } from "date-fns";
-import { CheckCircle, Edit, MoreHorizontalIcon, Plus, UserKey, X, XCircle } from "lucide-react";
+import { CheckCircle, Code2, Edit, Headset, MoreHorizontalIcon, Plus, Server, ShieldCheck, UserCog, UserKey, X, XCircle } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 
@@ -29,9 +29,20 @@ const columns: Column<Profile>[] = [
         key: "title",
         title: "Perfil",
         render: (value, row) => (
-            <div className="truncate max-w-70 flex flex-col">
-                <span>{value?.toString()}</span>
-                <span className="text-[.8rem] text-muted-foreground">{row.description}</span>
+            <div className="truncate max-w-70 flex gap-2">
+                <div className="flex rounded-full border border-border justify-center items-center w-10 h-10">
+                    {value?.toString() === 'Desenvolvedor' && <Code2 className="size-5 text-purple-500" />}
+                    {value?.toString() === 'Administrador' && <ShieldCheck className="size-5 text-amber-500" />}
+                    {value?.toString() === 'Infraestrutura' && <Server className="size-5 text-blue-500" />}
+                    {value?.toString() === 'Suporte' && <Headset className="size-5 text-emerald-500" />}
+                    {!["Desenvolvedor", "Administrador", "Infraestrutura", "Suporte"].includes(value?.toString() ?? "") && (
+                        <UserCog className="size-5 text-slate-500" />
+                    )}
+                </div>
+                <div className="flex flex-col">
+                    <span>{value?.toString()}</span>
+                    <span className="text-[.8rem] text-muted-foreground">{row.description}</span>
+                </div>
             </div>
         )
     },
@@ -153,7 +164,7 @@ export function ProfilePage() {
                 icon={UserKey}
                 actions={
                     <Button
-                        onClick={() => setOpenCreateModal(true)}
+                        onClick={() => navigate('/profiles/create')}
                     >
                         <Plus />
                         Adicionar Perfil
@@ -210,7 +221,7 @@ export function ProfilePage() {
                                 >
                                     <Edit />
                                     Editar
-                                </DropdownMenuItem> 
+                                </DropdownMenuItem>
                                 <DeleteDocumentModal id={profile.id}>
                                     <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                                         <X />

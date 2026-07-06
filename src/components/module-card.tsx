@@ -18,7 +18,7 @@ export function ModuleCard({ title, description, page, redirection, children, is
 
     return (
         <div
-            className={`w-full h-55flex justify-center items-center ${isBlock ? "cursor-not-allowed" : "cursor-pointer"}`}
+            className={`w-full h-55 flex justify-center items-center ${isBlock ? "cursor-not-allowed" : "cursor-pointer"}`}
             onClick={() => {
                 if (isBlock) return
                 if (page) {

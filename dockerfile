@@ -1,5 +1,5 @@
 # Estágio 1 - Build da aplicação
-FROM node:20-alpine as builder
+FROM node:22-alpine as builder
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci

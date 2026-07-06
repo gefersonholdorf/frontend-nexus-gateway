@@ -1,5 +1,6 @@
 import {
     AppWindow,
+    Building2,
     FileText,
     LayoutDashboard,
     MonitorCloud,
@@ -29,17 +30,23 @@ export const sidebarModules: SidebarModule[] = [
                 icon: LayoutDashboard,
                 profiles: ['Administrador', 'Suporte', 'Desenvolvedor', 'Infraestrutura']
             },
+            {
+                label: "Organograma",
+                path: "/organograma",
+                icon: Building2,
+                profiles: ['Administrador', 'Suporte', 'Desenvolvedor', 'Infraestrutura']
+            },
             // {
             //     label: "Calendário",
             //     path: "/calendar",
             //     icon: Calendar,
             // },
-            // {
-            //     label: "Documentos ISO",
-            //     path: "/documents",
-            //     icon: FileText,
-            //     profiles: ['Administrador']
-            // },
+            {
+                label: "Documentos ISO",
+                path: "/documents",
+                icon: FileText,
+                profiles: ['Administrador']
+            },
         ],
     },
 
@@ -101,21 +108,21 @@ export const sidebarModules: SidebarModule[] = [
     //         },
     //     ],
     // },
-    // {
-    //     title: "Administração",
-    //     items: [
-    //         {
-    //             label: "Usuários",
-    //             path: "/users",
-    //             icon: Users,
-    //             profiles: ['Administrador']
-    //         },
-    //         {
-    //             label: "Perfis",
-    //             path: "/profiles",
-    //             icon: UserRoundKey,
-    //             profiles: ['Administrador']
-    //         }
-    //     ]
-    // }
+    {
+        title: "Administração",
+        items: [
+            {
+                label: "Usuários",
+                path: "/users",
+                icon: Users,
+                profiles: ['Administrador']
+            },
+            {
+                label: "Perfis",
+                path: "/profiles",
+                icon: UserRoundKey,
+                profiles: ['Administrador']
+            }
+        ]
+    }
 ];
