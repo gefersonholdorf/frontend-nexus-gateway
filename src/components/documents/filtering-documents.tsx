@@ -1,5 +1,3 @@
-import { useState, useEffect } from "react";
-import { z } from "zod";
 import {
     Select,
     SelectContent,
@@ -8,10 +6,15 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { useDebounce } from "@/hooks/use-debounce";
+import { X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { z } from "zod";
 import { Card } from "../ui/card";
 import { Input } from "../ui/input";
-import { X } from "lucide-react";
-import { useDebounce } from "@/hooks/use-debounce";
+import { Label } from "../ui/label";
+import { SelectProfiles } from "../forms/select-profiles";
+import { useGetProfilesSelect } from "@/api/profiles/get-select-profiles";
 
 export const filtersSchema = z.object({
     text: z.string(),
@@ -29,6 +32,7 @@ interface FilteringDocumentsProps {
 export function FilteringDocuments({
     onFilterChange,
 }: FilteringDocumentsProps) {
+    const { data, isLoading } = useGetProfilesSelect()
     const [filters, setFilters] = useState<Filters>({
         text: "",
         category: "all",
@@ -43,14 +47,6 @@ export function FilteringDocuments({
     useEffect(() => {
         updateFilter("text", debouncedSearch || "");
     }, [debouncedSearch]);
-
-    useEffect(() => {
-  console.log("MONTADO");
-
-  return () => {
-    console.log("DESMONTADO");
-  };
-}, []);
 
     function updateFilter<K extends keyof Filters>(
         key: K,
@@ -88,98 +84,87 @@ export function FilteringDocuments({
             <div className="flex flex-col gap-2">
                 <div className="w-full grid grid-cols-1 lg:grid-cols-7 gap-4">
                     <div className="col-span-3">
-                        <Input
-                            placeholder="Buscar por código ou título..."
-                            value={searchText}
-                            onChange={(e) => setSearchText(e.target.value)}
-                        />
+                        <div className="space-y-1">
+                            <Label className="text-[.8rem] text-muted-foreground">Filtrar por</Label>
+                            <Input
+                                placeholder="Buscar por código ou título..."
+                                value={searchText}
+                                onChange={(e) => setSearchText(e.target.value)}
+                            />
+                        </div>
                     </div>
 
-                    <Select
-                        value={filters.category}
-                        onValueChange={(value) =>
-                            updateFilter("category", value)
-                        }
-                    >
-                        <SelectTrigger>
-                            <SelectValue placeholder="Categoria" />
-                        </SelectTrigger>
+                    <div className="space-y-1">
+                        <Label className="text-[.8rem] text-muted-foreground">Tipo:</Label>
+                        <Select
+                            value={filters.category}
+                            onValueChange={(value) =>
+                                updateFilter("category", value)
+                            }
+                        >
+                            <SelectTrigger>
+                                <SelectValue placeholder="Categoria" />
+                            </SelectTrigger>
 
-                        <SelectContent>
-                            <SelectGroup>
-                                <SelectItem value="Politica">
-                                    Política
-                                </SelectItem>
-                                <SelectItem value="Procedimento">
-                                    Procedimento
-                                </SelectItem>
-                                <SelectItem value="Manual">
-                                    Manual
-                                </SelectItem>
-                                <SelectItem value="all">
-                                    Todos
-                                </SelectItem>
-                            </SelectGroup>
-                        </SelectContent>
-                    </Select>
+                            <SelectContent>
+                                <SelectGroup>
+                                    <SelectItem value="Politica">
+                                        Política
+                                    </SelectItem>
+                                    <SelectItem value="Procedimento">
+                                        Procedimento
+                                    </SelectItem>
+                                    <SelectItem value="Manual">
+                                        Manual
+                                    </SelectItem>
+                                    <SelectItem value="all">
+                                        Todos
+                                    </SelectItem>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
+                    </div>
 
-                    <Select
-                        value={filters.status}
-                        onValueChange={(value) =>
-                            updateFilter("status", value)
-                        }
-                    >
-                        <SelectTrigger>
-                            <SelectValue placeholder="Status" />
-                        </SelectTrigger>
+                    <div className="space-y-1">
+                        <Label className="text-[.8rem] text-muted-foreground">Status:</Label>
+                        <Select
+                            value={filters.status}
+                            onValueChange={(value) =>
+                                updateFilter("status", value)
+                            }
+                        >
+                            <SelectTrigger>
+                                <SelectValue placeholder="Status" />
+                            </SelectTrigger>
 
-                        <SelectContent>
-                            <SelectGroup>
-                                <SelectItem value="Vigente">
-                                    Vigente
-                                </SelectItem>
-                                <SelectItem value="Em Andamento">
-                                    Em Andamento
-                                </SelectItem>
-                                <SelectItem value="Em Revisão">
-                                    Em Revisão
-                                </SelectItem>
-                                <SelectItem value="Pendente">
-                                    Pendente
-                                </SelectItem>
-                                <SelectItem value="all">
-                                    Todos
-                                </SelectItem>
-                            </SelectGroup>
-                        </SelectContent>
-                    </Select>
+                            <SelectContent>
+                                <SelectGroup>
+                                    <SelectItem value="Vigente">
+                                        Vigente
+                                    </SelectItem>
+                                    <SelectItem value="Em Andamento">
+                                        Em Andamento
+                                    </SelectItem>
+                                    <SelectItem value="Em Revisão">
+                                        Em Revisão
+                                    </SelectItem>
+                                    <SelectItem value="Pendente">
+                                        Pendente
+                                    </SelectItem>
+                                    <SelectItem value="all">
+                                        Todos
+                                    </SelectItem>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
+                    </div>
 
-                    <Select
-                        value={filters.department}
-                        onValueChange={(value) =>
-                            updateFilter("department", value)
-                        }
-                    >
-                        <SelectTrigger>
-                            <SelectValue placeholder="Departamento" />
-                        </SelectTrigger>
-
-                        <SelectContent>
-                            <SelectGroup>
-                                <SelectItem value="RH">RH</SelectItem>
-                                <SelectItem value="Infra">Infra</SelectItem>
-                                <SelectItem value="Suporte">
-                                    Suporte
-                                </SelectItem>
-                                <SelectItem value="Desenvolvimento">
-                                    Desenvolvimento
-                                </SelectItem>
-                                <SelectItem value="all">
-                                    Todos
-                                </SelectItem>
-                            </SelectGroup>
-                        </SelectContent>
-                    </Select>
+                    <div className="space-y-1">
+                        <Label className="text-[.8rem] text-muted-foreground">Responsável:</Label>
+                        {!isLoading && (
+                            <SelectProfiles value={filters.department} onChange={(value) => updateFilter("department", value)} profiles={data!.profiles} />
+                        )}
+                    </div>
 
                     <button
                         type="button"

@@ -2,6 +2,7 @@ import { useFetchDocuments } from "@/api/documents/fetch-documents";
 import { useFetchSummarys } from "@/api/documents/fetch-summary";
 import { CreateDocumentModal } from "@/components/documents/create-document-modal";
 import { DeleteDocumentModal } from "@/components/documents/delete-document";
+import { EditDocumentModal } from "@/components/documents/edit-document-modal";
 import { FilteringDocuments, type Filters } from "@/components/documents/filtering-documents";
 import { HeaderPage } from "@/components/header-page";
 import { TableComponent, type Column } from "@/components/table-component";
@@ -104,6 +105,8 @@ interface Document {
 
 export function DocumentsPage() {
   const [openCreateModal, setOpenCreateModal] = useState(false)
+  const [openUpdateModal, setOpenUpdateModal] = useState(false)
+  const [editDocument, setEditDocument] = useState<Document | null>(null)
   const [page, setPage] = useState(1)
   const [filters, setFilters] = useState<Filters>({
     text: "",
@@ -132,6 +135,14 @@ export function DocumentsPage() {
 
   function handleSetOpenCreateModal() {
     setOpenCreateModal(!openCreateModal)
+  }
+
+  function handleSetOpenUpdateModal() {
+    setOpenUpdateModal(!openUpdateModal)
+  }
+
+  function handleSetEditDocument(document: Document) {
+    setEditDocument(document)
   }
 
   function handleFiltering(newFilters: Filters) {
@@ -242,13 +253,24 @@ export function DocumentsPage() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={() => window.open(`${document.url}, "_blank"`)} >
-                  <Eye /> Visualizar </DropdownMenuItem> <DropdownMenuSeparator /> <DropdownMenuItem>
-                  <Edit /> Editar </DropdownMenuItem> <DeleteDocumentModal id={document.id}>
-                  <DropdownMenuItem onSelect={(e) => e.preventDefault()}> <X /> Excluir
-                  </DropdownMenuItem> </DeleteDocumentModal> </DropdownMenuContent>
+                  <Eye /> Visualizar 
+                </DropdownMenuItem> 
+                <DropdownMenuSeparator /> 
+                <DropdownMenuItem onClick={() => {
+                  handleSetOpenUpdateModal()
+                  handleSetEditDocument(document)
+                }}>
+                  <Edit /> Editar 
+                  </DropdownMenuItem> 
+                  <DeleteDocumentModal id={document.id}>
+                <DropdownMenuItem onSelect={(e) => e.preventDefault()}> <X /> Excluir
+                </DropdownMenuItem> 
+                </DeleteDocumentModal> 
+              </DropdownMenuContent>
             </DropdownMenu>)} />
       </div>
       <CreateDocumentModal open={openCreateModal} onOpenChange={handleSetOpenCreateModal} />
+      <EditDocumentModal open={openUpdateModal} onOpenChange={handleSetOpenUpdateModal} document={editDocument} />
     </>
   )
 }

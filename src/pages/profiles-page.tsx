@@ -1,6 +1,5 @@
 import { useFetchSummarys } from "@/api/documents/fetch-summary";
 import { useFetchProfiles } from "@/api/profiles/fetch-profiles";
-import { CardDocuments } from "@/components/documents/cards-documents";
 import { CreateDocumentModal } from "@/components/documents/create-document-modal";
 import { DeleteDocumentModal } from "@/components/documents/delete-document";
 import { FilteringDocuments, type Filters } from "@/components/documents/filtering-documents";
@@ -11,7 +10,7 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbP
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { formatDate } from "date-fns";
-import { CheckCircle, Code2, Edit, Headset, MoreHorizontalIcon, Plus, Server, ShieldCheck, UserCog, UserKey, X, XCircle } from "lucide-react";
+import { CheckCircle, Code2, Edit, FileText, Headset, MoreHorizontalIcon, Plus, Server, ShieldCheck, UserCog, UserKey, X, XCircle } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 
@@ -156,6 +155,32 @@ export function ProfilePage() {
         setPage(1);
     }
 
+    const summarys = dataSummary
+        ? [
+            {
+                title: "Total",
+                value: dataSummary.summary.total,
+                icon: FileText,
+                colorText: "text-primary",
+                borderColor: "hover:border-primary",
+            },
+            {
+                title: "Vigentes",
+                value: dataSummary.summary.present,
+                icon: CheckCircle,
+                colorText: "text-emerald-500",
+                borderColor: "hover:border-emerald-500",
+            },
+            {
+                title: "Em Revisão",
+                value: dataSummary.summary.revision,
+                icon: Edit,
+                colorText: "text-amber-500",
+                borderColor: "hover:border-amber-500",
+            }
+        ]
+        : [];
+
     return (
         <>
             <HeaderPage
@@ -185,9 +210,12 @@ export function ProfilePage() {
                 }
             />
             <div className="flex-1 px-16 py-8 space-y-6">
-                <CardDocuments isLoading={isLoadingSummary} summary={dataSummary?.summary} />
                 <TableComponent
                     data={data?.profiles ?? []}
+                    cardsQuantity={{
+                        summarys: summarys ?? [],
+                        isLoading: isLoadingSummary,
+                    }}
                     registerName="Perfis"
                     isLoading={isLoading}
                     isError={isError}
