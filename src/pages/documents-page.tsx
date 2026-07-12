@@ -1,15 +1,17 @@
+import { useCreateDocument } from "@/api/documents/create-document";
 import { useFetchDocuments } from "@/api/documents/fetch-documents";
 import { useFetchSummarys } from "@/api/documents/fetch-summary";
-import { CreateDocumentModal } from "@/components/documents/create-document-modal";
+import { useUpdateDocument } from "@/api/documents/update-document";
 import { DeleteDocumentModal } from "@/components/documents/delete-document";
-import { EditDocumentModal } from "@/components/documents/edit-document-modal";
 import { FilteringDocuments, type Filters } from "@/components/documents/filtering-documents";
+import { DocumentFormModal } from "@/components/documents/form-document";
 import { HeaderPage } from "@/components/header-page";
 import { TableComponent, type Column } from "@/components/table-component";
 import { Badge } from "@/components/ui/badge";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { useUser } from "@/contexts/user-context";
 import { formatDate } from "date-fns";
 import { CheckCircle, Clock, Edit, Eye, FileText, MoreHorizontalIcon, Plus, X, XCircle } from "lucide-react";
 import { useState } from "react";
@@ -86,33 +88,34 @@ const columns: Column<Document>[] = [
       </div>
     )
   },
-  {
-    key: "responsible",
-    title: "Responsável",
-  },
 ]
 
-interface Document {
+export interface Document {
   id: number
   code: string
   title: string
-  url: string
+  viewUrl: string
+  editUrl: string
   category: string
   status: string
-  responsible: string
+  createdAt: string
   updatedAt: string
 }
 
 export function DocumentsPage() {
+  const { user } = useUser()
   const [openCreateModal, setOpenCreateModal] = useState(false)
   const [openUpdateModal, setOpenUpdateModal] = useState(false)
-  const [editDocument, setEditDocument] = useState<Document | null>(null)
+  const [document, setDocument] = useState<Document | null>(null)
+
   const [page, setPage] = useState(1)
+  const createMutation = useCreateDocument();
+  const updateMutation = useUpdateDocument();
   const [filters, setFilters] = useState<Filters>({
     text: "",
     category: "all",
     status: "all",
-    department: "all",
+    profile: "all",
   });
 
   const { isLoading, data, isError, refetch } = useFetchDocuments({
@@ -121,7 +124,7 @@ export function DocumentsPage() {
     text: filters.text,
     category: filters.category,
     status: filters.status,
-    department: filters.department,
+    profile: filters.profile,
   })
 
   const { isLoading: isLoadingSummary, data: dataSummary } = useFetchSummarys({
@@ -130,7 +133,7 @@ export function DocumentsPage() {
     text: filters.text,
     category: filters.category,
     status: filters.status,
-    department: filters.department,
+    profile: filters.profile,
   })
 
   function handleSetOpenCreateModal() {
@@ -139,10 +142,6 @@ export function DocumentsPage() {
 
   function handleSetOpenUpdateModal() {
     setOpenUpdateModal(!openUpdateModal)
-  }
-
-  function handleSetEditDocument(document: Document) {
-    setEditDocument(document)
   }
 
   function handleFiltering(newFilters: Filters) {
@@ -196,14 +195,15 @@ export function DocumentsPage() {
         title="Documentos ISO"
         description="Central de documentos, políticas, procedimentos e registros do Sistema de Gestão de Segurança da Informação."
         icon={FileText}
-        actions={
+        actions=
+        {user?.roles?.includes("Administrador") && (
           <Button
             onClick={() => setOpenCreateModal(true)}
           >
             <Plus />
             Adicionar Documento
           </Button>
-        }
+        )}
         breadcrumb={
           <Breadcrumb>
             <BreadcrumbList>
@@ -251,26 +251,62 @@ export function DocumentsPage() {
                   <MoreHorizontalIcon />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => window.open(`${document.url}, "_blank"`)} >
-                  <Eye /> Visualizar 
-                </DropdownMenuItem> 
-                <DropdownMenuSeparator /> 
-                <DropdownMenuItem onClick={() => {
-                  handleSetOpenUpdateModal()
-                  handleSetEditDocument(document)
-                }}>
-                  <Edit /> Editar 
-                  </DropdownMenuItem> 
-                  <DeleteDocumentModal id={document.id}>
-                <DropdownMenuItem onSelect={(e) => e.preventDefault()}> <X /> Excluir
-                </DropdownMenuItem> 
-                </DeleteDocumentModal> 
+              <DropdownMenuContent align="end" className="w-fit">
+                <DropdownMenuItem disabled={!document.viewUrl} onClick={() => window.open(`${document.viewUrl}`, "_blank")}>
+                  <Eye /> Visualizar (PDF)
+                </DropdownMenuItem>
+                {user?.roles.includes("Administrador") && (
+                  <>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem disabled={!document.editUrl} onClick={() => window.open(`${document.viewUrl}`, "_blank")}>
+                      <Eye /> Visualizar/Editar (DOCX)
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => {
+                      setDocument(document);
+                      handleSetOpenUpdateModal();
+                    }}>
+                      <Edit /> Editar Documento
+                    </DropdownMenuItem>
+                    <DeleteDocumentModal document={document}>
+                      <DropdownMenuItem onSelect={(e) => e.preventDefault()}> <X /> Excluir
+                      </DropdownMenuItem>
+                    </DeleteDocumentModal>
+                  </>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>)} />
       </div>
-      <CreateDocumentModal open={openCreateModal} onOpenChange={handleSetOpenCreateModal} />
-      <EditDocumentModal open={openUpdateModal} onOpenChange={handleSetOpenUpdateModal} document={editDocument} />
+
+      <DocumentFormModal
+        mode="create"
+        open={openCreateModal}
+        onOpenChange={handleSetOpenCreateModal}
+        isPending={createMutation.isPending}
+        onSubmit={async (data) => {
+          await createMutation.mutateAsync(data);
+        }}
+      />
+      <DocumentFormModal
+        mode="update"
+        open={openUpdateModal}
+        onOpenChange={handleSetOpenUpdateModal}
+        defaultValues={{
+          code: document?.code || "",
+          title: document?.title || "",
+          category: document?.category || "",
+          status: document?.status || "",
+          viewUrl: document?.viewUrl || "",
+          editUrl: document?.editUrl || "",
+        }}
+        isPending={updateMutation.isPending}
+        onSubmit={async (data) => {
+          await updateMutation.mutateAsync({
+            id: document!.id,
+            ...data,
+          });
+        }}
+      />
     </>
   )
 }

@@ -1,3 +1,5 @@
+import { useMemo } from "react";
+import { useUser } from "@/contexts/user-context";
 import {
     Select,
     SelectContent,
@@ -23,6 +25,18 @@ export function SelectProfiles({
     value,
     onChange,
 }: SelectProfilesProps) {
+    const { user } = useUser();
+
+    const isAdmin = user?.roles.includes("Administrador");
+
+    const availableProfiles = useMemo(() => {
+        if (isAdmin) return profiles;
+
+        return profiles.filter(profile =>
+            user?.roles?.includes(profile.name)
+        );
+    }, [profiles, user?.roles, isAdmin]);
+
     return (
         <Select
             value={value}
@@ -32,13 +46,15 @@ export function SelectProfiles({
                 <SelectValue placeholder="Selecione um perfil" />
             </SelectTrigger>
 
-            <SelectContent>
+               <SelectContent>
                 <SelectGroup>
-                    <SelectItem value="all">
-                        Todos
-                    </SelectItem>
+                    {isAdmin && (
+                        <SelectItem value="all">
+                            Todos
+                        </SelectItem>
+                    )}
 
-                    {profiles.map((profile) => (
+                    {availableProfiles.map((profile) => (
                         <SelectItem
                             key={profile.id}
                             value={String(profile.id)}

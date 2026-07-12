@@ -15,7 +15,7 @@ interface FetchSummarysRequest {
     text?: string;
     category?: string;
     status?: string;
-    department?: string;
+    profile?: string;
 }
 
 interface FetchSummarysResponse {
@@ -30,7 +30,7 @@ interface FetchSummarysResponse {
     }
 }
 
-export function useFetchSummarys({ page = 1, perPage = 10, category, department, status, text }: FetchSummarysRequest) {
+export function useFetchSummarys({ page = 1, perPage = 10, category, status, text, profile }: FetchSummarysRequest) {
     const { user } = useUser()
 
     return useQuery({
@@ -41,7 +41,7 @@ export function useFetchSummarys({ page = 1, perPage = 10, category, department,
             text,
             category,
             status,
-            department,
+            profile
         ],
         queryFn: async () => {
             const query = new URLSearchParams();
@@ -65,9 +65,9 @@ export function useFetchSummarys({ page = 1, perPage = 10, category, department,
                 }
             }
 
-            if (department) {
-                if (department !== "all") {
-                    query.append("department", department);
+            if (profile) {
+                if (profile !== "all") {
+                    query.append("profile", profile);
                 }
             }
 

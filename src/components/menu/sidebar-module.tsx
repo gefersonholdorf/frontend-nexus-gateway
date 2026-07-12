@@ -45,7 +45,7 @@ export const sidebarModules: SidebarModule[] = [
                 label: "Documentos ISO",
                 path: "/documents",
                 icon: FileText,
-                profiles: ['Administrador']
+                profiles: ['Administrador', 'Suporte', 'Desenvolvedor', 'Infraestrutura']
             },
         ],
     },

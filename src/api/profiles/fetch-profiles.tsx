@@ -22,6 +22,7 @@ interface FetchProfilesRequest {
     perPage: number;
     title?: string;
     status?: string;
+    profile?: string
 }
 
 interface FetchProfilesResponse {
@@ -37,7 +38,7 @@ interface FetchProfilesResponse {
     countPermissions: number
 }
 
-export function useFetchProfiles({ page = 1, perPage = 10, status, title }: FetchProfilesRequest) {
+export function useFetchProfiles({ page = 1, perPage = 10, status, title, profile }: FetchProfilesRequest) {
     const { user } = useUser()
 
     return useQuery({
@@ -47,6 +48,7 @@ export function useFetchProfiles({ page = 1, perPage = 10, status, title }: Fetc
             perPage,
             title,
             status,
+            profile,
         ],
         queryFn: async () => {
             const query = new URLSearchParams();

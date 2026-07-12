@@ -7,8 +7,8 @@ interface UpdateDocumentRequest {
     title: string,
     category: string,
     status: string,
-    responsible: string,
-    url: string
+    viewUrl: string
+    editUrl: string
 }
 
 export function useUpdateDocument() {
@@ -29,8 +29,8 @@ export function useUpdateDocument() {
                     title: data.title,
                     category: data.category,
                     status: data.status,
-                    responsible: data.responsible,
-                    url: data.url
+                    viewUrl: data.viewUrl,
+                    editUrl: data.editUrl
                 })
             })
 

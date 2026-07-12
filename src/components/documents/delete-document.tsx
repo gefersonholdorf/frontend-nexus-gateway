@@ -8,17 +8,18 @@ import {
     DialogTitle,
     DialogTrigger
 } from "@/components/ui/dialog";
+import type { Document } from "@/pages/documents-page";
 import { useState } from "react";
 import { toast } from "sonner";
 
 interface DeleteDocumentModalProps {
-    id: number
+    document: Document
     children: React.ReactNode
 }
 
 
 export function DeleteDocumentModal({
-    id,
+    document,
     children
 }: DeleteDocumentModalProps) {
     const [open, setOpen] = useState(false);
@@ -26,7 +27,7 @@ export function DeleteDocumentModal({
 
     async function handleDeleteDocument() {
         try {
-            await mutateAsync(id)
+            await mutateAsync(document.id)
 
             toast.success("Documento deletado com sucesso!", {
                 position: "top-center",
@@ -51,9 +52,9 @@ export function DeleteDocumentModal({
                     onClick={(e) => e.stopPropagation()}
                     className="w-2/5 p-2 z-50"
                 >
-                    <DialogHeader className="bg-muted/40 p-6">
-                        <DialogTitle className="text-[1.1rem]">
-                            Este documento será removido, deseja confirmar a deleção?
+                    <DialogHeader className="p-6">
+                        <DialogTitle className="text-[.9rem]">
+                            O documento {document.title} será removido, deseja confirmar a deleção?
                         </DialogTitle>
                     </DialogHeader>
                     <DialogFooter>

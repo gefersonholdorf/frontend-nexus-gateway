@@ -6,8 +6,9 @@ interface CreateDocumentRequest {
     title: string,
     category: string,
     status: string,
-    responsible: string,
-    url: string
+    viewUrl?: string
+    editUrl?: string
+    profiles: number[]
 }
 
 export function useCreateDocument() {
@@ -28,8 +29,9 @@ export function useCreateDocument() {
                     title: data.title,
                     category: data.category,
                     status: data.status,
-                    responsible: data.responsible,
-                    url: data.url
+                    viewUrl: data.viewUrl,
+                    editUrl: data.editUrl,
+                    profiles: data.profiles
                 })
             })
 

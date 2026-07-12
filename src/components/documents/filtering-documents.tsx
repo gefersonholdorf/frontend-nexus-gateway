@@ -15,12 +15,13 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { SelectProfiles } from "../forms/select-profiles";
 import { useGetProfilesSelect } from "@/api/profiles/get-select-profiles";
+import { useUser } from "@/contexts/user-context";
 
 export const filtersSchema = z.object({
     text: z.string(),
     category: z.string(),
     status: z.string(),
-    department: z.string(),
+    profile: z.string(),
 });
 
 export type Filters = z.infer<typeof filtersSchema>;
@@ -32,13 +33,32 @@ interface FilteringDocumentsProps {
 export function FilteringDocuments({
     onFilterChange,
 }: FilteringDocumentsProps) {
+    const { user } = useUser()
     const { data, isLoading } = useGetProfilesSelect()
+    const isAdmin = user?.roles.includes("Administrador");
     const [filters, setFilters] = useState<Filters>({
         text: "",
         category: "all",
         status: "all",
-        department: "all",
+        profile: "all",
     });
+
+    useEffect(() => {
+        if (!data) return;
+
+        if (isAdmin) {
+            updateFilter("profile", "all");
+            return;
+        }
+
+        const profile = data.profiles.find(p =>
+            user?.roles.includes(p.name)
+        );
+
+        if (profile) {
+            updateFilter("profile", String(profile.id));
+        }
+    }, [data, isAdmin]);
 
     const [searchText, setSearchText] = useState("");
 
@@ -63,12 +83,21 @@ export function FilteringDocuments({
 
     function clearFilters() {
         setSearchText("");
+        let profile = "all"
+
+        const profiles = data!.profiles.find(p =>
+            user?.roles.includes(p.name)
+        );
+
+        if (profiles) {
+            profile = String(profiles.id)
+        }
 
         const newFilters: Filters = {
             text: "",
             category: "all",
             status: "all",
-            department: "all",
+            profile,
         };
 
         setFilters(newFilters);
@@ -162,7 +191,7 @@ export function FilteringDocuments({
                     <div className="space-y-1">
                         <Label className="text-[.8rem] text-muted-foreground">Responsável:</Label>
                         {!isLoading && (
-                            <SelectProfiles value={filters.department} onChange={(value) => updateFilter("department", value)} profiles={data!.profiles} />
+                            <SelectProfiles value={filters.profile} onChange={(value) => updateFilter("profile", value)} profiles={data!.profiles} />
                         )}
                     </div>
 

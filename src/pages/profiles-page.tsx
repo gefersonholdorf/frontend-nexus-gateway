@@ -1,7 +1,5 @@
 import { useFetchSummarys } from "@/api/documents/fetch-summary";
 import { useFetchProfiles } from "@/api/profiles/fetch-profiles";
-import { CreateDocumentModal } from "@/components/documents/create-document-modal";
-import { DeleteDocumentModal } from "@/components/documents/delete-document";
 import { FilteringDocuments, type Filters } from "@/components/documents/filtering-documents";
 import { HeaderPage } from "@/components/header-page";
 import { TableComponent, type Column } from "@/components/table-component";
@@ -127,7 +125,7 @@ export function ProfilePage() {
         text: "",
         category: "all",
         status: "all",
-        department: "all",
+        profile: "all",
     });
 
     const { isLoading, data, isError, refetch } = useFetchProfiles({
@@ -135,6 +133,7 @@ export function ProfilePage() {
         perPage: 10,
         title: filters.text,
         status: filters.status,
+        profile: filters.profile,
     })
 
     const { isLoading: isLoadingSummary, data: dataSummary } = useFetchSummarys({
@@ -143,7 +142,7 @@ export function ProfilePage() {
         text: filters.text,
         category: filters.category,
         status: filters.status,
-        department: filters.department,
+        profile: filters.profile,
     })
 
     function handleSetOpenCreateModal() {
@@ -250,16 +249,9 @@ export function ProfilePage() {
                                     <Edit />
                                     Editar
                                 </DropdownMenuItem>
-                                <DeleteDocumentModal id={profile.id}>
-                                    <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                                        <X />
-                                        Excluir
-                                    </DropdownMenuItem>
-                                </DeleteDocumentModal>
                             </DropdownMenuContent>
                         </DropdownMenu>)} />
             </div>
-            <CreateDocumentModal open={openCreateModal} onOpenChange={handleSetOpenCreateModal} />
         </>
     )
 }

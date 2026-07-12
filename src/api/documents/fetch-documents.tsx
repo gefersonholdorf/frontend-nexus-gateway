@@ -5,10 +5,11 @@ interface Document {
     id: number
     code: string,
     category: string,
-    responsible: string,
     status: string,
     title: string,
-    url: string,
+    viewUrl: string,
+    editUrl: string,
+    createdAt: string,
     updatedAt: string,
 }
 
@@ -18,7 +19,7 @@ interface FetchDocumentsRequest {
     text?: string;
     category?: string;
     status?: string;
-    department?: string;
+    profile?: string
 }
 
 interface FetchDocumentsResponse {
@@ -33,7 +34,7 @@ interface FetchDocumentsResponse {
     }
 }
 
-export function useFetchDocuments({ page = 1, perPage = 10, category, department, status, text }: FetchDocumentsRequest) {
+export function useFetchDocuments({ page = 1, perPage = 10, category, status, text, profile }: FetchDocumentsRequest) {
     const { user } = useUser()
 
     return useQuery({
@@ -44,7 +45,7 @@ export function useFetchDocuments({ page = 1, perPage = 10, category, department
             text,
             category,
             status,
-            department,
+            profile
         ],
         queryFn: async () => {
             const query = new URLSearchParams();
@@ -68,9 +69,9 @@ export function useFetchDocuments({ page = 1, perPage = 10, category, department
                 }
             }
 
-            if (department) {
-                if (department !== "all") {
-                    query.append("department", department);
+            if (profile) {
+                if (profile !== "all") {
+                    query.append("profile", profile);
                 }
             }
 
