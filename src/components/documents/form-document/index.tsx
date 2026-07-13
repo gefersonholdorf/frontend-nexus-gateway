@@ -43,14 +43,26 @@ interface CreateDocumentModalProps {
     isPending: boolean;
 }
 
+const nullableUrl = z
+  .string()
+  .nullable()
+  .transform((value) => {
+    if (value === "") return null;
+    return value;
+  })
+  .refine(
+    (value) => value === null || z.url().safeParse(value).success,
+    { message: "URL inválida" }
+  );
+
 const createDocumentSchema = z.object({
     code: z.string().min(1, "Código obrigatório"),
     title: z.string().min(1, "Título obrigatório"),
     category: z.string().min(1, "Categoria obrigatória"),
     status: z.string().min(1, "Status obrigatório"),
 
-    viewUrl: z.url("URL inválida").or(z.literal("")),
-    editUrl: z.url("URL inválida").or(z.literal("")),
+    viewUrl: nullableUrl,
+    editUrl: nullableUrl,
 
     profiles: z.array(z.number()).min(1, "Selecione pelo menos um perfil"),
 });
@@ -81,8 +93,8 @@ export function DocumentFormModal({
             category: "",
             status: "",
             title: "",
-            viewUrl: "",
-            editUrl: "",
+            viewUrl: null,
+            editUrl: null,
             profiles: [],
             ...defaultValues,
         },
@@ -95,8 +107,8 @@ export function DocumentFormModal({
                 category: "",
                 status: "",
                 title: "",
-                viewUrl: "",
-                editUrl: "",
+                viewUrl: null,
+                editUrl: null,
                 profiles: [],
                 ...defaultValues,
             });
@@ -114,6 +126,8 @@ export function DocumentFormModal({
                 "title",
                 "category",
                 "status",
+                "editUrl",
+                "viewUrl"
             ]);
         }
 
@@ -147,14 +161,17 @@ export function DocumentFormModal({
         try {
             await onSubmit({
                 ...data,
-                viewUrl: data.viewUrl,
-                editUrl: data.editUrl,
+                viewUrl: data.viewUrl === "" ? null : data.viewUrl,
+                editUrl: data.editUrl === "" ? null : data.editUrl,
             });
 
             toast.success(
                 mode === "create"
                     ? "Documento criado com sucesso!"
-                    : "Documento atualizado com sucesso!"
+                    : "Documento atualizado com sucesso!", {
+                    position: "top-center",
+                    richColors: true,
+                }
             );
 
             reset();
@@ -164,7 +181,10 @@ export function DocumentFormModal({
             toast.error(
                 mode === "create"
                     ? "Erro ao criar documento."
-                    : "Erro ao atualizar documento."
+                    : "Erro ao atualizar documento.", {
+                    position: "top-center",
+                    richColors: true,
+                }
             );
         }
     }
@@ -238,6 +258,7 @@ export function DocumentFormModal({
                         </StepperContent>
                         <StepperContent value={3}>
                             <StepFinish
+                                mode={mode}
                                 control={control}
                                 onPrevStep={handlePrevStep}
                                 isSubmitting={isSubmitting}

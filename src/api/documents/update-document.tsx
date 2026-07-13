@@ -7,8 +7,9 @@ interface UpdateDocumentRequest {
     title: string,
     category: string,
     status: string,
-    viewUrl: string
-    editUrl: string
+    viewUrl: string | null,
+    editUrl: string | null
+    profiles: number[]
 }
 
 export function useUpdateDocument() {
@@ -18,7 +19,7 @@ export function useUpdateDocument() {
     return useMutation({
         mutationKey: ['create-document-user'],
         mutationFn: async (data: UpdateDocumentRequest) => {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/documents`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/documents/${data.id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -30,11 +31,12 @@ export function useUpdateDocument() {
                     category: data.category,
                     status: data.status,
                     viewUrl: data.viewUrl,
-                    editUrl: data.editUrl
+                    editUrl: data.editUrl,
+                    profiles: data.profiles
                 })
             })
 
-            if (response.status !== 201) {
+            if (response.status !== 200) {
                 throw new Error("Erro ao atualizar novo documento.")
             }
         },

@@ -6,8 +6,8 @@ interface CreateDocumentRequest {
     title: string,
     category: string,
     status: string,
-    viewUrl?: string
-    editUrl?: string
+    viewUrl: string | null,
+    editUrl: string | null
     profiles: number[]
 }
 

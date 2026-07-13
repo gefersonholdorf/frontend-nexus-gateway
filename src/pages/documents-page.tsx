@@ -7,10 +7,12 @@ import { FilteringDocuments, type Filters } from "@/components/documents/filteri
 import { DocumentFormModal } from "@/components/documents/form-document";
 import { HeaderPage } from "@/components/header-page";
 import { TableComponent, type Column } from "@/components/table-component";
+import { Avatar, AvatarFallback, AvatarGroup, AvatarGroupCount, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useUser } from "@/contexts/user-context";
 import { formatDate } from "date-fns";
 import { CheckCircle, Clock, Edit, Eye, FileText, MoreHorizontalIcon, Plus, X, XCircle } from "lucide-react";
@@ -22,7 +24,7 @@ const columns: Column<Document>[] = [
     title: "Código",
     render: (value) => (
       <div className="flex items-center gap-1 text-[.8rem]">
-        <span>{value}</span>
+        <span>{value.toString()}</span>
       </div>
     )
   },
@@ -31,7 +33,7 @@ const columns: Column<Document>[] = [
     title: "Documento",
     render: (value) => (
       <div className="truncate max-w-70">
-        <span>{value}</span>
+        <span>{value.toString()}</span>
       </div>
     )
   },
@@ -80,14 +82,75 @@ const columns: Column<Document>[] = [
     )
   },
   {
+    key: "profiles",
+    title: "Perfis",
+    render: (value) => (
+      <div className="flex flex-col gap-1">
+        <AvatarGroup>
+          {Array.isArray(value) ? value.slice(0, 4).map((a) => (
+            <Tooltip key={a.id}>
+              <TooltipTrigger asChild>
+                <Avatar>
+                  <AvatarFallback className="bg-card text-muted-foreground">
+                    {a.name[0]}{a.name.split(" ").length > 1 ? a.name.split(" ")[1][0] : ""}
+                  </AvatarFallback>
+                </Avatar>
+              </TooltipTrigger>
+
+              <TooltipContent>
+                <span>
+                  {a.name}
+                </span>
+              </TooltipContent>
+            </Tooltip>
+          )) : null}
+
+          {Array.isArray(value) && value.length > 4 && (
+            <AvatarGroupCount className="bg-card">
+              +{value.length - 4}
+            </AvatarGroupCount>
+          )}
+        </AvatarGroup>
+      </div>
+    )
+  },
+  {
     key: "updatedAt",
     title: "Atualizado em",
     render: (value) => (
       <div>
-        {formatDate(value, "dd/MM/yyyy - HH:mm")}
+        {formatDate(value.toString(), "dd/MM/yyyy - HH:mm")}
       </div>
     )
   },
+  {
+    key: "createdBy",
+    title: "Criado por",
+    render: (value) => {
+      if (
+        !value ||
+        typeof value !== "object" ||
+        Array.isArray(value) ||
+        !("name" in value)
+      ) {
+        return null;
+      }
+
+      return (
+        <div className="flex items-center gap-2">
+          <Avatar>
+            <AvatarImage src={value.avatarUrl ?? ""} />
+            <AvatarFallback className="bg-card text-muted-foreground">
+              {value.name[0]}
+              {value.name.split(" ").length > 1
+                ? value.name.split(" ")[1][0]
+                : ""}
+            </AvatarFallback>
+          </Avatar>
+        </div>
+      );
+    },
+  }
 ]
 
 export interface Document {
@@ -100,6 +163,16 @@ export interface Document {
   status: string
   createdAt: string
   updatedAt: string
+  profiles: {
+    id: number
+    name: string
+    description: string | null
+  }[]
+  createdBy: {
+    id: number
+    name: string
+    avatarUrl: string | null
+  }
 }
 
 export function DocumentsPage() {
@@ -258,7 +331,7 @@ export function DocumentsPage() {
                 {user?.roles.includes("Administrador") && (
                   <>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem disabled={!document.editUrl} onClick={() => window.open(`${document.viewUrl}`, "_blank")}>
+                    <DropdownMenuItem disabled={!document.editUrl} onClick={() => window.open(`${document.editUrl}`, "_blank")}>
                       <Eye /> Visualizar/Editar (DOCX)
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
@@ -296,8 +369,9 @@ export function DocumentsPage() {
           title: document?.title || "",
           category: document?.category || "",
           status: document?.status || "",
-          viewUrl: document?.viewUrl || "",
-          editUrl: document?.editUrl || "",
+          viewUrl: document?.viewUrl || null,
+          editUrl: document?.editUrl || null,
+          profiles: document?.profiles.map(profile => profile.id),
         }}
         isPending={updateMutation.isPending}
         onSubmit={async (data) => {

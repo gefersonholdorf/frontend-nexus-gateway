@@ -2,7 +2,7 @@ import { useGetProfilesSelect } from "@/api/profiles/get-select-profiles";
 import { Button } from "@/components/ui/button";
 import { DialogFooter } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
-import { ArrowLeft, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Save, X } from "lucide-react";
 import {
     type Control,
     type UseFormHandleSubmit,
@@ -11,6 +11,7 @@ import {
 import type { CreateDocumentSchema } from ".";
 
 interface StepFinishProps {
+    mode?: "create" | "update";
     control: Control<CreateDocumentSchema>;
     onPrevStep: () => void;
     onOpenChange: (open: boolean) => void;
@@ -21,6 +22,7 @@ interface StepFinishProps {
 }
 
 export function StepFinish({
+    mode,
     control,
     onPrevStep,
     onOpenChange,
@@ -150,6 +152,7 @@ export function StepFinish({
                     variant="outline"
                     onClick={() => onOpenChange(false)}
                 >
+                    <X />
                     Cancelar
                 </Button>
 
@@ -173,10 +176,11 @@ export function StepFinish({
                         }
                     )}
                     disabled={isSubmitting || onIsPending}
-                >
+                >   
+                    <Save className="mr-2 h-4 w-4" />
                     {isSubmitting || onIsPending
                         ? "Salvando..."
-                        : "Criar Documento"}
+                        : mode === 'create' ? "Criar Documento" : "Atualizar Documento"}
                 </Button>
             </DialogFooter>
         </div>

@@ -10,7 +10,7 @@ import {
     FieldTitle,
 } from "@/components/ui/field";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, ArrowRight, Shield } from "lucide-react";
+import { ArrowLeft, ArrowRight, Shield, X } from "lucide-react";
 import {
     Controller,
     type Control,
@@ -118,10 +118,11 @@ export function StepProfiles({
                     variant="outline"
                     onClick={() => onOpenChange(false)}
                 >
+                     <X />
                     Cancelar
                 </Button>
 
-                <Button type="button" onClick={onPrevStep}>
+                <Button type="button" onClick={onPrevStep} variant="outline">
                     <ArrowLeft className="mr-2 h-4 w-4" />
                     Voltar
                 </Button>

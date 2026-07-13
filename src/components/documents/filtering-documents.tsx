@@ -72,13 +72,15 @@ export function FilteringDocuments({
         key: K,
         value: Filters[K]
     ) {
-        const next = {
-            ...filters,
-            [key]: value,
-        };
+        setFilters(prev => {
+            const next = {
+                ...prev,
+                [key]: value,
+            };
 
-        setFilters(next);
-        onFilterChange?.(next);
+            onFilterChange?.(next);
+            return next;
+        });
     }
 
     function clearFilters() {
@@ -90,7 +92,11 @@ export function FilteringDocuments({
         );
 
         if (profiles) {
-            profile = String(profiles.id)
+            if(isAdmin) {
+                profile = "all"
+            } else {
+                profile = String(profiles.id)
+            }
         }
 
         const newFilters: Filters = {

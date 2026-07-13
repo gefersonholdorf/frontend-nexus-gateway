@@ -26,6 +26,7 @@ import {
     BookOpen,
     ShieldCheck,
     Workflow,
+    X,
 } from "lucide-react";
 import {
     Controller,
@@ -180,14 +181,14 @@ export function StepConfiguration({
                     <Label>Link do Documento em Edição</Label>
 
                     <Input
-                        type="url"
+                        type="text"
                         placeholder="Informe a URL..."
-                        {...register("viewUrl")}
+                        {...register("editUrl")}
                     />
 
-                    {errors.viewUrl && (
+                    {errors.editUrl && (
                         <p className="text-sm text-red-500">
-                            {errors.viewUrl.message}
+                            {errors.editUrl.message}
                         </p>
                     )}
                 </div>
@@ -198,12 +199,12 @@ export function StepConfiguration({
                     <Input
                         type="url"
                         placeholder="Informe a URL..."
-                        {...register("editUrl")}
+                        {...register("viewUrl")}
                     />
 
-                    {errors.editUrl && (
+                    {errors.viewUrl && (
                         <p className="text-sm text-red-500">
-                            {errors.editUrl.message}
+                            {errors.viewUrl.message}
                         </p>
                     )}
                 </div>
@@ -262,6 +263,7 @@ export function StepConfiguration({
                     variant="outline"
                     onClick={() => onOpenChange(false)}
                 >
+                     <X />
                     Cancelar
                 </Button>
 

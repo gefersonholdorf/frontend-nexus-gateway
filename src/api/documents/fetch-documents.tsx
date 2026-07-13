@@ -11,6 +11,16 @@ interface Document {
     editUrl: string,
     createdAt: string,
     updatedAt: string,
+    profiles: {
+        id: number
+        name: string
+        description: string | null
+    }[]
+    createdBy: {
+        id: number
+        name: string
+        avatarUrl: string | null
+    }
 }
 
 interface FetchDocumentsRequest {
