@@ -10,7 +10,7 @@ import {
     FieldTitle,
 } from "@/components/ui/field";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, ArrowRight, Shield, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Code2, Headset, Server, ShieldCheck, UserCog, X } from "lucide-react";
 import {
     Controller,
     type Control,
@@ -63,7 +63,16 @@ export function StepProfiles({
                                         >
                                             <Field orientation="horizontal">
                                                 <FieldContent className="flex flex-row items-center gap-3">
-                                                    <Shield className="size-6 text-blue-500" />
+                                                    <div>
+                                                        {profile.name === 'Desenvolvedor' && <Code2 className="size-5 text-purple-500" />}
+                                                        {profile.name === 'Administrador' && <ShieldCheck className="size-5 text-amber-500" />}
+                                                        {profile.name === 'Infraestrutura' && <Server className="size-5 text-blue-500" />}
+                                                        {profile.name === 'Suporte' && <Headset className="size-5 text-emerald-500" />}
+                                                        {!["Desenvolvedor", "Administrador", "Infraestrutura", "Suporte"].includes(profile.name) && (
+                                                            <UserCog className="size-5 text-slate-500" />
+                                                        )}
+                                                    </div>
+
 
                                                     <div>
                                                         <FieldTitle>
@@ -71,8 +80,7 @@ export function StepProfiles({
                                                         </FieldTitle>
 
                                                         <FieldDescription>
-                                                            Permite acesso ao
-                                                            documento.
+                                                            {profile.description ?? "Sem descrição"}
                                                         </FieldDescription>
                                                     </div>
                                                 </FieldContent>
@@ -118,7 +126,7 @@ export function StepProfiles({
                     variant="outline"
                     onClick={() => onOpenChange(false)}
                 >
-                     <X />
+                    <X />
                     Cancelar
                 </Button>
 

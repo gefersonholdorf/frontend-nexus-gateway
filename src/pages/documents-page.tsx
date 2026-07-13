@@ -1,4 +1,5 @@
 import { useCreateDocument } from "@/api/documents/create-document";
+import { useCreateDocumentEvent } from "@/api/documents/create-document-event";
 import { useFetchDocuments } from "@/api/documents/fetch-documents";
 import { useFetchSummarys } from "@/api/documents/fetch-summary";
 import { useUpdateDocument } from "@/api/documents/update-document";
@@ -15,8 +16,9 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useUser } from "@/contexts/user-context";
 import { formatDate } from "date-fns";
-import { CheckCircle, Clock, Edit, Eye, FileText, MoreHorizontalIcon, Plus, X, XCircle } from "lucide-react";
+import { ChartBar, CheckCircle, Clock, Edit, Eye, FileText, MoreHorizontalIcon, Plus, X, XCircle } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 
 const columns: Column<Document>[] = [
   {
@@ -106,7 +108,7 @@ const columns: Column<Document>[] = [
           )) : null}
 
           {Array.isArray(value) && value.length > 4 && (
-            <AvatarGroupCount className="bg-card">
+            <AvatarGroupCount className="bg-primary/90 text-white">
               +{value.length - 4}
             </AvatarGroupCount>
           )}
@@ -138,15 +140,22 @@ const columns: Column<Document>[] = [
 
       return (
         <div className="flex items-center gap-2">
-          <Avatar>
-            <AvatarImage src={value.avatarUrl ?? ""} />
-            <AvatarFallback className="bg-card text-muted-foreground">
-              {value.name[0]}
-              {value.name.split(" ").length > 1
-                ? value.name.split(" ")[1][0]
-                : ""}
-            </AvatarFallback>
-          </Avatar>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Avatar className="h-9 w-9">
+                <AvatarImage src={value.avatarUrl ?? ""} />
+                <AvatarFallback className="bg-primary/90 text-white">
+                  {value.name[0]}
+                  {value.name.split(" ").length > 1
+                    ? value.name.split(" ")[1][0]
+                    : ""}
+                </AvatarFallback>
+              </Avatar>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{value.name}</p>
+            </TooltipContent>
+          </Tooltip>
         </div>
       );
     },
@@ -181,9 +190,12 @@ export function DocumentsPage() {
   const [openUpdateModal, setOpenUpdateModal] = useState(false)
   const [document, setDocument] = useState<Document | null>(null)
 
+  const navigate = useNavigate()
+
   const [page, setPage] = useState(1)
   const createMutation = useCreateDocument();
   const updateMutation = useUpdateDocument();
+  const createEventMutation = useCreateDocumentEvent();
   const [filters, setFilters] = useState<Filters>({
     text: "",
     category: "all",
@@ -221,6 +233,14 @@ export function DocumentsPage() {
     setFilters(newFilters);
     setPage(1);
   }
+
+  const handleCreateDocumentEvent = async (documentId: number) => {
+    try {
+      createEventMutation.mutateAsync({ id: documentId });
+    } catch (error) {
+      console.error("Erro ao criar evento do documento:", error);
+    }
+  };
 
   const summarys = dataSummary
     ? [
@@ -270,12 +290,20 @@ export function DocumentsPage() {
         icon={FileText}
         actions=
         {user?.roles?.includes("Administrador") && (
-          <Button
-            onClick={() => setOpenCreateModal(true)}
-          >
-            <Plus />
-            Adicionar Documento
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              onClick={() => navigate('/documents/events')}
+            >
+              <ChartBar />
+              Painel de Indicadores
+            </Button>
+            <Button
+              onClick={() => setOpenCreateModal(true)}
+            >
+              <Plus />
+              Adicionar Documento
+            </Button>
+          </div>
         )}
         breadcrumb={
           <Breadcrumb>
@@ -325,7 +353,10 @@ export function DocumentsPage() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-fit">
-                <DropdownMenuItem disabled={!document.viewUrl} onClick={() => window.open(`${document.viewUrl}`, "_blank")}>
+                <DropdownMenuItem disabled={!document.viewUrl} onClick={() => {
+                  window.open(`${document.viewUrl}`, "_blank")
+                  handleCreateDocumentEvent(document.id)
+                }}>
                   <Eye /> Visualizar (PDF)
                 </DropdownMenuItem>
                 {user?.roles.includes("Administrador") && (

@@ -25,6 +25,7 @@ import { ProtectedRoute } from './protected-router.tsx'
 import { ScrollToTop } from "./scroll-to-top.tsx"
 import OrganogramaPage from "./pages/organograma-page.tsx"
 import { UsersPage } from "./pages/users-page.tsx"
+import { DocumentsChartsPage } from "./pages/documents-charts-page.tsx"
 
 const queryClient = new QueryClient()
 
@@ -50,6 +51,7 @@ createRoot(document.getElementById('root')!).render(
                     <Route path="/servers" element={<ServersPage />} />
                     <Route path="/comunications" element={<CommunicationsPage />} />
                     <Route path="/documents" element={<DocumentsPage />} />
+                    <Route path="/documents/events" element={<DocumentsChartsPage />} />
                     <Route path="/users" element={<UsersPage />} />
                     <Route path="/profiles" element={<ProfilePage />} />
                     <Route path="/profiles/:id" element={<ProfilesUpdatedPage />} />

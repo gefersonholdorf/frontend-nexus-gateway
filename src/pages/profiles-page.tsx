@@ -8,7 +8,7 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbP
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { formatDate } from "date-fns";
-import { CheckCircle, Code2, Edit, FileText, Headset, MoreHorizontalIcon, Plus, Server, ShieldCheck, UserCog, UserKey, X, XCircle } from "lucide-react";
+import { CheckCircle, Code2, Edit, FileText, Headset, MoreHorizontalIcon, Plus, Server, ShieldCheck, UserCog, UserKey, XCircle } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 
@@ -118,7 +118,6 @@ export interface Profile {
 }
 
 export function ProfilePage() {
-    const [openCreateModal, setOpenCreateModal] = useState(false)
     const [page, setPage] = useState(1)
     const navigate = useNavigate()
     const [filters, setFilters] = useState<Filters>({
@@ -144,10 +143,6 @@ export function ProfilePage() {
         status: filters.status,
         profile: filters.profile,
     })
-
-    function handleSetOpenCreateModal() {
-        setOpenCreateModal(!openCreateModal)
-    }
 
     function handleFiltering(newFilters: Filters) {
         setFilters(newFilters);
