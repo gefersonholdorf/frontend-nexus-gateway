@@ -1,50 +1,37 @@
 "use client"
 
-import { TrendingUp } from "lucide-react"
 import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts"
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart"
+import { CardChart } from "./card-chart"
+import { useTheme } from "@/contexts/theme-context"
 
 export const description = "A bar chart with a label"
 
 const chartData = [
-  { month: "January", desktop: 186 },
-  { month: "February", desktop: 305 },
-  { month: "March", desktop: 237 },
-  { month: "April", desktop: 73 },
-  { month: "May", desktop: 209 },
-  { month: "June", desktop: 214 },
+  { month: "Vigente", desktop: 186 },
+  { month: "Pendente", desktop: 305 },
+  { month: "Em Andamento", desktop: 237 },
+  { month: "Em Revisão", desktop: 73 },
 ]
 
 const chartConfig = {
   desktop: {
     label: "Desktop",
-    color: "var(--chart-1)",
+    color: "#3790E7",
   },
 } satisfies ChartConfig
 
 export function DocumentsByStatusChart() {
+  const { theme } = useTheme()
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Bar Chart - Label</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig}>
+    <CardChart title="Documentos por Status" description="Distribuição de documentos por status">
+        <ChartContainer config={chartConfig} className="w-full h-50">
           <BarChart
             accessibilityLayer
             data={chartData}
@@ -55,16 +42,17 @@ export function DocumentsByStatusChart() {
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="month"
+              tick={{ fill: `${theme === 'dark' ? '#fff' : '#000'}`, fontSize: 12 }}
               tickLine={false}
               tickMargin={10}
               axisLine={false}
-              tickFormatter={(value) => value.slice(0, 3)}
+              // tickFormatter={(value) => value.slice(0, 3)}
             />
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
-            <Bar dataKey="desktop" fill="var(--color-desktop)" radius={8}>
+            <Bar dataKey="desktop" fill="#3790E7" radius={8}>
               <LabelList
                 position="top"
                 offset={12}
@@ -74,15 +62,6 @@ export function DocumentsByStatusChart() {
             </Bar>
           </BarChart>
         </ChartContainer>
-      </CardContent>
-      <CardFooter className="flex-col items-start gap-2 text-sm">
-        <div className="flex gap-2 leading-none font-medium">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-        </div>
-        <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
-        </div>
-      </CardFooter>
-    </Card>
+      </CardChart>
   )
 }

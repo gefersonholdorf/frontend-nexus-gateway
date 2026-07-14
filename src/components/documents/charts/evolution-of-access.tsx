@@ -1,54 +1,37 @@
 "use client"
 
-import { TrendingUp } from "lucide-react"
 import { CartesianGrid, LabelList, Line, LineChart, XAxis } from "recharts"
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart"
-
-export const description = "A line chart with a label"
+import { CardChart } from "./card-chart"
+import { useTheme } from "@/contexts/theme-context"
 
 const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
+  { month: "January", access: 186 },
+  { month: "February", access: 305 },
+  { month: "March", access: 237 },
+  { month: "April", access: 73 },
+  { month: "May", access: 209 },
+  { month: "June", access: 214 },
 ]
 
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
-    color: "#00FF00",
-  },
-  mobile: {
-    label: "Mobile",
-    color: "var(--chart-2)",
-  },
+  access: {
+    label: "Acessos",
+    color: "#3790E7",
+  }
 } satisfies ChartConfig
 
 export function EvolutionOfAccessChart() {
+  const { theme } = useTheme()
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Line Chart - Label</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig}>
+    <CardChart title="Evolução de Acesso" description="Acessos aos documentos ao longo do tempo">
+        <ChartContainer config={chartConfig} className="w-full h-50">
           <LineChart
             accessibilityLayer
             data={chartData}
@@ -61,6 +44,7 @@ export function EvolutionOfAccessChart() {
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="month"
+              tick={{ fill: `${theme === 'dark' ? '#fff' : '#000'}`, fontSize: 12 }}
               tickLine={false}
               axisLine={false}
               tickMargin={8}
@@ -71,12 +55,12 @@ export function EvolutionOfAccessChart() {
               content={<ChartTooltipContent indicator="line" />}
             />
             <Line
-              dataKey="desktop"
+              dataKey="access"
               type="natural"
-              stroke="var(--color-desktop)"
+              stroke="#3790E7"
               strokeWidth={2}
               dot={{
-                fill: "var(--color-desktop)",
+                fill: "#3790E7",
               }}
               activeDot={{
                 r: 6,
@@ -91,15 +75,6 @@ export function EvolutionOfAccessChart() {
             </Line>
           </LineChart>
         </ChartContainer>
-      </CardContent>
-      <CardFooter className="flex-col items-start gap-2 text-sm">
-        <div className="flex gap-2 leading-none font-medium">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-        </div>
-        <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
-        </div>
-      </CardFooter>
-    </Card>
+    </CardChart>
   )
 }
