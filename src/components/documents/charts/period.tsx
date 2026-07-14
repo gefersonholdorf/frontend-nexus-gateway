@@ -32,16 +32,16 @@ export function Period() {
     }
 
     return (
-        <Card className="bg-(image:--background-gradient) p-2 px-4 w-fit h-fit rounded-lg border border-border bg-card text-card-foreground shadow-lg hover:shadow-xl transition-shadow duration-300">
+        <Card className="bg-(image:--background-gradient) p-1 w-fit h-fit rounded-lg border border-border bg-card text-card-foreground hover:shadow-sm transition-shadow duration-300">
             <div className="flex gap-3">
                 {periods.map((period) => (
                     <div 
                         key={period.id} 
-                        className={`text-center px-4 py-1 rounded-sm cursor-pointer ${period.active ? 'bg-primary' : 'hover:bg-primary/60'}`}
+                        className={`text-center text-primary-text text-sm px-4 py-1 rounded-lg cursor-pointer ${period.active ? 'bg-primary text-white' : 'hover:bg-primary/80 hover:text-white'}`}
                         onClick={() => handleSetPeriod(period.id)}
                     >
                         
-                        {period.title}
+                        <span className="text-[.9rem] font-normal">{period.title}</span>
                     </div>
                 ))}
             </div>

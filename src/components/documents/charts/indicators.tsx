@@ -89,30 +89,31 @@ export function Indicator() {
         {cards.map((card) => (
           <Card
             key={card.title}
-            className="flex gap-3 rounded-lg border border-border bg-(image:--background-gradient) p-4 shadow-lg transition-shadow duration-300 hover:shadow-xl"
+            className="flex flex-row justify-between items-center gap-3 rounded-lg border border-border bg-(image:--background-gradient) p-4 shadow-lg transition-shadow duration-300 hover:shadow-xl"
           >
-            <div className="flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card">
-                <card.icon
-                  className="size-5"
-                  style={{ color: card.textColor }}
-                />
+            <div className="flex gap-4">
+              <div className="flex items-center gap-2">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card">
+                  <card.icon
+                    className="size-5"
+                    style={{ color: card.textColor }}
+                  />
+                </div>
               </div>
 
-              <span className="text-lg font-bold text-primary-text">
-                {card.quantity}
-              </span>
-            </div>
+              <div className="flex flex-col justify-center">
+                <span className="font-semibold text-primary-text">
+                  {card.title}
+                </span>
 
-            <div className="flex flex-col justify-center">
-              <span className="font-semibold text-primary-text">
-                {card.title}
-              </span>
-
-              <span className="text-sm text-muted-foreground">
-                {card.details}
-              </span>
+                <span className="text-sm text-muted-foreground">
+                  {card.details}
+                </span>
+              </div>
             </div>
+            <span className="text-lg font-bold text-primary-text">
+              {card.quantity}
+            </span>
           </Card>
         ))}
       </div>

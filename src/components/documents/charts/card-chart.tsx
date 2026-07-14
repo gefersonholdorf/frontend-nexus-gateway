@@ -13,7 +13,7 @@ export function CardChart({ title, description, children }: CardChartProps) {
                 <h3 className="text-lg font-semibold">{title}</h3>
                 <p className="text-[.85rem] text-muted-foreground">{description}</p>
             </CardHeader>
-            <CardContent className="flex flex-row gap-4">
+            <CardContent className="flex flex-row gap-4 p-0">
                 {children}
             </CardContent>
         </Card>

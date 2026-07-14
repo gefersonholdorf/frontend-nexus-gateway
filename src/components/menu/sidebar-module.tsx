@@ -4,8 +4,6 @@ import {
     FileText,
     LayoutDashboard,
     MonitorCloud,
-    UserRoundKey,
-    Users,
     type LucideIcon
 } from "lucide-react";
 
@@ -108,21 +106,21 @@ export const sidebarModules: SidebarModule[] = [
     //         },
     //     ],
     // },
-    {
-        title: "Administração",
-        items: [
-            {
-                label: "Usuários",
-                path: "/users",
-                icon: Users,
-                profiles: ['Administrador']
-            },
-            {
-                label: "Perfis",
-                path: "/profiles",
-                icon: UserRoundKey,
-                profiles: ['Administrador']
-            }
-        ]
-    }
+    // {
+    //     title: "Administração",
+    //     items: [
+    //         {
+    //             label: "Usuários",
+    //             path: "/users",
+    //             icon: Users,
+    //             profiles: ['Administrador']
+    //         },
+    //         {
+    //             label: "Perfis",
+    //             path: "/profiles",
+    //             icon: UserRoundKey,
+    //             profiles: ['Administrador']
+    //         }
+    //     ]
+    // }
 ];
