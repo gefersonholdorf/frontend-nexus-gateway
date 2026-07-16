@@ -1,15 +1,15 @@
 import {
   Children,
   createContext,
-  HTMLAttributes,
   isValidElement,
-  ReactElement,
   useCallback,
   useContext,
   useEffect,
   useMemo,
   useRef,
   useState,
+  type HTMLAttributes,
+  type ReactElement,
 } from "react"
 
 import { cn } from "@/lib/utils"

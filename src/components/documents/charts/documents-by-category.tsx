@@ -1,6 +1,7 @@
 "use client"
 
-import { Pie, PieChart, Label } from "recharts"
+import { Label, Pie, PieChart } from "recharts"
+
 import {
   ChartContainer,
   ChartTooltip,
@@ -10,47 +11,67 @@ import {
 import { CardChart } from "./card-chart"
 import { SummaryCategories } from "./summary-categories"
 
+interface DocumentsByCategoryChartProps {
+  documentsByCategory: {
+    name: string
+    total: number
+  }[]
+}
+
 const chartConfig = {
   total: {
     label: "Documentos",
   },
-  Procedimento: {
-    label: "Procedimento",
-    color: "#F59E0B",
-  },
-  Manual: {
-    label: "Manual",
-    color: "#2F81F7",
-  },
-  Politica: {
-    label: "Política",
-    color: "#FF2C2C",
-  },
 } satisfies ChartConfig
 
-const chartData = [
-  {
-    category: "Procedimento",
-    total: 10,
-    fill: chartConfig.Procedimento.color,
-  },
-  {
-    category: "Politica",
-    total: 15,
-    fill: chartConfig.Politica.color,
-  },
-  {
-    category: "Manual",
-    total: 5,
-    fill: chartConfig.Manual.color,
-  },
+const categoryColors: Record<string, string> = {
+  Política: "#2563EB",
+  Procedimento: "#10B981",
+  Manual: "#F59E0B",
+  PCN: "#8B5CF6",
+}
+
+const fallbackColors = [
+  "#2563EB",
+  "#10B981",
+  "#F59E0B",
+  "#8B5CF6",
+  "#EC4899",
+  "#14B8A6",
+  "#F97316",
+  "#64748B",
 ]
 
-export function DocumentsByCategoryChart() {
+export function DocumentsByCategoryChart({
+  documentsByCategory,
+}: DocumentsByCategoryChartProps) {
+  const chartData = documentsByCategory
+    .filter((item) => item.total > 0)
+    .map((item, index) => ({
+      category: item.name,
+      total: item.total,
+      fill:
+        categoryColors[item.name] ??
+        fallbackColors[index % fallbackColors.length],
+    }))
+
   const totalDocuments = chartData.reduce(
     (acc, item) => acc + item.total,
     0
   )
+
+  if (chartData.length === 0) {
+    return (
+      <CardChart
+        title="Documentos por Categoria"
+        description="Distribuição de documentos por categoria"
+      >
+        <div className="flex h-50 items-center justify-center text-sm text-muted-foreground">
+          Nenhum documento encontrado.
+        </div>
+      </CardChart>
+    )
+  }
 
   return (
     <CardChart
@@ -59,7 +80,7 @@ export function DocumentsByCategoryChart() {
     >
       <ChartContainer
         config={chartConfig}
-        className="w-45 h-50"
+        className="h-50 w-45"
       >
         <PieChart>
           <ChartTooltip
@@ -67,7 +88,7 @@ export function DocumentsByCategoryChart() {
             content={
               <ChartTooltipContent
                 formatter={(value, name) => [
-                  `${value} documentos`,
+                  `${value} `,
                   name,
                 ]}
               />
@@ -80,7 +101,7 @@ export function DocumentsByCategoryChart() {
             nameKey="category"
             innerRadius={60}
             outerRadius={80}
-            paddingAngle={6}
+            paddingAngle={5}
             strokeWidth={2}
           >
             <Label
@@ -122,7 +143,8 @@ export function DocumentsByCategoryChart() {
           </Pie>
         </PieChart>
       </ChartContainer>
-      <SummaryCategories />
+
+      <SummaryCategories categories={chartData} />
     </CardChart>
   )
 }

@@ -45,7 +45,7 @@ export interface TableComponentProps<T> {
   columns: Column<T>[]
   caption?: string
   actions?: (row: T) => React.ReactNode
-  pagination: {
+  pagination?: {
     page: number,
     perPage: number,
     total: number,
@@ -54,12 +54,12 @@ export interface TableComponentProps<T> {
     hasPreviousPage: boolean,
   }
   onPageChange?: (page: number) => void
-  filteringComponent: React.ReactNode
+  filteringComponent?: React.ReactNode
   registerName: string
   isLoading: boolean
   isError: boolean
   onRetry?: () => void
-  cardsQuantity: CardsQuantity
+  cardsQuantity?: CardsQuantity
 }
 
 export function TableComponent<T>({
@@ -76,17 +76,19 @@ export function TableComponent<T>({
   cardsQuantity
 }: TableComponentProps<T>) {
   const pages = Array.from(
-    { length: pagination.totalPages },
+    { length: pagination?.totalPages || 1 },
     (_, index) => index + 1
   )
   return (
     <>
-      <div className={`grid grid-cols-1 lg:grid-cols-${cardsQuantity.summarys.length} gap-4`}>
-        {cardsQuantity.summarys.map((summary) => (
-        <CardQuantityComponent summary={summary} isLoading={cardsQuantity.isLoading} />
-      ))}
-      </div>
-      <Card className="h-fit flex gap-0 rounded-b-2xl p-0 border-none border-transparent shadow-sm transition-all duration-300 transform hover:scale-[1.00]
+      {cardsQuantity && (
+        <div className={`grid grid-cols-1 lg:grid-cols-${cardsQuantity.summarys.length} gap-4`}>
+          {cardsQuantity.summarys.map((summary) => (
+            <CardQuantityComponent summary={summary} isLoading={cardsQuantity.isLoading} />
+          ))}
+        </div>
+      )}
+      <Card className="h-fit w-full flex gap-0 rounded-b-2xl p-0 border-none border-transparent shadow-sm transition-all duration-300 transform hover:scale-[1.00]
                                     hover:shadow-sm outline-none bg-(image:--background-gradient)">
         {filteringComponent}
         <Table className="bg-(image:--background-gradient) rounded-b-lg p-12 shadow-sm">
@@ -208,63 +210,65 @@ export function TableComponent<T>({
               ))
             )}
           </TableBody>
-          <TableFooter className="bg-card">
-            <TableRow>
-              <TableCell colSpan={2}>
-                <div className="pl-4">
-                  <span className="text-[.8rem] text-muted-foreground">{data.length} de {pagination.total} {registerName}</span>
-                </div>
-              </TableCell>
-              <TableCell colSpan={999}>
-                <Pagination className="bg-transparent flex justify-end rounded-lg flex-1 px-6 py-0">
-                  <PaginationContent>
+          {pagination && (
+            <TableFooter className="bg-card">
+              <TableRow>
+                <TableCell colSpan={2}>
+                  <div className="pl-4">
+                    <span className="text-[.8rem] text-muted-foreground">{data.length} de {pagination.total} {registerName}</span>
+                  </div>
+                </TableCell>
+                <TableCell colSpan={999}>
+                  <Pagination className="bg-transparent flex justify-end rounded-lg flex-1 px-6 py-0">
+                    <PaginationContent>
 
-                    <PaginationItem>
-                      <PaginationPrevious
-                        href="#"
-                        onClick={(e) => {
-                          e.preventDefault()
-
-                          if (pagination.hasPreviousPage) {
-                            onPageChange?.(pagination.page - 1)
-                          }
-                        }}
-                      />
-                    </PaginationItem>
-
-                    {pages.map((page) => (
-                      <PaginationItem key={page}>
-                        <PaginationLink
+                      <PaginationItem>
+                        <PaginationPrevious
                           href="#"
-                          isActive={page === pagination.page}
                           onClick={(e) => {
                             e.preventDefault()
-                            onPageChange?.(page)
+
+                            if (pagination.hasPreviousPage) {
+                              onPageChange?.(pagination.page - 1)
+                            }
                           }}
-                        >
-                          {page}
-                        </PaginationLink>
+                        />
                       </PaginationItem>
-                    ))}
 
-                    <PaginationItem>
-                      <PaginationNext
-                        href="#"
-                        onClick={(e) => {
-                          e.preventDefault()
+                      {pages.map((page) => (
+                        <PaginationItem key={page}>
+                          <PaginationLink
+                            href="#"
+                            isActive={page === pagination.page}
+                            onClick={(e) => {
+                              e.preventDefault()
+                              onPageChange?.(page)
+                            }}
+                          >
+                            {page}
+                          </PaginationLink>
+                        </PaginationItem>
+                      ))}
 
-                          if (pagination.hasNextPage) {
-                            onPageChange?.(pagination.page + 1)
-                          }
-                        }}
-                      />
-                    </PaginationItem>
+                      <PaginationItem>
+                        <PaginationNext
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault()
 
-                  </PaginationContent>
-                </Pagination>
-              </TableCell>
-            </TableRow>
-          </TableFooter>
+                            if (pagination.hasNextPage) {
+                              onPageChange?.(pagination.page + 1)
+                            }
+                          }}
+                        />
+                      </PaginationItem>
+
+                    </PaginationContent>
+                  </Pagination>
+                </TableCell>
+              </TableRow>
+            </TableFooter>
+          )}
         </Table>
       </Card>
     </>

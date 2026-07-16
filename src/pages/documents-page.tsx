@@ -34,9 +34,18 @@ const columns: Column<Document>[] = [
     key: "title",
     title: "Documento",
     render: (value) => (
-      <div className="truncate max-w-70">
-        <span>{value.toString()}</span>
-      </div>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <div className="truncate max-w-70">
+            <span>{value.toString()}</span>
+          </div>
+        </TooltipTrigger>
+        <TooltipContent>
+          <span>
+            {value.toString()}
+          </span>
+        </TooltipContent>
+      </Tooltip>
     )
   },
   {
@@ -50,32 +59,32 @@ const columns: Column<Document>[] = [
       <div className="flex items-center gap-1">
         {value === 'Vigente' && (
           <>
-            <Badge className="bg-transparent text-emerald-500 border border-emerald-500">
-              <CheckCircle className="size-3 text-emerald-500" />
+            <Badge className="bg-transparent text-primary-text/10 border border-border">
+              <CheckCircle className="size-4 text-emerald-500" />
               <span className="">Vigente</span>
             </Badge>
           </>
         )}
         {value === 'Pendente' && (
           <>
-            <Badge className="bg-transparent text-red-500 border border-red-500">
-              <XCircle className="size-3" />
+            <Badge className="bg-transparent text-primary-text/10 border border-border">
+              <XCircle className="size-4 text-red-500" />
               Pendente
             </Badge>
           </>
         )}
         {value === 'Em Andamento' && (
           <>
-            <Badge className="bg-transparent text-blue-500 border border-blue-500">
-              <Clock className="size-3" />
+            <Badge className="bg-transparent text-primary-text/10 border border-border">
+              <Clock className="size-4 text-blue-500" />
               Em Andamento
             </Badge>
           </>
         )}
         {value === 'Em Revisão' && (
           <>
-            <Badge className="bg-transparent text-amber-500 border border-amber-500">
-              <Edit className="size-3" />
+            <Badge className="bg-transparent text-primary-text/10 border border-border">
+              <Edit className="size-4 text-amber-500" />
               Em Revisão
             </Badge>
           </>

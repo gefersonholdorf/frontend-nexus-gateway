@@ -24,6 +24,8 @@ import {
 import {
     ArrowRight,
     BookOpen,
+    ClipboardList,
+    FileSignature,
     ShieldCheck,
     Workflow,
     X,
@@ -111,7 +113,7 @@ export function StepConfiguration({
                                 </Field>
                             </FieldLabel>
 
-                            <FieldLabel htmlFor="Política">
+                            <FieldLabel htmlFor="Politica">
                                 <Field orientation="horizontal">
                                     <FieldContent className="p-1 flex flex-row items-center gap-2">
                                         <ShieldCheck className="size-6 text-emerald-500" />
@@ -128,8 +130,77 @@ export function StepConfiguration({
                                     </FieldContent>
 
                                     <RadioGroupItem
-                                        id="Política"
-                                        value="Política"
+                                        id="Politica"
+                                        value="Politica"
+                                    />
+                                </Field>
+                            </FieldLabel>
+
+                            <FieldLabel htmlFor="Formulario">
+                                <Field orientation="horizontal">
+                                    <FieldContent className="p-1 flex flex-row items-center gap-2">
+                                        <ClipboardList className="size-6 text-emerald-500" />
+
+                                        <div>
+                                            <FieldTitle>
+                                                Formulário
+                                            </FieldTitle>
+
+                                            <FieldDescription className="text-[.8rem] text-muted-foreground">
+                                                Modelos para coleta e solicitação de informações.
+                                            </FieldDescription>
+                                        </div>
+                                    </FieldContent>
+
+                                    <RadioGroupItem
+                                        id="Formulario"
+                                        value="Formulario"
+                                    />
+                                </Field>
+                            </FieldLabel>
+
+                            <FieldLabel htmlFor="Termo">
+                                <Field orientation="horizontal">
+                                    <FieldContent className="p-1 flex flex-row items-center gap-2">
+                                        <FileSignature  className="size-6 text-violet-500" />
+
+                                        <div>
+                                            <FieldTitle>
+                                                Termo
+                                            </FieldTitle>
+
+                                            <FieldDescription className="text-[.8rem] text-muted-foreground">
+                                                Documentos formais de aceite ou compromisso.
+                                            </FieldDescription>
+                                        </div>
+                                    </FieldContent>
+
+                                    <RadioGroupItem
+                                        id="Termo"
+                                        value="Termo"
+                                    />
+                                </Field>
+                            </FieldLabel>
+
+                            <FieldLabel htmlFor="PCN">
+                                <Field orientation="horizontal">
+                                    <FieldContent className="p-1 flex flex-row items-center gap-2">
+                                        <ShieldCheck className="size-6 text-red-500" />
+
+                                        <div>
+                                            <FieldTitle>
+                                                PCN
+                                            </FieldTitle>
+
+                                            <FieldDescription className="text-[.8rem] text-muted-foreground">
+                                                Plano de Continuidade e recuperação de operações.
+                                            </FieldDescription>
+                                        </div>
+                                    </FieldContent>
+
+                                    <RadioGroupItem
+                                        id="PCN"
+                                        value="PCN"
                                     />
                                 </Field>
                             </FieldLabel>

@@ -1,85 +1,54 @@
+import { useFetchDocumentsMetrics } from "@/api/documents/documents-metrics";
 import { Card } from "@/components/ui/card";
-import type { LucideIcon } from "lucide-react";
 import {
   BadgeCheck,
-  Clock3,
   Eye,
   EyeOff,
-  FileText,
-  LoaderCircle,
-  RefreshCcw,
-  TrendingUp,
+  FileText
 } from "lucide-react";
 import { CardChart } from "./card-chart";
 
-interface CardData {
-  title: string;
-  details: string;
-  icon: LucideIcon;
-  quantity: number;
-  textColor: string;
-}
-
-const cards: CardData[] = [
-  {
-    title: "Total de Documentos",
-    details: "+12 este mês",
-    icon: FileText,
-    quantity: 328,
-    textColor: "#3790E7",
-  },
-  {
-    title: "Vigentes",
-    details: "+12 este mês",
-    icon: BadgeCheck,
-    quantity: 246,
-    textColor: "#22C55E",
-  },
-  {
-    title: "Pendentes",
-    details: "+12 este mês",
-    icon: Clock3,
-    quantity: 21,
-    textColor: "#F59E0B",
-  },
-  {
-    title: "Em Andamento",
-    details: "+12 este mês",
-    icon: LoaderCircle,
-    quantity: 17,
-    textColor: "#3B82F6",
-  },
-  {
-    title: "Em Revisão",
-    details: "+12 este mês",
-    icon: RefreshCcw,
-    quantity: 44,
-    textColor: "#A855F7",
-  },
-  {
-    title: "Acessos",
-    details: "+12 este mês",
-    icon: Eye,
-    quantity: 5847,
-    textColor: "#06B6D4",
-  },
-  {
-    title: "Nunca Acessados",
-    details: "+12 este mês",
-    icon: EyeOff,
-    quantity: 39,
-    textColor: "#EF4444",
-  },
-  {
-    title: "Crescimento no Período",
-    details: "+12 este mês",
-    icon: TrendingUp,
-    quantity: 27,
-    textColor: "#10B981",
-  },
-];
-
 export function Indicator() {
+  const { data, isLoading } = useFetchDocumentsMetrics({
+    period: "30d",
+  });
+
+  if (isLoading) {
+    return <>Carregando...</>;
+  }
+
+  const metrics = data!.metrics;
+
+  const cards = [
+    {
+      title: "Total de Documentos",
+      details: metrics.totalDocuments.growth,
+      icon: FileText,
+      quantity: metrics.totalDocuments.value,
+      textColor: "#3790E7",
+    },
+    {
+      title: "Taxa de Vigência",
+      details: metrics.totalCurrentRate.growth,
+      icon: BadgeCheck,
+      quantity: `${metrics.totalCurrentRate.value}%`,
+      textColor: "#22C55E",
+    },
+    {
+      title: "Acessos",
+      details: metrics.totalAccess.growth,
+      icon: Eye,
+      quantity: metrics.totalAccess.value,
+      textColor: "#06B6D4",
+    },
+    {
+      title: "Documentos Nunca Acessados",
+      details: metrics.totalDocumentsNeverAccessed.growth,
+      icon: EyeOff,
+      quantity: `${metrics.totalDocumentsNeverAccessed.value}`,
+      textColor: "#EF4444",
+    },
+  ];
   return (
     <CardChart
       title="Indicadores dos Documentos"
@@ -106,8 +75,11 @@ export function Indicator() {
                   {card.title}
                 </span>
 
-                <span className="text-sm text-muted-foreground">
-                  {card.details}
+                <span
+                  className={`text-[.8rem] font-medium text-muted-foreground`}
+                >
+                  {card.details > 0 && "+"}
+                  {card.details}% este período
                 </span>
               </div>
             </div>

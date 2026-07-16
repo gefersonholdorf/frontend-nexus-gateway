@@ -152,6 +152,15 @@ export function FilteringDocuments({
                                     <SelectItem value="Manual">
                                         Manual
                                     </SelectItem>
+                                    <SelectItem value="Formulário">
+                                        Formulário
+                                    </SelectItem>
+                                    <SelectItem value="Termo">
+                                        Termo
+                                    </SelectItem>
+                                    <SelectItem value="PCN">
+                                        PCN
+                                    </SelectItem>
                                     <SelectItem value="all">
                                         Todos
                                     </SelectItem>
