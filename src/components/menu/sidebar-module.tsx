@@ -1,6 +1,7 @@
 import {
     AppWindow,
     Building2,
+    Cctv,
     FileText,
     LayoutDashboard,
     MonitorCloud,
@@ -77,23 +78,24 @@ export const sidebarModules: SidebarModule[] = [
         ],
     },
 
-    // {
-    //     title: "Operações",
-    //     items: [
-    //         {
-    //             label: "Central de Segurança",
-    //             path: "/security-center",
-    //             icon: Cctv,
-    //             isBlocked: true
-    //         },
-    //         {
-    //             label: "Incidentes",
-    //             path: "/incidents",
-    //             icon: AlertTriangle,
-    //             isBlocked: true,
-    //         },
-    //     ],
-    // },
+    {
+        title: "Operações",
+        items: [
+            {
+                label: "Central de Segurança",
+                path: "/security-center",
+                icon: Cctv,
+                isBlocked: false,
+                profiles: ['Administrador']
+            },
+            // {
+            //     label: "Incidentes",
+            //     path: "/incidents",
+            //     icon: AlertTriangle,
+            //     isBlocked: true,
+            // },
+        ],
+    },
 
     // {
     //     title: "Automação",
