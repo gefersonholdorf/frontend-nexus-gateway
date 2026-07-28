@@ -2,6 +2,8 @@ import {
     AppWindow,
     Building2,
     Cctv,
+    DatabaseBackup,
+    EyeOff,
     FileText,
     LayoutDashboard,
     MonitorCloud,
@@ -88,12 +90,20 @@ export const sidebarModules: SidebarModule[] = [
                 isBlocked: false,
                 profiles: ['Administrador']
             },
-            // {
-            //     label: "Incidentes",
-            //     path: "/incidents",
-            //     icon: AlertTriangle,
-            //     isBlocked: true,
-            // },
+            {
+                label: "Backups/Restores",
+                path: "/backups",
+                icon: DatabaseBackup,
+                isBlocked: false,
+                profiles: ['Administrador']
+            },
+            {
+                label: "Mascaramento",
+                path: "/masking",
+                icon: EyeOff,
+                isBlocked: false,
+                profiles: ['Administrador']
+            }
         ],
     },
 

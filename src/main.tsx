@@ -26,6 +26,9 @@ import { ScrollToTop } from "./scroll-to-top.tsx"
 import OrganogramaPage from "./pages/organograma-page.tsx"
 // import { UsersPage } from "./pages/users-page.tsx"
 import { DocumentsChartsPage } from "./pages/documents-charts-page.tsx"
+import { BackupsRestoresPages } from "./pages/backups-restores-page.tsx"
+import { OperationsProvider } from "./components/nexus-operations/contexts/operations-context.tsx"
+import { MaskingPage } from "./pages/masking-page.tsx"
 
 const queryClient = new QueryClient()
 
@@ -36,31 +39,35 @@ createRoot(document.getElementById('root')!).render(
         <ScrollToTop />
         <ThemeProvider>
           <UserProvider>
-            <RootLayout>
-              <Routes>
-                <Route path="/" element={<LoginPage />} />
-                <Route path="/403" element={<ForbiddenPage />} />
-                <Route element={<ProtectedRoute />}>
-                  <Route element={<LayoutPages />}>
-                    <Route path="/welcome" element={<WelcomePage />} />
-                    <Route path="/ipmap" element={<IpMapPage />} />
-                    <Route path="/security-center" element={<SecurityCenterPage />} />
-                    <Route path="/systems" element={<SystemsPage />} />
-                    <Route path="/services" element={<ServicesPage />} />
-                    <Route path="/calendar" element={<CalendarPage />} />
-                    <Route path="/servers" element={<ServersPage />} />
-                    <Route path="/comunications" element={<CommunicationsPage />} />
-                    <Route path="/documents" element={<DocumentsPage />} />
-                    <Route path="/documents/events" element={<DocumentsChartsPage />} />
-                    {/* <Route path="/users" element={<UsersPage />} /> */}
-                    <Route path="/profiles" element={<ProfilePage />} />
-                    <Route path="/profiles/:id" element={<ProfilesUpdatedPage />} />
-                    <Route path="/profiles/create" element={<ProfilesUpdatedPage />} />
-                    <Route path="/organograma" element={<OrganogramaPage />} />
+            <OperationsProvider>
+              <RootLayout>
+                <Routes>
+                  <Route path="/" element={<LoginPage />} />
+                  <Route path="/403" element={<ForbiddenPage />} />
+                  <Route element={<ProtectedRoute />}>
+                    <Route element={<LayoutPages />}>
+                      <Route path="/welcome" element={<WelcomePage />} />
+                      <Route path="/ipmap" element={<IpMapPage />} />
+                      <Route path="/security-center" element={<SecurityCenterPage />} />
+                      <Route path="/systems" element={<SystemsPage />} />
+                      <Route path="/services" element={<ServicesPage />} />
+                      <Route path="/calendar" element={<CalendarPage />} />
+                      <Route path="/servers" element={<ServersPage />} />
+                      <Route path="/comunications" element={<CommunicationsPage />} />
+                      <Route path="/documents" element={<DocumentsPage />} />
+                      <Route path="/documents/events" element={<DocumentsChartsPage />} />
+                      {/* <Route path="/users" element={<UsersPage />} /> */}
+                      <Route path="/profiles" element={<ProfilePage />} />
+                      <Route path="/profiles/:id" element={<ProfilesUpdatedPage />} />
+                      <Route path="/profiles/create" element={<ProfilesUpdatedPage />} />
+                      <Route path="/organograma" element={<OrganogramaPage />} />
+                      <Route path="/backups" element={<BackupsRestoresPages />} />
+                      <Route path="/masking" element={<MaskingPage />} />
+                    </Route>
                   </Route>
-                </Route>
-              </Routes>
-            </RootLayout>
+                </Routes>
+              </RootLayout>
+            </OperationsProvider>
           </UserProvider>
         </ThemeProvider>
       </BrowserRouter>
