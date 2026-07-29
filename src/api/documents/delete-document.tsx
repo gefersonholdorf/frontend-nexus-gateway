@@ -25,7 +25,7 @@ export function useDeleteDocument() {
             })
 
             await queryClient.invalidateQueries({
-                queryKey: ["fetch-summarys"]
+                queryKey: ["fetch-summarys-documents"]
             })
         }
     })

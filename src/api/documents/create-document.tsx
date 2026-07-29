@@ -45,7 +45,7 @@ export function useCreateDocument() {
             })
 
             await queryClient.invalidateQueries({
-                queryKey: ["fetch-summarys"]
+                queryKey: ["fetch-summarys-documents"]
             })
         }
     })

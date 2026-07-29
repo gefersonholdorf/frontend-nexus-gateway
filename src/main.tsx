@@ -26,8 +26,8 @@ import { ScrollToTop } from "./scroll-to-top.tsx"
 import OrganogramaPage from "./pages/organograma-page.tsx"
 // import { UsersPage } from "./pages/users-page.tsx"
 import { DocumentsChartsPage } from "./pages/documents-charts-page.tsx"
-import { BackupsRestoresPages } from "./pages/backups-restores-page.tsx"
-import { OperationsProvider } from "./components/nexus-operations/contexts/operations-context.tsx"
+// import { BackupsRestoresPages } from "./pages/backups-restores-page.tsx"
+// import { OperationsProvider } from "./components/nexus-operations/contexts/operations-context.tsx"
 import { MaskingPage } from "./pages/masking-page.tsx"
 
 const queryClient = new QueryClient()
@@ -39,7 +39,7 @@ createRoot(document.getElementById('root')!).render(
         <ScrollToTop />
         <ThemeProvider>
           <UserProvider>
-            <OperationsProvider>
+            {/* <OperationsProvider> */}
               <RootLayout>
                 <Routes>
                   <Route path="/" element={<LoginPage />} />
@@ -61,13 +61,13 @@ createRoot(document.getElementById('root')!).render(
                       <Route path="/profiles/:id" element={<ProfilesUpdatedPage />} />
                       <Route path="/profiles/create" element={<ProfilesUpdatedPage />} />
                       <Route path="/organograma" element={<OrganogramaPage />} />
-                      <Route path="/backups" element={<BackupsRestoresPages />} />
+                      {/* <Route path="/backups" element={<BackupsRestoresPages />} /> */}
                       <Route path="/masking" element={<MaskingPage />} />
                     </Route>
                   </Route>
                 </Routes>
               </RootLayout>
-            </OperationsProvider>
+            {/* </OperationsProvider> */}
           </UserProvider>
         </ThemeProvider>
       </BrowserRouter>

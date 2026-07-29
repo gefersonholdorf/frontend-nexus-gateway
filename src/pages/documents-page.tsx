@@ -117,7 +117,7 @@ const columns: Column<Document>[] = [
           )) : null}
 
           {Array.isArray(value) && value.length > 4 && (
-            <AvatarGroupCount className="bg-primary/90 text-white">
+            <AvatarGroupCount className="bg-card text-muted-foreground">
               +{value.length - 4}
             </AvatarGroupCount>
           )}

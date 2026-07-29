@@ -1,4 +1,4 @@
-import { useGetDataMasking, type DataMaskingResponse } from "@/api/maskings/get-data-masking";
+import { type DataMaskingResponse } from "@/api/maskings/get-data-masking";
 import { useTheme } from "@/contexts/theme-context";
 import {
     Background,
@@ -64,26 +64,26 @@ function ExecutionNode({ data }: { data: ExecutionNodeData }) {
     }, [execution.startedAt, execution.finishedAt]);
 
     return (
-        <div className="min-w-[360px] rounded-xl border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/20 p-4 shadow-sm">
+        <div className="min-w-90 rounded-xl border border-border dark:border-amber-800 bg-transparent p-4 shadow-sm">
             <Handle type="target" position={Position.Top} className="opacity-0" />
 
             <div className="flex items-center gap-3">
-                <div className="rounded-full bg-amber-100 dark:bg-amber-900/40 p-2">
-                    <PlayCircle className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+                <div className="rounded-full border border-border p-2">
+                    <PlayCircle className="w-5 h-5 text-muted-foreground" />
                 </div>
                 <div className="flex-1 min-w-0">
                     <h3 className="font-bold text-sm text-zinc-900 dark:text-zinc-100">
                         Execution {execution.executionId}
                     </h3>
-                    <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                    <p className="text-[.9rem] text-muted-foreground">
                         {execution.status} · {execution.databasesSuccess}/{execution.databasesExpected} databases OK
                     </p>
                 </div>
                 <StatusDot status={execution.status} />
             </div>
 
-            <div className="mt-2 flex items-center gap-1 text-[11px] text-zinc-400 dark:text-zinc-500">
-                <Clock className="w-3 h-3" />
+            <div className="mt-2 flex items-center gap-1 text-[.9rem] text-muted-foreground">
+                <Clock className="size-4" />
                 <span>{duration}</span>
                 {execution.isOfficialExecution && (
                     <span className="ml-auto flex items-center gap-1 font-medium text-[10px] text-amber-600 dark:text-amber-400">
@@ -108,25 +108,25 @@ function DatabaseNode({ data }: { data: DatabaseNodeData }) {
     };
 
     return (
-        <div className="min-w-[260px] rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-3 shadow-sm">
+        <div className="min-w-70 rounded-lg border border-border bg-transparent p-4 shadow-sm">
             <Handle type="target" position={Position.Top} className="opacity-0" />
 
             <div className="flex items-center gap-2.5">
                 <Database className="w-4 h-4 text-zinc-400 dark:text-zinc-500 shrink-0" />
-                <h4 className="font-semibold text-sm text-zinc-800 dark:text-zinc-200 truncate">
+                <h4 className="font-semibold text-[.8rem] text-zinc-800 dark:text-zinc-200 truncate">
                     {database.name}
                 </h4>
                 <span
-                    className={`ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full ${typeColors[database.type]}`}
+                    className={`ml-auto text-[10px]  font-bold px-2 py-0.5 rounded-full ${typeColors[database.type]}`}
                 >
                     {database.type}
                 </span>
                 <StatusDot status={database.status} />
             </div>
 
-            <div className="mt-2 flex items-center gap-3 text-[11px] text-zinc-400 dark:text-zinc-500">
-                <span>{database.summary.tablesSuccess}/{database.summary.tablesExpected} tables OK</span>
-                <span>{database.summary.recordsProcessed.toLocaleString()} records</span>
+            <div className="mt-2 flex items-center gap-3 text-[.8rem] text-muted-foreground">
+                <span className="text-[.8rem]">{database.summary.tablesSuccess}/{database.summary.tablesExpected} tabelas OK</span>
+                <span className="text-[.8rem]">{database.summary.recordsProcessed.toLocaleString()} registros</span>
             </div>
 
             {database.error && (
@@ -146,15 +146,15 @@ function TableNode({ data }: { data: TableNodeData }) {
     const { table } = data;
 
     return (
-        <div className="min-w-[220px] rounded-md border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-2.5 shadow-sm">
+        <div className="min-w-70 rounded-md border border-border bg-transparent p-4 shadow-sm">
             <Handle type="target" position={Position.Top} className="opacity-0" />
 
             <div className="flex items-center gap-2">
-                <Table className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0" />
+                <Table className="w-3.5 h-3.5 text-zinc-900 dark:text-zinc-200 shrink-0" />
                 <h5
-                    className={`font-medium text-xs truncate ${table.status === "ERROR"
-                            ? "text-red-600 dark:text-red-400"
-                            : "text-zinc-700 dark:text-zinc-300"
+                    className={`font-semibold text-[.8rem] truncate ${table.status === "ERROR"
+                        ? "text-red-600 dark:text-red-400"
+                        : "text-zinc-700 dark:text-zinc-300"
                         }`}
                 >
                     {table.name}
@@ -162,8 +162,8 @@ function TableNode({ data }: { data: TableNodeData }) {
                 <StatusDot status={table.status} />
             </div>
 
-            <div className="mt-1 flex items-center gap-3 text-[10px] text-zinc-400 dark:text-zinc-500">
-                <span>{table.recordsProcessed.toLocaleString()} records</span>
+            <div className="mt-1 flex items-center gap-3 text-[10px] text-muted-foreground">
+                <span className="text-[.8rem]">{table.recordsProcessed.toLocaleString()} registros</span>
                 {table.dynamic && (
                     <span className="text-blue-500 dark:text-blue-400 font-medium">DYNAMIC</span>
                 )}
@@ -254,23 +254,14 @@ function buildFlowData(response: DataMaskingResponse): { nodes: Node[]; edges: E
 
 // ─── Componente Principal ───────────────────────────────────────────────────
 
-export default function DataMaskingFlowPage() {
+export default function DataMaskingFlowPage({ data }: { data: DataMaskingResponse }) {
     const { theme } = useTheme();
     const isDark = theme === "dark";
-    const { data, isLoading } = useGetDataMasking();
 
     const { nodes, edges } = useMemo(() => {
         if (!data) return { nodes: [], edges: [] };
-        return buildFlowData(data[0]);
+        return buildFlowData(data);
     }, [data]);
-
-    if (isLoading) {
-        return (
-            <div className="flex items-center justify-center h-96 text-muted-foreground">
-                Carregando dados de mascaramento...
-            </div>
-        );
-    }
 
     if (!data) {
         return (
@@ -282,23 +273,23 @@ export default function DataMaskingFlowPage() {
 
     return (
         <>
-            <div className="w-full h-[calc(100vh-140px)] min-h-[600px] rounded-xl bg-(image:--background-gradient) border border-border shadow-xl">
+            <div className="w-full h-[calc(100vh-140px)] min-h-150 rounded-xl bg-(image:--background-gradient) border border-border shadow-xl">
                 <ReactFlow
                     nodes={nodes}
                     edges={edges}
                     nodeTypes={nodeTypes}
-                    // Troca fitView por defaultViewport para começar do topo
-                    defaultViewport={{ x: 0, y: 0, zoom: 0.75 }}
-                    // OU mantém fitView mas focando só no nó raiz:
-                    // fitView
-                    // fitViewOptions={{ nodes: ['execution-root'], padding: 0.4 }}
+                    defaultViewport={{
+                        x: 450,
+                        y: 80,
+                        zoom: 0.80
+                    }}
                     proOptions={{ hideAttribution: true }}
-                    minZoom={0.4}
+                    minZoom={0.6}
                     maxZoom={4.0}
                 >
                     <Background
-                        color={isDark ? "#3f3f46" : "#d4d4d8"}
-                        gap={20}
+                        color={isDark ? "#000" : "#fff"}
+                        gap={24}
                     />
                 </ReactFlow>
             </div>

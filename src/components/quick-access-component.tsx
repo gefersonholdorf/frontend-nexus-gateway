@@ -1,4 +1,4 @@
-import { Link, GitBranch, Bug, Clock, Server, Book, Mail, LockIcon } from "lucide-react";
+import { Link, GitBranch, Bug, Clock, Server, Book, Mail, LockIcon, Files } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 import { Card, CardContent, CardHeader } from "./ui/card";
@@ -69,6 +69,14 @@ const quickAccess: QuickAccess[] = [
         bgColor: "bg-red-50 dark:bg-red-500/10",
         iconColor: "text-red-500",
         url: "https://pass.lusati.com.br"
+    },
+    {
+        id: 9,
+        title: "Documentos ISO",
+        icon: Files,
+        bgColor: "bg-purple-50 dark:bg-purple-500/10",
+        iconColor: "text-purple-500",
+        url: "/documents"
     }
 ];
 
@@ -112,8 +120,8 @@ export function QuickAccessComponent() {
                         grid-cols-2
                         gap-4
                         sm:grid-cols-3
-                        lg:grid-cols-7
-                        xl:grid-cols-7
+                        lg:grid-cols-8
+                        xl:grid-cols-8
                     "
                 >
                     {quickAccess.map((access) => {

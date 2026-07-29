@@ -80,15 +80,15 @@ export type DatabaseType =
   | "TENANT"
   | "MASTER";
 
-export function useGetDataMasking() {
+export function useGetDataMasking({ executionId }: {executionId: string}) {
     const { user } = useUser()
 
     return useQuery({
         queryKey: [
-            "data-masking",
+            "data-masking", executionId,
         ],
         queryFn: async () => {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/data-masking`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/data-masking/${executionId}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -100,7 +100,7 @@ export function useGetDataMasking() {
                 throw new Error("Erro ao listar mascaramentos")
             }
 
-            const result: DataMaskingResponse[] = await response.json()
+            const result: DataMaskingResponse = await response.json()
 
             return result
         },

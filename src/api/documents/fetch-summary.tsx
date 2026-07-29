@@ -35,7 +35,7 @@ export function useFetchSummarys({ page = 1, perPage = 10, category, status, tex
 
     return useQuery({
         queryKey: [
-            "fetch-summarys",
+            "fetch-summarys-documents",
             page,
             perPage,
             text,
