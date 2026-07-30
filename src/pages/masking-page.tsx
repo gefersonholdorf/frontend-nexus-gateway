@@ -232,7 +232,7 @@ export function MaskingPage() {
                         data?.pagination ?? {
                             page: 1,
                             perPage: 10,
-                            total: 3,
+                            total: 0,
                             totalPages: 1,
                             hasNextPage: false,
                             hasPreviousPage: false,

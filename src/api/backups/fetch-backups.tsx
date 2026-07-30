@@ -55,6 +55,14 @@ export function useFetchBackups({ page = 1, perPage = 10 }: FetchBackupsRequest)
                 },
             })
 
+            if (response.status === 401) {
+                localStorage.removeItem("token");
+                localStorage.removeItem("user");
+
+                window.location.href = "/login";
+                return;
+            }
+
             if (response.status !== 200) {
                 throw new Error("Erro ao listar Backups")
             }

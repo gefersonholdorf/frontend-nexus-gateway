@@ -6,7 +6,8 @@ import {
     Clock3,
     Coffee,
     Moon,
-    Plane
+    Plane,
+    TriangleAlert
 } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
@@ -128,7 +129,7 @@ const activityLabel = {
 
 export function AvailabilityComponent({
 }: AvailabilityComponentProps) {
-    const { data, isLoading } = useGetPresence()
+    const { data, isLoading, isError } = useGetPresence()
     const { data: dataAvailability, isLoading: IsLoadingAvailability } = useGetAvailabilityUsers()
     const [userSelected, setUserSelected] = useState<Availability | null>(null)
     const [openUserAvailabilityDrawer, setOpenUserAvailabilityDrawer] = useState(false);
@@ -142,16 +143,36 @@ export function AvailabilityComponent({
         setOpenUserAvailabilityDrawer(!openUserAvailabilityDrawer)
     }
 
-    if (!data || !dataAvailability) {
-        return null;
-    }
-
     if (isLoading || IsLoadingAvailability) {
         return (
-            <Card className="h-168 p-0">
-                <Skeleton className="h-full bg-gray-100" />
+            <Card className="h-174 p-0 overflow-hidden">
+                <Skeleton className="h-full w-full" />
             </Card>
         );
+    }
+
+    if (isError) {
+        return (
+            <Card className="h-174 p-0 overflow-hidden">
+                <div className="bg-(image:--background-gradient) w-full h-full flex flex-col items-center justify-center gap-3">
+                    <TriangleAlert className="size-10 text-destructive" />
+
+                    <div className="text-center">
+                        <p className="font-semibold">
+                            Ocorreu um erro ao carregar os dados
+                        </p>
+
+                        <p className="text-sm text-muted-foreground">
+                            Tente novamente em alguns instantes.
+                        </p>
+                    </div>
+                </div>
+            </Card>
+        );
+    }
+
+    if (!data || !dataAvailability) {
+        return null;
     }
 
     const availabilitys: Availability[] =

@@ -20,7 +20,7 @@ const nodes: Node[] = [
     {
         id: "roberto",
         type: "employee",
-        position: { x: 550, y: 0 },
+        position: { x: 700, y: 0 },
         data: {
             name: "Roberto Amorim",
             role: "CEO | CTO | Founder",
@@ -31,7 +31,7 @@ const nodes: Node[] = [
     {
         id: "marcelo",
         type: "employee",
-        position: { x: 550, y: 180 },
+        position: { x: 700, y: 180 },
         data: {
             name: "Marcelo Verdi",
             role: "COO | CPO | Co-Founder",
@@ -53,7 +53,7 @@ const nodes: Node[] = [
     {
         id: "leandro",
         type: "employee",
-        position: { x: 230, y: 420 },
+        position: { x: 280, y: 420 },
         data: {
             name: "Leandro",
             role: "Desenvolvedor Pleno III",
@@ -64,7 +64,7 @@ const nodes: Node[] = [
     {
         id: "vitor",
         type: "employee",
-        position: { x: 440, y: 420 },
+        position: { x: 540, y: 420 },
         data: {
             name: "Vitor",
             role: "Desenvolvedor Pleno II",
@@ -75,7 +75,7 @@ const nodes: Node[] = [
     {
         id: "geferson",
         type: "employee",
-        position: { x: 690, y: 420 },
+        position: { x: 800, y: 420 },
         data: {
             name: "Geferson",
             role: "Analista Suporte N2 | Devops",
@@ -86,7 +86,7 @@ const nodes: Node[] = [
     {
         id: "bruno",
         type: "employee",
-        position: { x: 900, y: 420 },
+        position: { x: 1060, y: 420 },
         data: {
             name: "Bruno",
             role: "Analista Suporte N1",
@@ -97,7 +97,7 @@ const nodes: Node[] = [
     {
         id: "patricia",
         type: "employee",
-        position: { x: 1110, y: 420 },
+        position: { x: 1320, y: 420 },
         data: {
             name: "Patricia",
             role: "Analista Licitações",

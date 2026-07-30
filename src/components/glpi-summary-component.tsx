@@ -1,6 +1,6 @@
 import { useUser } from "@/contexts/user-context";
 import { useQuery } from "@tanstack/react-query";
-import { SquareArrowOutUpRight, Ticket } from "lucide-react";
+import { SquareArrowOutUpRight, Ticket, TriangleAlert } from "lucide-react";
 import { Card, CardContent, CardHeader } from "./ui/card";
 import { Skeleton } from "./ui/skeleton";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
@@ -35,8 +35,28 @@ export function GLPISummaryComponent() {
 
     if (query.isLoading) {
         return (
-            <Card className="h-80 p-0">
-                <Skeleton className="h-full bg-gray-100" />
+            <Card className="h-80 p-0 overflow-hidden">
+                <Skeleton className="h-full w-full" />
+            </Card>
+        );
+    }
+
+    if (query.isError) {
+        return (
+            <Card className="h-80 p-0 overflow-hidden">
+                <div className="bg-(image:--background-gradient) w-full h-full flex flex-col items-center justify-center gap-3">
+                    <TriangleAlert className="size-10 text-destructive" />
+
+                    <div className="text-center">
+                        <p className="font-semibold">
+                            Ocorreu um erro ao carregar os dados
+                        </p>
+
+                        <p className="text-sm text-muted-foreground">
+                            Tente novamente em alguns instantes.
+                        </p>
+                    </div>
+                </div>
             </Card>
         );
     }

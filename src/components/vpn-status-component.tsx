@@ -1,4 +1,4 @@
-import { CircleX, Clock, ShieldAlert, ShieldAlertIcon, ShieldCheck, Wifi } from "lucide-react";
+import { CircleX, Clock, ShieldAlert, ShieldAlertIcon, ShieldCheck, TriangleAlert, Wifi } from "lucide-react";
 import { Card, CardContent, CardHeader } from "./ui/card";
 import { Skeleton } from "./ui/skeleton";
 import { useUser } from "@/contexts/user-context";
@@ -37,8 +37,28 @@ export function VPNStatusCard() {
 
     if (query.isLoading) {
         return (
-            <Card className="h-52 p-0">
-                <Skeleton className="h-full bg-gray-100" />
+            <Card className="h-52 p-0 overflow-hidden">
+                <Skeleton className="h-full w-full" />
+            </Card>
+        );
+    }
+
+    if (query.isError) {
+        return (
+            <Card className="h-52 p-0 overflow-hidden">
+                <div className="bg-(image:--background-gradient) w-full h-full flex flex-col items-center justify-center gap-3">
+                    <TriangleAlert className="size-10 text-destructive" />
+
+                    <div className="text-center">
+                        <p className="font-semibold">
+                            Ocorreu um erro ao carregar os dados
+                        </p>
+
+                        <p className="text-sm text-muted-foreground">
+                            Tente novamente em alguns instantes.
+                        </p>
+                    </div>
+                </div>
             </Card>
         );
     }

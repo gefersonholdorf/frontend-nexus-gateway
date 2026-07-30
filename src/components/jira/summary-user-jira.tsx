@@ -2,15 +2,35 @@ import { useGetSummaryJiraUser } from "@/api/jira/get-summary-jira-user";
 import { Card, CardContent, CardHeader } from "../ui/card";
 import { ChartSummaryUserPie } from "./chart-summary-user-pier";
 import { Skeleton } from "../ui/skeleton";
-import { Ticket } from "lucide-react";
+import { Ticket, TriangleAlert } from "lucide-react";
 
 export function SummaryUserJira() {
-    const { data, isLoading } = useGetSummaryJiraUser()
+    const { data, isLoading, isError } = useGetSummaryJiraUser()
 
     if (isLoading) {
         return (
             <Card className="h-78 overflow-hidden p-0">
                 <Skeleton className="h-full w-full" />
+            </Card>
+        );
+    }
+
+    if (isError) {
+        return (
+            <Card className="h-78 p-0 overflow-hidden">
+                <div className="bg-(image:--background-gradient) w-full h-full flex flex-col items-center justify-center gap-3">
+                    <TriangleAlert className="size-10 text-destructive" />
+
+                    <div className="text-center">
+                        <p className="font-semibold">
+                            Ocorreu um erro ao carregar os dados
+                        </p>
+
+                        <p className="text-sm text-muted-foreground">
+                            Tente novamente em alguns instantes.
+                        </p>
+                    </div>
+                </div>
             </Card>
         );
     }

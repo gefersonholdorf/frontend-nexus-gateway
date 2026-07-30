@@ -14,33 +14,30 @@ export default function EmployeeNode({ data }: Props) {
     <>
       <Handle type="target" position={Position.Top} />
 
-      <div
-        style={{
-          width: 170,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
+      <div className="p-4 flex flex-row border border-border bg-(image:--background-gradient) shadow-lg w-60 h-fit rounded-lg">
+        <div className="w-90 flex justify-center gap-4 items-center">
 
-        <Avatar className="h-18 w-18 border-4 border-primary/60">
-          <AvatarImage src={data.image} className="w-full h-full" />
-          <AvatarFallback>CN</AvatarFallback>
-        </Avatar>
+          <Avatar className="h-18 w-18 border-4 border-primary/60">
+            <AvatarImage src={data.image} className="w-full h-full" />
+            <AvatarFallback>CN</AvatarFallback>
+          </Avatar>
 
-        <strong
-          style={{
-            color: "#1565c0",
-            textAlign: "center",
-            fontSize: 15,
-          }}
-        >
-          {data.name}
-        </strong>
+          <div className="flex flex-col">
+            <strong
+              style={{
+                color: "#1565c0",
+                textAlign: "start",
+                fontSize: 14,
+              }}
+            >
+              {data.name}
+            </strong>
 
-        <span className="text-[.7rem] text-muted-foreground">
-          {data.role}
-        </span>
+            <span className="text-[.8rem] text-muted-foreground">
+              {data.role}
+            </span>
+          </div>
+        </div>
       </div>
 
       <Handle type="source" position={Position.Bottom} />

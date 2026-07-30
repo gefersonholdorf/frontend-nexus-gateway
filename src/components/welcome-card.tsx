@@ -4,7 +4,7 @@ import { useUser } from "@/contexts/user-context";
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "./ui/card";
 import { Skeleton } from "./ui/skeleton";
-import { PlayCircle } from "lucide-react";
+import { PlayCircle, TriangleAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface WelcomeCardProps {
@@ -14,7 +14,7 @@ interface WelcomeCardProps {
 export function WelcomeCard({ onInitTour }: WelcomeCardProps) {
     const [now, setNow] = useState(new Date());
     const { user } = useUser()
-    const { data, isLoading } = useGetSummaryEvents({ type: 'user' })
+    const { data, isLoading, isError } = useGetSummaryEvents({ type: 'user' })
     const { theme } = useTheme()
 
     useEffect(() => {
@@ -24,11 +24,32 @@ export function WelcomeCard({ onInitTour }: WelcomeCardProps) {
 
     if (isLoading) {
         return (
-            <Card className="h-62 rounded-sm">
-                <Skeleton className="h-full w-full rounded-sm" />
+            <Card className="h-62 p-0 overflow-hidden">
+                <Skeleton className="h-full w-full" />
             </Card>
         );
     }
+
+    if (isError) {
+        return (
+            <Card className="h-62 p-0 overflow-hidden">
+                <div className="bg-(image:--background-gradient) w-full h-full flex flex-col items-center justify-center gap-3">
+                    <TriangleAlert className="size-10 text-destructive" />
+
+                    <div className="text-center">
+                        <p className="font-semibold">
+                            Ocorreu um erro ao carregar os dados
+                        </p>
+
+                        <p className="text-sm text-muted-foreground">
+                            Tente novamente em alguns instantes.
+                        </p>
+                    </div>
+                </div>
+            </Card>
+        );
+    }
+
 
     if (!data) return null;
 
@@ -144,13 +165,13 @@ export function WelcomeCard({ onInitTour }: WelcomeCardProps) {
                     <WeatherCard />
                 </div> */}
                 <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={onInitTour}
-                    >
-                        <PlayCircle className="h-4 w-4 mr-2" />
-                        Iniciar Tour
-                    </Button>
+                    variant="outline"
+                    size="sm"
+                    onClick={onInitTour}
+                >
+                    <PlayCircle className="h-4 w-4 mr-2" />
+                    Iniciar Tour
+                </Button>
             </CardContent>
         </Card>
     );
