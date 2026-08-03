@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useTheme } from "@/contexts/theme-context";
 import { useUser } from "@/contexts/user-context";
-import { ChevronRight, History, Info, LogOut, Moon, Sun } from "lucide-react";
+import { Bell, CheckCircle2, ChevronRight, CircleAlert, History, Info, LogOut, Moon, Sun, TriangleAlert } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { AboutSystemModal } from "../modals/about-system-modal";
@@ -29,59 +29,144 @@ export function MenuComponent({ onSetFiltering }: { onSetFiltering?: (value: str
     const isWelcomePage = window.location.pathname !== "/gateway"
     const app = import.meta.env.VITE_APP
     const version = import.meta.env.VITE_VERSION
+
+    const alerts = [
+        {
+            id: 1,
+            type: "warning",
+            title: "Você possui 2 solicitações para aprovar",
+            description: "Solicitações aguardando aprovação.",
+            time: "Agora",
+            read: false,
+        }
+    ];
+
+    const unreadCount = alerts.filter((x) => !x.read).length;
     return (
         <>
-        {app === 'homolog' && (
-            <div className={`fixed flex items-center justify-center h-4 top-0 left-0 right-0 w-full z-50 bg-blue-500`}>
-                <span className="text-[.8rem] text-gray-100">Ambiente de Homologação - Versão {version}</span>
-            </div>
-        )}
-        <div className={`fixed ${app === 'homolog' ? 'top-4' : 'top-0'} left-0 right-0 z-50 w-full grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-6 justify-between px-10 py-2 min-h-20 bg-(image:--background-gradient) items-center border-b border-border shadow-lg`}>
-            <img src={`${theme === 'clean' ? 'https://api2.lusati.com.br/repositorio/nexus/logo-dark.png' : 'https://api2.lusati.com.br/repositorio/nexus/logo-light.png'}`} className="w-50 p-2 cursor-pointer" onClick={() => navigate('/welcome')} />
-            <div>
-                {!isWelcomePage && (
-                    <Input
-                        placeholder="Pesquisar Serviços ou Sistema..."
-                        className="w-full"
-                        onChange={(e) => onSetFiltering && onSetFiltering(e.target.value)}
-                    />
-                )}
-            </div>
-            <div className="flex gap-5 items-center w-fit justify-self-end px-2">
-                {/* <div className="flex gap-1 items-center">
+            {app === 'homolog' && (
+                <div className={`fixed flex items-center justify-center h-4 top-0 left-0 right-0 w-full z-50 bg-blue-500`}>
+                    <span className="text-[.8rem] text-gray-100">Ambiente de Homologação - Versão {version}</span>
+                </div>
+            )}
+            <div className={`fixed ${app === 'homolog' ? 'top-4' : 'top-0'} left-0 right-0 z-50 w-full grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-6 justify-between px-10 py-2 min-h-20 bg-(image:--background-gradient) items-center border-b border-border shadow-lg`}>
+                <img src={`${theme === 'clean' ? 'https://api2.lusati.com.br/repositorio/nexus/logo-dark.png' : 'https://api2.lusati.com.br/repositorio/nexus/logo-light.png'}`} className="w-50 p-2 cursor-pointer" onClick={() => navigate('/welcome')} />
+                <div>
+                    {!isWelcomePage && (
+                        <Input
+                            placeholder="Pesquisar Serviços ou Sistema..."
+                            className="w-full"
+                            onChange={(e) => onSetFiltering && onSetFiltering(e.target.value)}
+                        />
+                    )}
+                </div>
+                <div className="flex gap-5 items-center w-fit justify-self-end px-2">
+                    {/* <div className="flex gap-1 items-center">
                     <div className="w-2 h-2 rounded-full bg-emerald-400"></div>
                     <span className="text-primary-text text-[.8rem]">Online</span>
                 </div>
                 <div className="px-2 border border-primary/20 bg-primary/10 text-primary rounded-sm">
                     <span className="text-[.8rem] font-medium">v1.4.0</span>
                 </div> */}
-                {/* USER AREA */}
-                <div className="shrink-0">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <div className="hover:bg-card flex items-center gap-2 p-2 rounded-lg cursor-pointer">
-                                <Avatar className="h-10 w-10">
-                                    <AvatarImage src={`${user?.logo}`} />
-                                    <AvatarFallback>CN</AvatarFallback>
-                                </Avatar>
+                            <button
+                                className="relative flex items-center justify-center rounded-lg border border-transparent p-2 transition-colors hover:bg-card hover:border-border cursor-pointer focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 data-[state=open]:bg-card data-[state=open]:border-border"
+                            >
+                                <Bell className={`size-5 transition-colors ${unreadCount > 0 ? "text-amber-500 animate-pulse" : "text-primary-text"}`} />
 
-                                <div className="flex w-full justify-between items-center gap-4">
-                                    <div className="flex flex-col">
-                                        <span className="text-sm">{user?.name}</span>
-                                        <span className="text-[.7rem] text-muted-foreground">
-                                            {user?.roleDescription}
-                                        </span>
-                                    </div>
-                                    <ChevronRight />
-                                </div>
-                            </div>
+                                {unreadCount > 0 && (
+                                    <span className="absolute animate-pulse -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full border-2 border-background bg-amber-600 px-1 text-[10px] font-bold leading-none text-white shadow-md">
+                                        {unreadCount > 9 ? "9+" : unreadCount}
+                                    </span>
+                                )}
+                            </button>
                         </DropdownMenuTrigger>
 
-                        <DropdownMenuContent className="bg-background text-primary-text">
-                            <DropdownMenuGroup>
-                                <DropdownMenuLabel>Ações</DropdownMenuLabel>
+                        <DropdownMenuContent
+                            align="end"
+                            className="w-95 p-0 overflow-hidden"
+                        >
+                            <div className="flex border-b p-4 gap-2">
+                                <h3 className="font-semibold text-[.9rem] leading-none tracking-tight">
+                                    Alertas
+                                </h3>
+                                <p className="text-xs text-muted-foreground">
+                                    {unreadCount} alerta(s)
+                                </p>
+                            </div>
 
-                                {/* <DropdownMenuItem
+                            <div className="max-h-105 overflow-auto">
+
+                                {alerts.map((alert) => (
+                                    <DropdownMenuItem
+                                        key={alert.id}
+                                        className="items-start gap-3 py-4 cursor-pointer px-6"
+                                    >
+                                        <div className="mt-1">
+                                            {alert.type === "error" && (
+                                                <TriangleAlert className="text-red-500 size-5" />
+                                            )}
+
+                                            {alert.type === "warning" && (
+                                                <CircleAlert className="text-amber-500 size-5" />
+                                            )}
+
+                                            {alert.type === "success" && (
+                                                <CheckCircle2 className="text-emerald-500 size-5" />
+                                            )}
+                                        </div>
+
+                                        <div className="flex-1">
+                                            <p className="font-medium">
+                                                {alert.title}
+                                            </p>
+
+                                            <p className="text-xs text-muted-foreground">
+                                                {alert.description}
+                                            </p>
+
+                                            <span className="text-[11px] text-muted-foreground">
+                                                {alert.time}
+                                            </span>
+                                        </div>
+
+                                        {!alert.read && (
+                                            <div className="mt-2 h-2 w-2 rounded-full bg-blue-500" />
+                                        )}
+                                    </DropdownMenuItem>
+                                ))}
+
+                            </div>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                    {/* USER AREA */}
+                    <div className="shrink-0">
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <div className="hover:bg-card flex items-center gap-2 p-2 rounded-lg cursor-pointer">
+                                    <Avatar className="h-10 w-10">
+                                        <AvatarImage src={`${user?.logo}`} />
+                                        <AvatarFallback>CN</AvatarFallback>
+                                    </Avatar>
+
+                                    <div className="flex w-full justify-between items-center gap-4">
+                                        <div className="flex flex-col">
+                                            <span className="text-sm">{user?.name}</span>
+                                            <span className="text-[.7rem] text-muted-foreground">
+                                                {user?.roleDescription}
+                                            </span>
+                                        </div>
+                                        <ChevronRight />
+                                    </div>
+                                </div>
+                            </DropdownMenuTrigger>
+
+                            <DropdownMenuContent className="bg-background text-primary-text">
+                                <DropdownMenuGroup>
+                                    <DropdownMenuLabel>Ações</DropdownMenuLabel>
+
+                                    {/* <DropdownMenuItem
                                     onSelect={(e) => {
                                         e.preventDefault();
                                         setEditProfileOpen(true);
@@ -91,68 +176,68 @@ export function MenuComponent({ onSetFiltering }: { onSetFiltering?: (value: str
                                     Editar Perfil
                                 </DropdownMenuItem> */}
 
-                                <DropdownMenuItem
-                                    onSelect={(e) => {
-                                        e.preventDefault();
-                                        setEditPasswordOpen(true);
-                                    }}
-                                >
-                                    <History size={16} />
-                                    Alterar Senha
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                    onSelect={(e) => {
-                                        e.preventDefault();
-                                        handleSetTheme(theme === 'clean' ? 'dark' : 'clean')
-                                    }}
-                                >
-                                    {theme === 'clean' ? (<Moon size={16} />) : <Sun size={16} />}
-                                    Mudar Tema
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                    onSelect={(e) => {
-                                        e.preventDefault();
-                                        setAboutSystemModalOpen(true);
-                                    }}
-                                >
-                                    <Info size={16} />
-                                    Sobre o Sistema
-                                </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                        onSelect={(e) => {
+                                            e.preventDefault();
+                                            setEditPasswordOpen(true);
+                                        }}
+                                    >
+                                        <History size={16} />
+                                        Alterar Senha
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                        onSelect={(e) => {
+                                            e.preventDefault();
+                                            handleSetTheme(theme === 'clean' ? 'dark' : 'clean')
+                                        }}
+                                    >
+                                        {theme === 'clean' ? (<Moon size={16} />) : <Sun size={16} />}
+                                        Mudar Tema
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                        onSelect={(e) => {
+                                            e.preventDefault();
+                                            setAboutSystemModalOpen(true);
+                                        }}
+                                    >
+                                        <Info size={16} />
+                                        Sobre o Sistema
+                                    </DropdownMenuItem>
 
-                                <DropdownMenuSeparator />
+                                    <DropdownMenuSeparator />
 
-                                <DropdownMenuItem onClick={() => navigate("/")}>
-                                    <LogOut className="text-red-500" size={16} />
-                                    Sair do Sistema
-                                </DropdownMenuItem>
-                            </DropdownMenuGroup>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                                    <DropdownMenuItem onClick={() => navigate("/")}>
+                                        <LogOut className="text-red-500" size={16} />
+                                        Sair do Sistema
+                                    </DropdownMenuItem>
+                                </DropdownMenuGroup>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
                 </div>
+                {/* MODALS */}
+                <EditUserModal
+                    open={editProfileOpen}
+                    onOpenChange={setEditProfileOpen}
+                    user={{
+                        name: "Geferson Holdorf",
+                        email: "geferson@lusati.com.br",
+                        username: "gholdorf",
+                        id: 1,
+                    }}
+                />
+
+                <UpdatePasswordModal
+                    userId={1}
+                    open={editPasswordOpen}
+                    onOpenChange={setEditPasswordOpen}
+                />
+
+                <AboutSystemModal
+                    open={aboutSystemModalOpen}
+                    onOpenChange={setAboutSystemModalOpen}
+                />
             </div>
-            {/* MODALS */}
-            <EditUserModal
-                open={editProfileOpen}
-                onOpenChange={setEditProfileOpen}
-                user={{
-                    name: "Geferson Holdorf",
-                    email: "geferson@lusati.com.br",
-                    username: "gholdorf",
-                    id: 1,
-                }}
-            />
-
-            <UpdatePasswordModal
-                userId={1}
-                open={editPasswordOpen}
-                onOpenChange={setEditPasswordOpen}
-            />
-
-            <AboutSystemModal
-                open={aboutSystemModalOpen}
-                onOpenChange={setAboutSystemModalOpen}
-            />
-        </div>
         </>
     )
 }

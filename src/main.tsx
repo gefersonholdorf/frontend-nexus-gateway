@@ -29,6 +29,7 @@ import { DocumentsChartsPage } from "./pages/documents-charts-page.tsx"
 // import { BackupsRestoresPages } from "./pages/backups-restores-page.tsx"
 // import { OperationsProvider } from "./components/nexus-operations/contexts/operations-context.tsx"
 import { MaskingPage } from "./pages/masking-page.tsx"
+import { TicketsValidationPendingsPage } from "./pages/tickets-validation-pendings-page.tsx"
 
 const queryClient = new QueryClient()
 
@@ -63,6 +64,7 @@ createRoot(document.getElementById('root')!).render(
                       <Route path="/organograma" element={<OrganogramaPage />} />
                       {/* <Route path="/backups" element={<BackupsRestoresPages />} /> */}
                       <Route path="/masking" element={<MaskingPage />} />
+                      <Route path="/tickets-validations-pendings" element={<TicketsValidationPendingsPage />} />
                     </Route>
                   </Route>
                 </Routes>
