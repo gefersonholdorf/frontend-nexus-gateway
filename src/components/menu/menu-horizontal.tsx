@@ -1,3 +1,4 @@
+import { useFetchNotifications } from "@/api/notifications/get-notifications-me";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
     DropdownMenu,
@@ -10,13 +11,24 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useTheme } from "@/contexts/theme-context";
 import { useUser } from "@/contexts/user-context";
-import { Bell, CheckCircle2, ChevronRight, CircleAlert, History, Info, LogOut, Moon, Sun, TriangleAlert } from "lucide-react";
-import { useState } from "react";
+import { playNotificationSound } from "@/lib/notifications-dound";
+import { websocket } from "@/services/websocket";
+import { Bell, ChevronRight, ClipboardList, History, Info, LogOut, Moon, Sun, Ticket } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { AboutSystemModal } from "../modals/about-system-modal";
 import { UpdatePasswordModal } from "../modals/change-user-modal";
 import { EditUserModal } from "../modals/edit-user-modal";
 import { Input } from "../ui/input";
+import { formatDistanceToNow } from "date-fns";
+import { ptBR } from "date-fns/locale";
+
+export function formatNotificationDate(date: string | Date) {
+    return formatDistanceToNow(new Date(date), {
+        addSuffix: true,
+        locale: ptBR,
+    });
+}
 
 export function MenuComponent({ onSetFiltering }: { onSetFiltering?: (value: string) => void }) {
     const { user } = useUser();
@@ -25,23 +37,25 @@ export function MenuComponent({ onSetFiltering }: { onSetFiltering?: (value: str
     const [editProfileOpen, setEditProfileOpen] = useState(false);
     const [editPasswordOpen, setEditPasswordOpen] = useState(false);
     const [aboutSystemModalOpen, setAboutSystemModalOpen] = useState(false);
+    const { data: alerts, refetch } = useFetchNotifications();
 
     const isWelcomePage = window.location.pathname !== "/gateway"
     const app = import.meta.env.VITE_APP
     const version = import.meta.env.VITE_VERSION
 
-    const alerts = [
-        {
-            id: 1,
-            type: "warning",
-            title: "Você possui 2 solicitações para aprovar",
-            description: "Solicitações aguardando aprovação.",
-            time: "Agora",
-            read: false,
-        }
-    ];
+    useEffect(() => {
+        const unsubscribe = websocket.onMessage((message) => {
+            switch (message.event) {
+                case "notification.created":
+                    playNotificationSound();
+                    refetch();
+                    break;
+            }
+        });
+        return unsubscribe;
+    }, [refetch]);
 
-    const unreadCount = alerts.filter((x) => !x.read).length;
+    const unreadCount = alerts ? alerts.notifications.length : 0;
     return (
         <>
             {app === 'homolog' && (
@@ -73,10 +87,10 @@ export function MenuComponent({ onSetFiltering }: { onSetFiltering?: (value: str
                             <button
                                 className="relative flex items-center justify-center rounded-lg border border-transparent p-2 transition-colors hover:bg-card hover:border-border cursor-pointer focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 data-[state=open]:bg-card data-[state=open]:border-border"
                             >
-                                <Bell className={`size-5 transition-colors ${unreadCount > 0 ? "text-amber-500 animate-pulse" : "text-primary-text"}`} />
+                                <Bell className={`size-5 text-muted-foreground`} />
 
                                 {unreadCount > 0 && (
-                                    <span className="absolute animate-pulse -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full border-2 border-background bg-amber-600 px-1 text-[10px] font-bold leading-none text-white shadow-md">
+                                    <span className="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full border-2 border-background bg-amber-600 p-1 text-[.7rem] font-bold leading-none text-white shadow-md">
                                         {unreadCount > 9 ? "9+" : unreadCount}
                                     </span>
                                 )}
@@ -89,31 +103,26 @@ export function MenuComponent({ onSetFiltering }: { onSetFiltering?: (value: str
                         >
                             <div className="flex border-b p-4 gap-2">
                                 <h3 className="font-semibold text-[.9rem] leading-none tracking-tight">
-                                    Alertas
+                                    Notificações
                                 </h3>
                                 <p className="text-xs text-muted-foreground">
-                                    {unreadCount} alerta(s)
+                                    {unreadCount} notificações
                                 </p>
                             </div>
 
                             <div className="max-h-105 overflow-auto">
 
-                                {alerts.map((alert) => (
+                                {alerts && alerts.notifications.map((alert) => (
                                     <DropdownMenuItem
                                         key={alert.id}
-                                        className="items-start gap-3 py-4 cursor-pointer px-6"
+                                        className="items-start gap-3 py-4 cursor-pointer px-6 border-b"
                                     >
                                         <div className="mt-1">
-                                            {alert.type === "error" && (
-                                                <TriangleAlert className="text-red-500 size-5" />
+                                            {alert.eventType === "glpi_new_problem" && (
+                                                <ClipboardList className="text-blue-500 size-5" />
                                             )}
-
-                                            {alert.type === "warning" && (
-                                                <CircleAlert className="text-amber-500 size-5" />
-                                            )}
-
-                                            {alert.type === "success" && (
-                                                <CheckCircle2 className="text-emerald-500 size-5" />
+                                            {alert.eventType === "glpi_new_ticket" && (
+                                                <Ticket className="text-purple-500 size-5" />
                                             )}
                                         </div>
 
@@ -123,15 +132,15 @@ export function MenuComponent({ onSetFiltering }: { onSetFiltering?: (value: str
                                             </p>
 
                                             <p className="text-xs text-muted-foreground">
-                                                {alert.description}
+                                                {alert.message}
                                             </p>
 
                                             <span className="text-[11px] text-muted-foreground">
-                                                {alert.time}
+                                                {formatNotificationDate(alert.createdAt)}
                                             </span>
                                         </div>
 
-                                        {!alert.read && (
+                                        {!alert.createdAt && (
                                             <div className="mt-2 h-2 w-2 rounded-full bg-blue-500" />
                                         )}
                                     </DropdownMenuItem>

@@ -20,18 +20,17 @@ const nodes: Node[] = [
     {
         id: "roberto",
         type: "employee",
-        position: { x: 700, y: 0 },
+        position: { x: 550, y: 0 },
         data: {
             name: "Roberto Amorim",
             role: "CEO | CTO | Founder",
             image: 'https://api2.lusati.com.br/repositorio/nexus/avatar_roberto.PNG',
         },
     },
-
     {
         id: "marcelo",
         type: "employee",
-        position: { x: 700, y: 180 },
+        position: { x: 550, y: 180 },
         data: {
             name: "Marcelo Verdi",
             role: "COO | CPO | Co-Founder",
@@ -92,18 +91,7 @@ const nodes: Node[] = [
             role: "Analista Suporte N1",
             image: 'https://api2.lusati.com.br/repositorio/nexus/avatar_bruno.PNG',
         },
-    },
-
-    {
-        id: "patricia",
-        type: "employee",
-        position: { x: 1320, y: 420 },
-        data: {
-            name: "Patricia",
-            role: "Analista Licitações",
-            image: null,
-        },
-    },
+    }
 ];
 
 const edges: Edge[] = [
@@ -138,12 +126,7 @@ const edges: Edge[] = [
         id: "6",
         source: "marcelo",
         target: "bruno",
-    },
-    {
-        id: "7",
-        source: "marcelo",
-        target: "patricia",
-    },
+    }
 ];
 
 export default function OrganogramaPage() {

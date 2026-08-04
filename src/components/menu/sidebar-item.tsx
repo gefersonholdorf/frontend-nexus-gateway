@@ -24,12 +24,6 @@ export function SidebarItem({
     const hasPermission = user?.roles?.some(permission =>
     profiles.includes(permission)
 );
-
-console.log({
-    permissions: user?.permissions,
-    profiles,
-    hasPermission,
-});
     return (
         <NavLink
             to={isBlocked ? "#" : path}

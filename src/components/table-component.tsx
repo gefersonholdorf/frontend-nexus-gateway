@@ -83,8 +83,8 @@ export function TableComponent<T>({
     <>
       {cardsQuantity && (
         <div className={`grid grid-cols-1 lg:grid-cols-${cardsQuantity.summarys.length} gap-4`}>
-          {cardsQuantity.summarys.map((summary) => (
-            <CardQuantityComponent summary={summary} isLoading={cardsQuantity.isLoading} />
+          {cardsQuantity.summarys.map((summary, rowIndex) => (
+            <CardQuantityComponent key={rowIndex} summary={summary} isLoading={cardsQuantity.isLoading} />
           ))}
         </div>
       )}

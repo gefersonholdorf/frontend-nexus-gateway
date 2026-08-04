@@ -7,6 +7,7 @@ import { QuickAccessSupportComponent } from "@/components/quick-access-support-c
 import BackupsReport from "@/components/reports/backups-report";
 import { VPNStatusCard } from "@/components/vpn-status-component";
 import { WelcomeCard } from "@/components/welcome-card";
+import { playNotificationSound } from "@/lib/notifications-dound";
 import { CustomTooltip } from "@/tours/tooltip";
 import { useState } from "react";
 import { Joyride } from 'react-joyride';
@@ -79,6 +80,7 @@ export function WelcomePage() {
     const [runTour, setRunTour] = useState(false);
 
     function handleInitTour() {
+        playNotificationSound()
         setRunTour(true)
     }
     return (
