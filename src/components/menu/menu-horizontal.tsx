@@ -116,6 +116,7 @@ export function MenuComponent({ onSetFiltering }: { onSetFiltering?: (value: str
                                     <DropdownMenuItem
                                         key={alert.id}
                                         className="items-start gap-3 py-4 cursor-pointer px-6 border-b"
+                                        onClick={() => navigate("")}
                                     >
                                         <div className="mt-1">
                                             {alert.eventType === "glpi_new_problem" && (

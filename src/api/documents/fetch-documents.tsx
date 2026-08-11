@@ -1,3 +1,4 @@
+import { useLoginExpired } from "@/contexts/login-expired";
 import { useUser } from "@/contexts/user-context";
 import { useQuery } from "@tanstack/react-query";
 
@@ -46,6 +47,7 @@ interface FetchDocumentsResponse {
 
 export function useFetchDocuments({ page = 1, perPage = 10, category, status, text, profile }: FetchDocumentsRequest) {
     const { user } = useUser()
+    const { handleSetLoginExpired } = useLoginExpired()
 
     return useQuery({
         queryKey: [
@@ -92,6 +94,10 @@ export function useFetchDocuments({ page = 1, perPage = 10, category, status, te
                     "Authorization": `Bearer ${user?.token}`
                 },
             })
+
+            if (response.status === 401) {
+                handleSetLoginExpired(true)
+            }
 
             if (response.status !== 200) {
                 throw new Error("Erro ao listar documentos")

@@ -1,3 +1,4 @@
+import { useLoginExpired } from "@/contexts/login-expired";
 import { useUser } from "@/contexts/user-context";
 import { useQuery } from "@tanstack/react-query";
 
@@ -34,6 +35,7 @@ interface FetchBackupsResponse {
 
 export function useFetchBackups({ page = 1, perPage = 10 }: FetchBackupsRequest) {
     const { user } = useUser()
+    const { handleSetLoginExpired } = useLoginExpired()
 
     return useQuery({
         queryKey: [
@@ -58,8 +60,9 @@ export function useFetchBackups({ page = 1, perPage = 10 }: FetchBackupsRequest)
             if (response.status === 401) {
                 localStorage.removeItem("token");
                 localStorage.removeItem("user");
+                handleSetLoginExpired(true)
 
-                window.location.href = "/login";
+                window.location.href = "/";
                 return;
             }
 

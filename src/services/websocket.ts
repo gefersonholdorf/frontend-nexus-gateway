@@ -17,7 +17,7 @@ class WebSocketService {
 
     this.manuallyClosed = false;
 
-    this.socket = new WebSocket("ws://127.0.0.1:3336/ws");
+    this.socket = new WebSocket("ws://10.188.15.99:3336/ws");
 
     this.socket.onopen = () => {
       console.log("✅ WebSocket conectado");

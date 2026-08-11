@@ -1,3 +1,4 @@
+import { useLoginExpired } from "@/contexts/login-expired";
 import { useUser } from "@/contexts/user-context";
 import { useQuery } from "@tanstack/react-query";
 
@@ -32,6 +33,7 @@ export function useGetSummaryEvents({
     endDate,
 }: UseGetSummaryEventsProps) {
     const { user } = useUser();
+    const { handleSetLoginExpired } = useLoginExpired()
 
     const now = new Date();
 
@@ -88,8 +90,9 @@ export function useGetSummaryEvents({
             if (response.status === 401) {
                 localStorage.removeItem("token");
                 localStorage.removeItem("user");
+                handleSetLoginExpired(true)
 
-                window.location.href = "/login";
+                window.location.href = "/";
                 return;
             }
 

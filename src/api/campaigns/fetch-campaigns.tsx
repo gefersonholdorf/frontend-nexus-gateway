@@ -2,25 +2,51 @@ import { useLoginExpired } from "@/contexts/login-expired";
 import { useUser } from "@/contexts/user-context";
 import { useQuery } from "@tanstack/react-query";
 
-export interface Summary {
-    total: number,
-    present: number,
-    revision: number,
-    progress: number,
-    pending: number
+export interface CampaignUser {
+  id: number;
+  name: string;
+  avatarUrl: string | null;
+  email?: string;
 }
 
-interface FetchSummarysRequest {
+export interface CampaignAccessStats {
+  total: number;
+  accessed: number;
+  viewed: number;
+  pending: number;
+  ignored?: number;
+  accessRate?: number;
+}
+
+export type CampaignStatus = 'DRAFT' | 'SCHEDULED' | 'PUBLISHED' | 'INACTIVE';
+
+export interface Campaign {
+  id: number;
+  code: string;
+  title: string;
+  description: string | null;
+  monthYear: string;
+  publishDate: string | null;
+  status: CampaignStatus;
+  url: string | null;
+  accessStats: CampaignAccessStats;
+  responsible: CampaignUser;
+  createdAt: string;
+  updatedAt: string;
+  createdBy: string;
+}
+
+interface FetchCampaignsRequest {
     page: number;
     perPage: number;
     text?: string;
     category?: string;
     status?: string;
-    profile?: string;
+    profile?: string
 }
 
-interface FetchSummarysResponse {
-    summary: Summary
+interface FetchCampaignsResponse {
+    campaigns: Campaign[]
     pagination: {
         page: number,
         perPage: number,
@@ -31,13 +57,13 @@ interface FetchSummarysResponse {
     }
 }
 
-export function useFetchSummarys({ page = 1, perPage = 10, category, status, text, profile }: FetchSummarysRequest) {
+export function useFetchCampaigns({ page = 1, perPage = 10, category, status, text, profile }: FetchCampaignsRequest) {
     const { user } = useUser()
     const { handleSetLoginExpired } = useLoginExpired()
 
     return useQuery({
         queryKey: [
-            "fetch-summarys-documents",
+            "fetch-campaigns",
             page,
             perPage,
             text,
@@ -73,7 +99,7 @@ export function useFetchSummarys({ page = 1, perPage = 10, category, status, tex
                 }
             }
 
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/documents/summary?${query.toString()}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/campaigns?${query.toString()}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -86,11 +112,11 @@ export function useFetchSummarys({ page = 1, perPage = 10, category, status, tex
             }
 
             if (response.status !== 200) {
-                throw new Error("Erro ao listar Resumo dos documentos")
+                throw new Error("Erro ao listar documentos")
             }
 
-            const result: FetchSummarysResponse = await response.json()
-            console.log(result)
+            const result: FetchCampaignsResponse = await response.json()
+
             return result
         },
     })

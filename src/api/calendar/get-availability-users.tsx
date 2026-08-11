@@ -1,3 +1,4 @@
+import { useLoginExpired } from "@/contexts/login-expired";
 import { useUser } from "@/contexts/user-context";
 import { useQuery } from "@tanstack/react-query";
 
@@ -30,6 +31,7 @@ interface AvailabilityResponse {
 
 export function useGetAvailabilityUsers() {
     const { user } = useUser()
+    const { handleSetLoginExpired } = useLoginExpired()
 
     return useQuery({
         queryKey: ["availability"],
@@ -43,6 +45,10 @@ export function useGetAvailabilityUsers() {
             })
 
             const result = await response.json() as AvailabilityResponse;
+
+            if (response.status === 401) {
+                handleSetLoginExpired(true)
+            }
 
             return result;
         },

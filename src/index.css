@@ -273,3 +273,29 @@
 .sidebar-scroll::-webkit-scrollbar-thumb:hover {
     background-color: rgba(148, 163, 184, 0.45);
 }
+
+/* Scroll horizontal — mesma paleta do sidebar-scroll */
+.table-scroll-x {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(148, 163, 184, 0.35) transparent;
+}
+
+/* Chrome, Edge e Safari */
+.table-scroll-x::-webkit-scrollbar {
+    height: 8px;  /* eixo X usa height, não width */
+}
+
+.table-scroll-x::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.table-scroll-x::-webkit-scrollbar-thumb {
+    background-color: rgba(148, 163, 184, 0.25);
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+
+.table-scroll-x::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(148, 163, 184, 0.45);
+}

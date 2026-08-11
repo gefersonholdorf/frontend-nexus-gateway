@@ -1,3 +1,4 @@
+import { useLoginExpired } from "@/contexts/login-expired";
 import { useUser } from "@/contexts/user-context";
 import { useQuery } from "@tanstack/react-query";
 
@@ -35,6 +36,7 @@ interface FetchMaskingsResponse {
 
 export function useFetchMaskings({ page = 1, perPage = 10 }: FetchMaskingsRequest) {
     const { user } = useUser()
+    const { handleSetLoginExpired } = useLoginExpired()
 
     return useQuery({
         queryKey: [
@@ -55,6 +57,10 @@ export function useFetchMaskings({ page = 1, perPage = 10 }: FetchMaskingsReques
                     "Authorization": `Bearer ${user?.token}`
                 },
             })
+
+            if (response.status === 401) {
+                handleSetLoginExpired(true)
+            }
 
             if (response.status !== 200) {
                 throw new Error("Erro ao listar maskings")

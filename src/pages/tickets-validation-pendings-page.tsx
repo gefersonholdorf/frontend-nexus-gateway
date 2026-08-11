@@ -2,6 +2,7 @@ import { useFetchTicketValidationPendings, type TicketValidationPending } from "
 import { HeaderPage } from "@/components/header-page";
 import { TableComponent, type Column } from "@/components/table-component";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,7 +13,7 @@ import {
 } from "@/components/ui/tooltip";
 import { format, formatDistanceToNowStrict, isPast } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { CheckCircle, Circle, ClipboardList, Clock, ExternalLink, FileCheck, ShieldAlert, ShieldX, Ticket, Users, XCircle } from "lucide-react";
+import { ArrowDown, ArrowUp, CheckCircle, ChevronDown, ChevronUp, Circle, ClipboardList, Clock, ExternalLink, FileCheck, Minus, ShieldAlert, ShieldX, Ticket, Users, XCircle } from "lucide-react";
 
 const columns: Column<TicketValidationPending>[] = [
     {
@@ -97,9 +98,59 @@ const columns: Column<TicketValidationPending>[] = [
         }
     },
     {
-        key: "priority",
-        title: "Prioridade",
-    },
+  key: "priority",
+  title: "Prioridade",
+  render: (value) => {
+    switch (value) {
+      case "Muito Baixa":
+        return (
+          <Badge variant="outline" className="gap-1 border-slate-400 text-slate-500">
+            <ArrowDown className="size-3" />
+            Muito Baixa
+          </Badge>
+        );
+
+      case "Baixa":
+        return (
+          <Badge variant="outline" className="gap-1 border-sky-500 text-sky-500">
+            <ChevronDown className="size-3" />
+            Baixa
+          </Badge>
+        );
+
+      case "Média":
+        return (
+          <Badge variant="outline" className="gap-1 border-yellow-500 text-yellow-600">
+            <Minus className="size-3" />
+            Média
+          </Badge>
+        );
+
+      case "Alta":
+        return (
+          <Badge variant="outline" className="gap-1 border-border text-primary-text">
+            <ChevronUp className="size-4 text-red-500" />
+            Alta
+          </Badge>
+        );
+
+      case "Muito Alta":
+        return (
+          <Badge variant="outline" className="gap-1 border-red-500 text-red-500">
+            <ArrowUp className="size-3" />
+            Muito Alta
+          </Badge>
+        );
+
+      default:
+        return (
+          <Badge variant="secondary">
+            {value}
+          </Badge>
+        );
+    }
+  },
+},
     {
         key: "createdAt",
         title: "Abertura",
@@ -128,8 +179,8 @@ const columns: Column<TicketValidationPending>[] = [
     {
         key: "time_to_own",
         title: "SLA de Atendimento",
-        render: (value) => {
-            if (!value) {
+        render: (_, row) => {
+            if (!row.time_to_own) {
                 return (
                     <span className="flex items-center gap-2 text-muted-foreground">
                         <Circle className="size-3 fill-muted stroke-none" />
@@ -138,44 +189,49 @@ const columns: Column<TicketValidationPending>[] = [
                 );
             }
 
-            const date = new Date(value.toString().replace(" ", "T"));
+            const start = new Date(row.createdAt.replace(" ", "T"));
+            const end = new Date(row.time_to_own.replace(" ", "T"));
             const now = new Date();
 
-            const diff = date.getTime() - now.getTime();
+            const total = end.getTime() - start.getTime();
+            const remaining = end.getTime() - now.getTime();
 
-            let iconColor = "fill-green-500";
+            const percent = Math.max(
+                0,
+                Math.min(100, (remaining / total) * 100)
+            );
 
-            if (diff <= 0) {
-                iconColor = "fill-red-800";
-            } else if (diff <= 30 * 60 * 1000) {
-                iconColor = "fill-red-500";
-            } else if (diff <= 2 * 60 * 60 * 1000) {
-                iconColor = "fill-yellow-500";
-            }
+            let color = "bg-emerald-500";
+
+            if (percent <= 20) color = "bg-red-500";
+            else if (percent <= 50) color = "bg-yellow-500";
 
             return (
-                <div className="flex flex-col">
-                    <span title={format(date, "EEEE, dd 'de' MMMM 'de' yyyy 'às' HH:mm", { locale: ptBR })}>
-                        {format(date, "dd/MM/yyyy HH:mm")}
-                    </span>
-                    <span
-                        className="flex items-center gap-2 text-muted-foreground text-[.8rem]"
-                        title={`Limite: ${format(date, "dd/MM/yyyy HH:mm")}`}
-                    >
-                        <Circle className={`size-3 stroke-none ${iconColor}`} />
+                <div className="flex flex-col gap-1 w-40">
+                    <div className="flex justify-between text-[.8rem]">
+                        <span>{format(end, "dd/MM HH:mm")}</span>
 
-                        {isPast(date)
-                            ? `Expirado há ${formatDistanceToNowStrict(date, {
-                                locale: ptBR,
-                            })}`
-                            : `Expira ${formatDistanceToNowStrict(date, {
-                                locale: ptBR,
-                                addSuffix: true,
-                            })}`}
-                    </span>
+                        <span className="font-medium">
+                            {isPast(end)
+                                ? `Expirado há ${formatDistanceToNowStrict(end, {
+                                    locale: ptBR,
+                                })}`
+                                : formatDistanceToNowStrict(end, {
+                                    locale: ptBR,
+                                    addSuffix: true,
+                                })}
+                        </span>
+                    </div>
+
+                    <div className="h-3 rounded-full border border-border bg-card overflow-hidden">
+                        <div
+                            className={`h-full transition-all ${color}`}
+                            style={{ width: `${percent}%` }}
+                        />
+                    </div>
                 </div>
             );
-        },
+        }
     },
     {
         key: "url",

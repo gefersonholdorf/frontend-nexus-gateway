@@ -14,4 +14,6 @@ export function playNotificationSound() {
       );
     });
 
+  console.log("tocou")
+
 }

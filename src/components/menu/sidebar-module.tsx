@@ -5,7 +5,9 @@ import {
     EyeOff,
     FileText,
     LayoutDashboard,
+    Megaphone,
     MonitorCloud,
+    MonitorCog,
     type LucideIcon
 } from "lucide-react";
 
@@ -47,6 +49,12 @@ export const sidebarModules: SidebarModule[] = [
                 icon: FileText,
                 profiles: ['Administrador', 'Suporte', 'Desenvolvedor', 'Infraestrutura']
             },
+            {
+                label: "Campanhas",
+                path: "/campaigns",
+                icon: Megaphone,
+                profiles: ['Administrador']
+            },
         ],
     },
 
@@ -82,6 +90,13 @@ export const sidebarModules: SidebarModule[] = [
     {
         title: "Operações",
         items: [
+            {
+                label: "Central de Operações",
+                path: "/operations",
+                icon: MonitorCog,
+                isBlocked: false,
+                profiles: ['Administrador']
+            },
             {
                 label: "Central de Segurança",
                 path: "/security-center",

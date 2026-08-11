@@ -1,3 +1,4 @@
+import { useLoginExpired } from "@/contexts/login-expired";
 import { useUser } from "@/contexts/user-context";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
@@ -14,6 +15,7 @@ interface CreateDocumentRequest {
 export function useCreateDocument() {
     const { user } = useUser()
     const queryClient = useQueryClient()
+    const { handleSetLoginExpired } = useLoginExpired()
 
     return useMutation({
         mutationKey: ['create-document-user'],
@@ -34,6 +36,10 @@ export function useCreateDocument() {
                     profiles: data.profiles
                 })
             })
+
+            if (response.status === 401) {
+                handleSetLoginExpired(true)
+            }
 
             if (response.status !== 201) {
                 throw new Error("Erro ao criar novo documento.")

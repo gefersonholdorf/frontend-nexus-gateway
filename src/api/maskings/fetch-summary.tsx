@@ -1,3 +1,4 @@
+import { useLoginExpired } from "@/contexts/login-expired";
 import { useUser } from "@/contexts/user-context";
 import { useQuery } from "@tanstack/react-query";
 
@@ -27,6 +28,7 @@ interface FetchSummarysResponse {
 
 export function useFetchSummarysMaskings({ page = 1, perPage = 10 }: FetchSummarysRequest) {
     const { user } = useUser()
+    const { handleSetLoginExpired } = useLoginExpired()
 
     return useQuery({
         queryKey: [
@@ -47,6 +49,10 @@ export function useFetchSummarysMaskings({ page = 1, perPage = 10 }: FetchSummar
                     "Authorization": `Bearer ${user?.token}`
                 },
             })
+
+            if (response.status === 401) {
+                handleSetLoginExpired(true)
+            }
 
             if (response.status !== 200) {
                 throw new Error("Erro ao listar Resumo dos maskings")
