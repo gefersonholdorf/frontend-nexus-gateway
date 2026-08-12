@@ -143,8 +143,7 @@ const createCampaignSchema = z
             "Informe a data de publicação."
         ),
         status: z.enum([
-            "DRAFT",
-            "SCHEDULED",
+            "DRAFT", "SCHEDULED", "PUBLISHED", "INACTIVE"
         ]),
         url: z.url("Informe uma URL válida."),
     })
@@ -268,15 +267,17 @@ export function CampaignFormModal({
             reset();
             onOpenChange(false);
         } catch (error) {
-            toast.error(
-                mode === "create"
-                    ? "Erro ao criar campanha."
-                    : "Erro ao atualizar campanha.",
-                {
-                    position: "top-center",
-                    richColors: true,
-                }
-            );
+            const message =
+                error instanceof Error
+                    ? error.message
+                    : mode === "create"
+                        ? "Erro ao criar campanha."
+                        : "Erro ao atualizar campanha.";
+
+            toast.error(message, {
+                position: "top-center",
+                richColors: true,
+            });
         }
     }
 
@@ -347,15 +348,15 @@ export function CampaignFormModal({
                             </Label>
 
                             <Controller
-    control={control}
-    name="monthYear"
-    render={({ field }) => (
-        <MonthYearPicker
-            value={field.value}
-            onChange={field.onChange}
-        />
-    )}
-/>
+                                control={control}
+                                name="monthYear"
+                                render={({ field }) => (
+                                    <MonthYearPicker
+                                        value={field.value}
+                                        onChange={field.onChange}
+                                    />
+                                )}
+                            />
 
                             <p className="text-xs text-muted-foreground">
                                 Define o mês ao qual a campanha pertence.
@@ -485,6 +486,14 @@ export function CampaignFormModal({
 
                                             <SelectItem value="SCHEDULED">
                                                 Agendada
+                                            </SelectItem>
+
+                                            <SelectItem value="PUBLISHED">
+                                                Publicado
+                                            </SelectItem>
+
+                                            <SelectItem value="INACTIVE">
+                                                Encerrada
                                             </SelectItem>
                                         </SelectContent>
                                     </Select>

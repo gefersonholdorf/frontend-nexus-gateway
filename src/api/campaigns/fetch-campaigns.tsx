@@ -40,9 +40,8 @@ interface FetchCampaignsRequest {
     page: number;
     perPage: number;
     text?: string;
-    category?: string;
+    monthYear?: string
     status?: string;
-    profile?: string
 }
 
 interface FetchCampaignsResponse {
@@ -57,7 +56,7 @@ interface FetchCampaignsResponse {
     }
 }
 
-export function useFetchCampaigns({ page = 1, perPage = 10, category, status, text, profile }: FetchCampaignsRequest) {
+export function useFetchCampaigns({ page = 1, perPage = 10, monthYear, status, text }: FetchCampaignsRequest) {
     const { user } = useUser()
     const { handleSetLoginExpired } = useLoginExpired()
 
@@ -67,9 +66,8 @@ export function useFetchCampaigns({ page = 1, perPage = 10, category, status, te
             page,
             perPage,
             text,
-            category,
+            monthYear,
             status,
-            profile
         ],
         queryFn: async () => {
             const query = new URLSearchParams();
@@ -81,22 +79,14 @@ export function useFetchCampaigns({ page = 1, perPage = 10, category, status, te
                 query.append("text", text);
             }
 
-            if (category) {
-                if (category !== "all") {
-                    query.append("category", category);
-                }
-            }
-
             if (status) {
                 if (status !== "all") {
                     query.append("status", status);
                 }
             }
 
-            if (profile) {
-                if (profile !== "all") {
-                    query.append("profile", profile);
-                }
+            if (monthYear) {
+                query.append("monthYear", monthYear);
             }
 
             const response = await fetch(`${import.meta.env.VITE_API_URL}/campaigns?${query.toString()}`, {

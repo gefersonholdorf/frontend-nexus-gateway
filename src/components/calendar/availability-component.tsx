@@ -145,7 +145,7 @@ export function AvailabilityComponent({
 
     if (isLoading || IsLoadingAvailability) {
         return (
-            <Card className="h-174 p-0 overflow-hidden">
+            <Card className="h-181 p-0 overflow-hidden">
                 <Skeleton className="h-full w-full" />
             </Card>
         );
@@ -153,7 +153,7 @@ export function AvailabilityComponent({
 
     if (isError) {
         return (
-            <Card className="h-174 p-0 overflow-hidden">
+            <Card className="h-181 p-0 overflow-hidden">
                 <div className="bg-(image:--background-gradient) w-full h-full flex flex-col items-center justify-center gap-3">
                     <TriangleAlert className="size-10 text-destructive" />
 
@@ -192,7 +192,7 @@ export function AvailabilityComponent({
         <>
             <Card
                 className="
-                h-174
+                h-181
                 w-full
                 border
                 border-border

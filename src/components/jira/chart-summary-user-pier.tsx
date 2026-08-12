@@ -29,6 +29,10 @@ const chartConfig = {
     label: "Concluído",
     color: "#10b981",
   },
+  Homologação: {
+    label: "Homologação",
+    color: "#A855F7",
+  },
 } satisfies ChartConfig
 
 interface ChartSummaryUserPieProps {
@@ -37,6 +41,7 @@ interface ChartSummaryUserPieProps {
     inProgress: number
     correction: number
     completed: number
+    homologation: number
   }
 }
 
@@ -57,6 +62,11 @@ export function ChartSummaryUserPie({ summary }: ChartSummaryUserPieProps) {
     status: "Correção",
     total: summary.correction,
     fill: "#ff2c2c",
+  },
+  {
+    status: "Homologação",
+    total: summary.homologation,
+    fill: "#A855F7",
   },
   {
     status: "Concluído",

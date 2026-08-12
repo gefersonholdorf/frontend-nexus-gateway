@@ -1,28 +1,20 @@
 import { useLoginExpired } from "@/contexts/login-expired";
 import { useUser } from "@/contexts/user-context";
 import { useQuery } from "@tanstack/react-query";
+import type { Campaign } from "./fetch-campaigns";
 
-export interface Summary {
-    pending: number
-    inProgress: number
-    correction: number
-    completed: number
-    homologation: number
+interface FetchCampaignsResponse {
+    campaign: Campaign | null
 }
 
-interface FetchSummarysResponse {
-    total: number
-    summary: Summary
-}
-
-export function useGetSummaryJiraUser() {
+export function useGetCampaignActive(isLoginCompleted: boolean) {
     const { user } = useUser()
     const { handleSetLoginExpired } = useLoginExpired()
 
     return useQuery({
-        queryKey: ["fetch-summary", user?.email],
+        queryKey: ["fetch-campaigns", user],
         queryFn: async () => {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/jira`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/campaigns/active`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -35,11 +27,13 @@ export function useGetSummaryJiraUser() {
             }
 
             if (response.status !== 200) {
-                throw new Error("Erro ao listar resumo das tasks")
+                throw new Error("Erro ao listar campanha")
             }
 
-            const result: FetchSummarysResponse = await response.json()
+            const result: FetchCampaignsResponse = await response.json()
+
             return result
         },
+        enabled: !!isLoginCompleted
     })
 }

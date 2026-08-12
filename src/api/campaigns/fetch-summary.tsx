@@ -3,20 +3,17 @@ import { useUser } from "@/contexts/user-context";
 import { useQuery } from "@tanstack/react-query";
 
 export interface Summary {
-    total: number,
-    present: number,
-    revision: number,
-    progress: number,
-    pending: number
+    total: number
+    draft: number
+    scheduled: number
+    published: number
+    inactive: number
 }
 
 interface FetchSummarysRequest {
-    page: number;
-    perPage: number;
-    text?: string;
-    category?: string;
-    status?: string;
-    profile?: string;
+    status?: string
+    monthYear?: string
+    text?: string
 }
 
 interface FetchSummarysResponse {
@@ -31,34 +28,26 @@ interface FetchSummarysResponse {
     }
 }
 
-export function useFetchSummarys({ page = 1, perPage = 10, category, status, text, profile }: FetchSummarysRequest) {
+export function useFetchSummaryCampaign({ status, text, monthYear }: FetchSummarysRequest) {
     const { user } = useUser()
     const { handleSetLoginExpired } = useLoginExpired()
 
     return useQuery({
         queryKey: [
-            "fetch-summarys-documents",
-            page,
-            perPage,
+            "fetch-summarys-campaigns",
             text,
-            category,
             status,
-            profile
+            monthYear
         ],
         queryFn: async () => {
             const query = new URLSearchParams();
-
-            query.append("page", String(page));
-            query.append("perPage", String(perPage));
 
             if (text) {
                 query.append("text", text);
             }
 
-            if (category) {
-                if (category !== "all") {
-                    query.append("category", category);
-                }
+            if (monthYear) {
+                query.append("monthYear", monthYear);
             }
 
             if (status) {
@@ -67,13 +56,7 @@ export function useFetchSummarys({ page = 1, perPage = 10, category, status, tex
                 }
             }
 
-            if (profile) {
-                if (profile !== "all") {
-                    query.append("profile", profile);
-                }
-            }
-
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/documents/summary?${query.toString()}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/campaigns/summary?${query.toString()}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",

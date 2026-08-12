@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { useCampaignActive } from "@/contexts/campaign-active";
 import { useTheme } from "@/contexts/theme-context";
 import { useUser } from "@/contexts/user-context";
 import { cn } from "@/lib/utils";
@@ -23,6 +24,7 @@ interface LoginResponse {
 }
 
 export function LoginPage() {
+    const { onLoginCompleted } = useCampaignActive()
     const mutation = useMutation({
         mutationKey: ["login"],
         mutationFn: async ({
@@ -137,6 +139,8 @@ export function LoginPage() {
             })
 
             navigate("/welcome")
+
+            onLoginCompleted(true)
         } catch (error) {
             toast.error("Erro ao realizar login, verifique suas credenciais.", {
                 position: "top-center",

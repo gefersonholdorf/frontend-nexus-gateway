@@ -36,7 +36,7 @@ export function QuickAccessSupportComponent() {
         <Card
             className="
                 p-6
-                h-58
+                h-65
                 rounded-3xl
                 border-border/50
                 bg-card

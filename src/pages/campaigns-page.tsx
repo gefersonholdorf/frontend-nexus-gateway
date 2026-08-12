@@ -1,50 +1,44 @@
-// import { useCreateCampaign } from "@/api/campaigns/create-campaign";
-// import { useUpdateCampaign } from "@/api/campaigns/update-campaign";
-// import { useFetchCampaigns } from "@/api/campaigns/fetch-campaigns";
-// import { useFetchCampaignSummary } from "@/api/campaigns/fetch-campaign-summary";
-// import { DeleteCampaignModal } from "@/components/campaigns/delete-campaign";
-// import { FilteringCampaigns, type Filters } from "@/components/campaigns/filtering-campaigns";
-// import { CampaignFormModal } from "@/components/campaigns/form-campaign";
+import { useCreateCampaign } from "@/api/campaigns/create-campaign";
+import { useFetchCampaigns, type Campaign } from "@/api/campaigns/fetch-campaigns";
+import { useFetchSummaryCampaign } from "@/api/campaigns/fetch-summary";
+import { useUpdateCampaign } from "@/api/campaigns/update-campaign";
+import { CampaignFormModal } from "@/components/campaigns/create-campaign";
+import { DeleteCampaignModal } from "@/components/campaigns/delete-campaign-modal";
+import { FilteringCampaigns, type Filters } from "@/components/campaigns/filtering-campaigns";
+import { UserByCampaignComponent } from "@/components/campaigns/users-by-campaign-component";
 import { HeaderPage } from "@/components/header-page";
 import { TableComponent, type Column } from "@/components/table-component";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Progress } from "@/components/ui/progress";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useUser } from "@/contexts/user-context";
 import { formatDate } from "date-fns";
 import {
+  AlertCircle,
   BarChart3,
   CheckCircle,
   Clock,
-  Copy,
+  Clock1,
   Edit,
-  Eye,
   FileText,
   Megaphone,
   MoreHorizontalIcon,
   Plus,
   Trash2,
-  X,
-  Calendar,
-  TrendingUp,
-  AlertCircle
+  X
 } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router";
-import { CampaignFormModal } from "@/components/campaigns/create-campaign";
-import { useCreateCampaign } from "@/api/campaigns/create-campaign";
-import { useFetchCampaigns, type Campaign, type CampaignStatus } from "@/api/campaigns/fetch-campaigns";
 
 const columns: Column<Campaign>[] = [
   {
     key: "code",
     title: "Código",
     render: (value) => (
-      <div className="flex items-center gap-1 text-[.8rem] font-medium text-muted-foreground">
+      <div className="flex items-center gap-1 text-[.8rem] font-medium">
         <span>{value?.toString()}</span>
       </div>
     )
@@ -69,7 +63,7 @@ const columns: Column<Campaign>[] = [
     key: "monthYear",
     title: "Mês/Ano",
     render: (value) => (
-      <div className="text-sm text-muted-foreground">
+      <div className="text-sm">
         {value?.toString()}
       </div>
     )
@@ -78,7 +72,7 @@ const columns: Column<Campaign>[] = [
     key: "publishDate",
     title: "Data de publicação",
     render: (value) => (
-      <div className="text-sm text-muted-foreground">
+      <div className="text-sm">
         {formatDate(value!.toString(), "dd/MM/yyyy HH:mm")}
       </div>
     )
@@ -86,29 +80,29 @@ const columns: Column<Campaign>[] = [
   {
     key: "status",
     title: "Status",
-    render: (value, row) => (
+    render: (_, row) => (
       <div className="flex items-center gap-1">
         {row.status === 'PUBLISHED' && (
-          <Badge className="bg-transparent text-muted-foreground border border-border">
-            <CheckCircle className="size-3.5 mr-1 text-emerald-500" />
+          <Badge className="bg-transparent text-emerald-500 border border-border">
+            <CheckCircle className="size-4 mr-1 text-emerald-500" />
             Publicada
           </Badge>
         )}
         {row.status === 'SCHEDULED' && (
-          <Badge className="bg-transparent text-muted-foreground border border-border">
-            <Clock className="size-3.5 mr-1 text-blue-500" />
+          <Badge className="bg-transparent text-blue-500 border border-border">
+            <Clock className="size-4 mr-1 text-blue-500" />
             Agendada
           </Badge>
         )}
         {row.status === 'DRAFT' && (
-          <Badge className="bg-transparent text-muted-foreground border border-border">
-            <FileText className="size-3.5 mr-1 text-amber-500" />
+          <Badge className="bg-transparent text-amber-500 border border-border">
+            <FileText className="size-4 mr-1 text-amber-500" />
             Rascunho
           </Badge>
         )}
         {row.status === 'INACTIVE' && (
-          <Badge className="bg-transparent text-muted-foreground border border-border">
-            <AlertCircle className="size-3.5 mr-1 text-red-500" />
+          <Badge className="bg-transparent text-red-500 border border-border">
+            <AlertCircle className="size-4 mr-1 text-red-500" />
             Encerrada
           </Badge>
         )}
@@ -120,7 +114,7 @@ const columns: Column<Campaign>[] = [
     title: "Acessos",
     render: (value) => {
       if (!value || typeof value !== "object" || Array.isArray(value)) {
-        return <span className="text-muted-foreground text-sm">—</span>;
+        return <span className="text-sm">—</span>;
       }
 
       const stats = value as CampaignAccessStats;
@@ -131,7 +125,7 @@ const columns: Column<Campaign>[] = [
           <TooltipTrigger asChild>
             <div className="flex flex-col gap-1.5 w-36">
               <div className="flex items-center justify-between text-xs">
-                <span className="text-muted-foreground">
+                <span className="">
                   {stats.accessed} / {stats.total} usuários
                 </span>
                 <span className="font-medium text-emerald-600">{percentage}%</span>
@@ -183,7 +177,7 @@ const columns: Column<Campaign>[] = [
               <p>{responsible.name}</p>
             </TooltipContent>
           </Tooltip>
-          <span className="text-sm text-muted-foreground truncate max-w-28">
+          <span className="text-sm truncate max-w-28">
             {responsible.name}
           </span>
         </div>
@@ -206,55 +200,41 @@ export interface CampaignAccessStats {
 }
 export interface CampaignFilters {
   text: string;
-  status: CampaignStatus | 'all';
+  status: 'DRAFT' | 'SCHEDULED' | 'PUBLISHED' | 'INACTIVE' | 'all';
   monthYear: string | 'all';
-  responsible: string | 'all';
 }
 
 export function CampaignsPage() {
   const { user } = useUser();
-  const { data } = useFetchCampaigns({
-    page: 1,
-    perPage: 10,
-    text: undefined,
-    category: undefined,
-    status: undefined,
-    profile: undefined,
-  })
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
+  const [usersCampaign, setUsersCampaign] = useState<number | null>(null);
+  const [openUsersCampaign, setOpenUsersCampaign] = useState(false);
   const [campaign, setCampaign] = useState<Campaign | null>(null);
-
-  const navigate = useNavigate();
 
   const [page, setPage] = useState(1);
   const createMutation = useCreateCampaign();
-  // const updateMutation = useUpdateCampaign();
-  
+  const updateMutation = useUpdateCampaign();
+
   const [filters, setFilters] = useState<CampaignFilters>({
     text: "",
     status: "all",
-    monthYear: "all",
-    responsible: "all",
+    monthYear: "",
   });
 
-  // const { isLoading, data, isError, refetch } = useFetchCampaigns({
-  //   page,
-  //   perPage: 10,
-  //   text: filters.text,
-  //   status: filters.status,
-  //   monthYear: filters.monthYear,
-  //   responsible: filters.responsible,
-  // });
+  const { data } = useFetchCampaigns({
+    page: 1,
+    perPage: 10,
+    text: filters.text,
+    status: filters.status,
+    monthYear: filters.monthYear,
+  })
 
-  // const { isLoading: isLoadingSummary, data: dataSummary } = useFetchCampaignSummary({
-  //   page,
-  //   perPage: 10,
-  //   text: filters.text,
-  //   status: filters.status,
-  //   monthYear: filters.monthYear,
-  //   responsible: filters.responsible,
-  // });
+  const { isLoading: isLoadingSummary, data: dataSummary } = useFetchSummaryCampaign({
+    text: filters.text,
+    status: filters.status,
+    monthYear: filters.monthYear,
+  });
 
   function handleSetOpenCreateModal() {
     setOpenCreateModal(!openCreateModal);
@@ -264,50 +244,58 @@ export function CampaignsPage() {
     setOpenUpdateModal(!openUpdateModal);
   }
 
-  // function handleFiltering(newFilters: Filters) {
-  //   setFilters(newFilters);
-  //   setPage(1);
-  // }
+  function handleSetUsersCampaign(campaignId: number | null) {
+    setUsersCampaign(campaignId);
+  }
 
-  // const summaryCards = mockCampaignSummary
-  //   ? [
-  //       {
-  //         title: "Total de campanhas",
-  //         value: mockCampaignSummary.total,
-  //         icon: Megaphone,
-  //         colorText: "text-primary",
-  //         borderColor: "hover:border-primary",
-  //       },
-  //       {
-  //         title: "Publicadas",
-  //         value: mockCampaignSummary.published,
-  //         icon: CheckCircle,
-  //         colorText: "text-emerald-500",
-  //         borderColor: "hover:border-emerald-500",
-  //       },
-  //       {
-  //         title: "Agendadas",
-  //         value: mockCampaignSummary.scheduled,
-  //         icon: Calendar,
-  //         colorText: "text-blue-500",
-  //         borderColor: "hover:border-blue-500",
-  //       },
-  //       {
-  //         title: "Taxa média de acesso",
-  //         value: `${mockCampaignSummary.averageAccessRate}%`,
-  //         icon: TrendingUp,
-  //         colorText: "text-violet-500",
-  //         borderColor: "hover:border-violet-500",
-  //       },
-  //       {
-  //         title: "Rascunhos",
-  //         value: mockCampaignSummary.draft,
-  //         icon: FileText,
-  //         colorText: "text-slate-500",
-  //         borderColor: "hover:border-slate-500",
-  //       },
-  //     ]
-  //   : [];
+  function handleSetOpenUsersCampaign() {
+    setOpenUsersCampaign(!openUsersCampaign);
+  }
+
+  function handleFiltering(newFilters: Filters) {
+    setFilters(newFilters);
+    setPage(1);
+  }
+
+  const summaryCards = dataSummary?.summary
+    ? [
+        {
+          title: "Total de campanhas",
+          value: dataSummary?.summary.total,
+          icon: Megaphone,
+          colorText: "text-primary",
+          borderColor: "hover:border-primary",
+        },
+        {
+          title: "Publicadas",
+          value: dataSummary?.summary.published,
+          icon: CheckCircle,
+          colorText: "text-emerald-500",
+          borderColor: "hover:border-emerald-500",
+        },
+        {
+          title: "Agendadas",
+          value: dataSummary?.summary.scheduled,
+          icon: Clock1,
+          colorText: "text-blue-500",
+          borderColor: "hover:border-blue-500",
+        },
+        {
+          title: "Encerrados",
+          value: dataSummary?.summary.inactive,
+          icon: X,
+          colorText: "text-red-500",
+          borderColor: "hover:border-violet-500",
+        },
+        {
+          title: "Rascunhos",
+          value: dataSummary?.summary.draft,
+          icon: FileText,
+          colorText: "text-slate-500",
+          borderColor: "hover:border-slate-500",
+        },
+      ]
+    : [];
 
   return (
     <>
@@ -318,13 +306,6 @@ export function CampaignsPage() {
         actions={
           user?.roles?.includes("Administrador") && (
             <div className="flex gap-2">
-              <Button
-                variant="outline"
-                onClick={() => navigate('/campaigns/dashboard')}
-              >
-                <BarChart3 className="size-4 mr-2" />
-                Painel de Indicadores
-              </Button>
               <Button onClick={() => setOpenCreateModal(true)}>
                 <Plus className="size-4 mr-2" />
                 Nova Campanha
@@ -350,21 +331,21 @@ export function CampaignsPage() {
       <div className="flex-1 px-16 py-8 space-y-6">
         <TableComponent
           data={data?.campaigns ?? []}
-          // cardsQuantity={{
-          //   summarys: summaryCards,
-          //   isLoading: false,
-          // }}
+          cardsQuantity={{
+            summarys: summaryCards,
+            isLoading: isLoadingSummary,
+          }}
           registerName="Campanhas"
           isLoading={false}
           isError={false}
-          onRetry={() => {}}
-          // filteringComponent={
-          //   <FilteringCampaigns onFilterChange={handleFiltering} />
-          // }
+          onRetry={() => { }}
+          filteringComponent={
+            <FilteringCampaigns onFilterChange={handleFiltering} />
+          }
           columns={columns}
           pagination={
             data?.pagination ?? {
-              page: 1,
+              page,
               perPage: 10,
               total: 0,
               totalPages: 1,
@@ -381,22 +362,20 @@ export function CampaignsPage() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-52">
-                <DropdownMenuItem onClick={() => navigate(`/campaigns/${campaign.id}`)}>
-                  <Eye className="size-4 mr-2" />
-                  Visualizar detalhes
-                </DropdownMenuItem>
-                
-                <DropdownMenuItem 
-                  disabled={!campaign.url} 
+                <DropdownMenuItem
+                  disabled={!campaign.url}
                   onClick={() => campaign.url && window.open(campaign.url, "_blank")}
                 >
                   <Megaphone className="size-4 mr-2" />
-                  Acessar campanha no Teams
+                  Acessar Campanha
                 </DropdownMenuItem>
 
                 <DropdownMenuSeparator />
 
-                <DropdownMenuItem onClick={() => navigate(`/campaigns/${campaign.id}/tracking`)}>
+                <DropdownMenuItem onClick={() => {
+                  handleSetUsersCampaign(campaign.id)
+                  handleSetOpenUsersCampaign();
+                }}>
                   <BarChart3 className="size-4 mr-2" />
                   Acompanhamento
                 </DropdownMenuItem>
@@ -404,7 +383,7 @@ export function CampaignsPage() {
                 {user?.roles.includes("Administrador") && (
                   <>
                     <DropdownMenuSeparator />
-                    
+
                     <DropdownMenuItem onClick={() => {
                       setCampaign(campaign);
                       handleSetOpenUpdateModal();
@@ -412,15 +391,12 @@ export function CampaignsPage() {
                       <Edit className="size-4 mr-2" />
                       Editar
                     </DropdownMenuItem>
-                    {/* <DeleteCampaignModal campaign={campaign}>
-                      <DropdownMenuItem 
-                        onSelect={(e) => e.preventDefault()}
-                        className="text-red-600 focus:text-red-600"
-                      >
-                        <Trash2 className="size-4 mr-2" />
-                        Excluir
-                      </DropdownMenuItem>
-                    </DeleteCampaignModal> */}
+                    <DeleteCampaignModal campaign={campaign}>
+                    <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                      <Trash2 className="size-4 mr-2" />
+                      Excluir
+                    </DropdownMenuItem>
+                    </DeleteCampaignModal>
                   </>
                 )}
               </DropdownMenuContent>
@@ -439,7 +415,13 @@ export function CampaignsPage() {
         }}
       />
 
-      {/* <CampaignFormModal
+      <UserByCampaignComponent 
+        open={openUsersCampaign}
+        onOpenChange={handleSetOpenUsersCampaign}
+        campaignId={usersCampaign}
+      />
+
+      <CampaignFormModal
         mode="update"
         open={openUpdateModal}
         onOpenChange={handleSetOpenUpdateModal}
@@ -449,9 +431,8 @@ export function CampaignsPage() {
           description: campaign?.description || "",
           monthYear: campaign?.monthYear || "",
           publishDate: campaign?.publishDate || "",
-          status: campaign?.status || "Rascunho",
-          url: campaign?.url || null,
-          responsibleId: campaign?.responsible.id,
+          status: campaign?.status,
+          url: campaign?.url || "",
         }}
         isPending={updateMutation.isPending}
         onSubmit={async (data) => {
@@ -460,7 +441,7 @@ export function CampaignsPage() {
             ...data,
           });
         }}
-      /> */}
+      />
     </>
   );
 }

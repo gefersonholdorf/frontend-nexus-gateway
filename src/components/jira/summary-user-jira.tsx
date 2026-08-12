@@ -9,7 +9,7 @@ export function SummaryUserJira() {
 
     if (isLoading) {
         return (
-            <Card className="h-78 overflow-hidden p-0">
+            <Card className="h-85 overflow-hidden p-0">
                 <Skeleton className="h-full w-full" />
             </Card>
         );
@@ -17,7 +17,7 @@ export function SummaryUserJira() {
 
     if (isError) {
         return (
-            <Card className="h-78 p-0 overflow-hidden">
+            <Card className="h-85 p-0 overflow-hidden">
                 <div className="bg-(image:--background-gradient) w-full h-full flex flex-col items-center justify-center gap-3">
                     <TriangleAlert className="size-10 text-destructive" />
 
@@ -43,7 +43,8 @@ export function SummaryUserJira() {
         data.summary.pending +
         data.summary.inProgress +
         data.summary.correction +
-        data.summary.completed
+        data.summary.completed +
+        data.summary.homologation
 
     const summary = [
         {
@@ -57,6 +58,12 @@ export function SummaryUserJira() {
             count: data.summary.inProgress,
             percentage: (data.summary.inProgress / totalTasks) * 100,
             bgColor: "bg-blue-500"
+        },
+        {
+            title: "Em Homologação",
+            count: data.summary.homologation,
+            percentage: (data.summary.homologation / totalTasks) * 100,
+            bgColor: "bg-purple-500"
         },
         {
             title: "Correção",
@@ -78,7 +85,7 @@ export function SummaryUserJira() {
             : 0
     return (
         <Card
-            className={`h-78 flex flex-col items-center justify-start border border-border rounded-2xl shadow-sm transition-all duration-300 transform hover:scale-[1.01]
+            className={`h-85 flex flex-col items-center justify-start border border-border rounded-2xl shadow-sm transition-all duration-300 transform hover:scale-[1.01]
                         hover:shadow-sm gap-6 bg-(image:--background-gradient)`}
         >
             <CardHeader className="w-full flex justify-between items-center gap-6">
@@ -105,6 +112,7 @@ export function SummaryUserJira() {
                         inProgress: data.summary.inProgress,
                         correction: data.summary.correction,
                         completed: data.summary.completed,
+                        homologation: data.summary.homologation
                     }} />
                 </div>
                 <div className="col-span-2 pl-10 w-full flex flex-col justify-center gap-3">

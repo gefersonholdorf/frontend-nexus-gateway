@@ -1,47 +1,27 @@
 import { useUser } from "@/contexts/user-context";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export interface CreateCampaignRequest {
-    code: string;
-    title: string;
-    description: string;
-    monthYear: string;
-    publishDate: string;
-    status: "DRAFT" | "SCHEDULED" | "PUBLISHED" | "INACTIVE";
-    url: string;
+export interface SeenCampaignRequest {
+    campaignId: number
 }
 
-interface CreateCampaignResponse {
-    campaignId: number;
-}
-
-export function useCreateCampaign() {
+export function useSeenCampaign() {
     const { user } = useUser();
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationKey: ["create-campaign"],
+        mutationKey: ["seen-campaign"],
 
         mutationFn: async (
-            data: CreateCampaignRequest
-        ): Promise<CreateCampaignResponse> => {
+            data: SeenCampaignRequest
+        ) => {
             const response = await fetch(
-                `${import.meta.env.VITE_API_URL}/campaigns`,
+                `${import.meta.env.VITE_API_URL}/campaigns/${data.campaignId}/access/seen`,
                 {
                     method: "POST",
                     headers: {
-                        "Content-Type": "application/json",
                         Authorization: `Bearer ${user?.token}`,
                     },
-                    body: JSON.stringify({
-                        code: data.code,
-                        title: data.title,
-                        description: data.description,
-                        monthYear: data.monthYear,
-                        publishDate: data.publishDate,
-                        status: data.status,
-                        url: data.url,
-                    }),
                 }
             );
 
@@ -50,7 +30,7 @@ export function useCreateCampaign() {
             if (!response.ok) {
                 throw new Error(
                     responseData?.message ||
-                    "Erro ao criar campanha."
+                    "Erro ao registrar métricas na campanha."
                 );
             }
 
