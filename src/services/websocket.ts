@@ -1,69 +1,69 @@
-class WebSocketService {
-  private socket: WebSocket | null = null;
-  private manuallyClosed = false;
+// class WebSocketService {
+//   private socket: WebSocket | null = null;
+//   private manuallyClosed = false;
 
-  private listeners = new Set<(data: any) => void>();
+//   private listeners = new Set<(data: any) => void>();
 
-  connect() {
-    if (
-      this.socket &&
-      (
-        this.socket.readyState === WebSocket.OPEN ||
-        this.socket.readyState === WebSocket.CONNECTING
-      )
-    ) {
-      return;
-    }
+//   connect() {
+//     if (
+//       this.socket &&
+//       (
+//         this.socket.readyState === WebSocket.OPEN ||
+//         this.socket.readyState === WebSocket.CONNECTING
+//       )
+//     ) {
+//       return;
+//     }
 
-    this.manuallyClosed = false;
+//     this.manuallyClosed = false;
 
-    this.socket = new WebSocket("ws://10.188.15.99:3336/ws");
+//     this.socket = new WebSocket("wss://intranet.lusati.com.br/ws");
 
-    this.socket.onopen = () => {
-      console.log("✅ WebSocket conectado");
-    };
+//     this.socket.onopen = () => {
+//       console.log("✅ WebSocket conectado");
+//     };
 
-    this.socket.onmessage = (event) => {
-      try {
-        const message = JSON.parse(event.data);
+//     this.socket.onmessage = (event) => {
+//       try {
+//         const message = JSON.parse(event.data);
 
-        this.listeners.forEach((listener) => {
-          listener(message);
-        });
-      } catch (err) {
-        console.error("Erro ao processar mensagem do WebSocket:", err);
-      }
-    };
+//         this.listeners.forEach((listener) => {
+//           listener(message);
+//         });
+//       } catch (err) {
+//         console.error("Erro ao processar mensagem do WebSocket:", err);
+//       }
+//     };
 
-    this.socket.onclose = () => {
-      console.log("❌ WebSocket desconectado");
+//     this.socket.onclose = () => {
+//       console.log("❌ WebSocket desconectado");
 
-      this.socket = null;
+//       this.socket = null;
 
-      if (!this.manuallyClosed) {
-        setTimeout(() => this.connect(), 5000);
-      }
-    };
+//       if (!this.manuallyClosed) {
+//         setTimeout(() => this.connect(), 5000);
+//       }
+//     };
 
-    this.socket.onerror = (err) => {
-      console.error(err);
-    };
-  }
+//     this.socket.onerror = (err) => {
+//       console.error(err);
+//     };
+//   }
 
-  disconnect() {
-    this.manuallyClosed = true;
+//   disconnect() {
+//     this.manuallyClosed = true;
 
-    this.socket?.close();
-    this.socket = null;
-  }
+//     this.socket?.close();
+//     this.socket = null;
+//   }
 
-  onMessage(listener: (data: any) => void) {
-    this.listeners.add(listener);
+//   onMessage(listener: (data: any) => void) {
+//     this.listeners.add(listener);
 
-    return () => {
-      this.listeners.delete(listener);
-    };
-  }
-}
+//     return () => {
+//       this.listeners.delete(listener);
+//     };
+//   }
+// }
 
-export const websocket = new WebSocketService();
+// export const websocket = new WebSocketService();

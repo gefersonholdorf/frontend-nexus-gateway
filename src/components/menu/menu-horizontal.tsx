@@ -1,4 +1,3 @@
-import { useFetchNotifications } from "@/api/notifications/get-notifications-me";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
     DropdownMenu,
@@ -11,10 +10,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useTheme } from "@/contexts/theme-context";
 import { useUser } from "@/contexts/user-context";
-import { playNotificationSound } from "@/lib/notifications-dound";
-import { websocket } from "@/services/websocket";
-import { Bell, ChevronRight, ClipboardList, History, Info, LogOut, Moon, Sun, Ticket } from "lucide-react";
-import { useEffect, useState } from "react";
+import { ChevronRight, History, Info, LogOut, Moon, Sun } from "lucide-react";
+import { useState } from "react";
 import { useNavigate } from "react-router";
 import { AboutSystemModal } from "../modals/about-system-modal";
 import { UpdatePasswordModal } from "../modals/change-user-modal";
@@ -37,25 +34,25 @@ export function MenuComponent({ onSetFiltering }: { onSetFiltering?: (value: str
     const [editProfileOpen, setEditProfileOpen] = useState(false);
     const [editPasswordOpen, setEditPasswordOpen] = useState(false);
     const [aboutSystemModalOpen, setAboutSystemModalOpen] = useState(false);
-    const { data: alerts, refetch } = useFetchNotifications();
+    // const { data: alerts, refetch } = useFetchNotifications();
 
     const isWelcomePage = window.location.pathname !== "/gateway"
     const app = import.meta.env.VITE_APP
     const version = import.meta.env.VITE_VERSION
 
-    useEffect(() => {
-        const unsubscribe = websocket.onMessage((message) => {
-            switch (message.event) {
-                case "notification.created":
-                    playNotificationSound();
-                    refetch();
-                    break;
-            }
-        });
-        return unsubscribe;
-    }, [refetch]);
+    // useEffect(() => {
+    //     const unsubscribe = websocket.onMessage((message) => {
+    //         switch (message.event) {
+    //             case "notification.created":
+    //                 playNotificationSound();
+    //                 refetch();
+    //                 break;
+    //         }
+    //     });
+    //     return unsubscribe;
+    // }, [refetch]);
 
-    const unreadCount = alerts ? alerts.notifications.length : 0;
+    // const unreadCount = alerts ? alerts.notifications.length : 0;
     return (
         <>
             {app === 'homolog' && (
@@ -82,7 +79,7 @@ export function MenuComponent({ onSetFiltering }: { onSetFiltering?: (value: str
                 <div className="px-2 border border-primary/20 bg-primary/10 text-primary rounded-sm">
                     <span className="text-[.8rem] font-medium">v1.4.0</span>
                 </div> */}
-                    <DropdownMenu>
+                    {/* <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <button
                                 className="relative flex items-center justify-center rounded-lg border border-transparent p-2 transition-colors hover:bg-card hover:border-border cursor-pointer focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 data-[state=open]:bg-card data-[state=open]:border-border"
@@ -149,7 +146,7 @@ export function MenuComponent({ onSetFiltering }: { onSetFiltering?: (value: str
 
                             </div>
                         </DropdownMenuContent>
-                    </DropdownMenu>
+                    </DropdownMenu> */}
                     {/* USER AREA */}
                     <div className="shrink-0">
                         <DropdownMenu>

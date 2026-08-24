@@ -8,7 +8,7 @@ import {
     DialogTitle,
     DialogTrigger
 } from "@/components/ui/dialog";
-import type { Document } from "@/pages/documents-page";
+import type { Document } from "@/pages/documents/documents-page";
 import { useState } from "react";
 import { toast } from "sonner";
 

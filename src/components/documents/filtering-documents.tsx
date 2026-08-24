@@ -92,7 +92,7 @@ export function FilteringDocuments({
         );
 
         if (profiles) {
-            if(isAdmin) {
+            if (isAdmin) {
                 profile = "all"
             } else {
                 profile = String(profiles.id)

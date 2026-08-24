@@ -222,7 +222,6 @@ export function CalendarPage() {
                         month={month}
                         onMonthChange={setMonth}
                         className="rounded-lg border"
-                        events={query.data.events}
                     />
                 </div>
                 <div className="h-full lg:col-span-2">

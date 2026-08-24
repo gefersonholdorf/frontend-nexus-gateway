@@ -214,23 +214,35 @@ export function CampaignFormModal({
             return;
         }
 
+        const [year, month] = monthYear.split("-").map(Number);
+
         const currentPublishDate = watch("publishDate");
 
-        if (!currentPublishDate) {
-            return;
+        if (currentPublishDate) {
+            const publicationDate = new Date(currentPublishDate);
+
+            // Se a data atual já pertence ao mês selecionado,
+            // mantém a data escolhida.
+            if (
+                publicationDate.getFullYear() === year &&
+                publicationDate.getMonth() + 1 === month
+            ) {
+                return;
+            }
         }
 
-        const [year, month] = monthYear.split("-").map(Number);
-        const publicationDate = new Date(currentPublishDate);
+        // Caso não tenha data ou a data seja de outro mês,
+        // seleciona automaticamente o dia 1.
+        const firstDayOfMonth = new Date(year, month - 1, 1);
 
-        if (
-            publicationDate.getFullYear() !== year ||
-            publicationDate.getMonth() + 1 !== month
-        ) {
-            setValue("publishDate", "", {
+        setValue(
+            "publishDate",
+            format(firstDayOfMonth, "yyyy-MM-dd'T'HH:mm"),
+            {
                 shouldValidate: true,
-            });
-        }
+                shouldDirty: true,
+            }
+        );
     }, [monthYear, setValue, watch]);
 
     useEffect(() => {
@@ -488,9 +500,9 @@ export function CampaignFormModal({
                                                 Agendada
                                             </SelectItem>
 
-                                            <SelectItem value="PUBLISHED">
+                                            {/* <SelectItem value="PUBLISHED">
                                                 Publicado
-                                            </SelectItem>
+                                            </SelectItem> */}
 
                                             <SelectItem value="INACTIVE">
                                                 Encerrada

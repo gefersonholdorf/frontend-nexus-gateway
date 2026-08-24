@@ -3,12 +3,13 @@ import { useUser } from "@/contexts/user-context";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface CreateDocumentRequest {
+    classification: string,
+    process: string,
+    ownerId: string,
     code: string,
     title: string,
     category: string,
-    status: string,
-    viewUrl: string | null,
-    editUrl: string | null
+    editUrl: string
     profiles: number[]
 }
 
@@ -30,10 +31,11 @@ export function useCreateDocument() {
                     code: data.code,
                     title: data.title,
                     category: data.category,
-                    status: data.status,
-                    viewUrl: data.viewUrl,
                     editUrl: data.editUrl,
-                    profiles: data.profiles
+                    profiles: data.profiles,
+                    classification: data.classification,
+                    process: data.process,
+                    ownerId: data.ownerId
                 })
             })
 

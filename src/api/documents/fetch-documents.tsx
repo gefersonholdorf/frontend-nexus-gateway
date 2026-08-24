@@ -8,20 +8,26 @@ interface Document {
     category: string,
     status: string,
     title: string,
+    version: string | null
     viewUrl: string,
     editUrl: string,
     createdAt: string,
     updatedAt: string,
+    classification: string | null
+    process: string | null
+    nextReview: string | null
+    profilesCount: number
     profiles: {
         id: number
         name: string
         description: string | null
     }[]
-    createdBy: {
+    owner: {
         id: number
         name: string
         avatarUrl: string | null
-    }
+        roleDescription: string | null
+    } | null
 }
 
 interface FetchDocumentsRequest {

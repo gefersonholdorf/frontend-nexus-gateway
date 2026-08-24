@@ -4,7 +4,6 @@ import { GLPISummaryComponent } from "@/components/glpi-summary-component";
 import { SummaryUserJira } from "@/components/jira/summary-user-jira";
 import { QuickAccessComponent } from "@/components/quick-access-component";
 import { QuickAccessSupportComponent } from "@/components/quick-access-support-component";
-import BackupsReport from "@/components/reports/backups-report";
 import { VPNStatusCard } from "@/components/vpn-status-component";
 import { WelcomeCard } from "@/components/welcome-card";
 import { CustomTooltip } from "@/tours/tooltip";
@@ -131,7 +130,7 @@ export function WelcomePage() {
                 <div className="grid grid-cols-1 lg:grid-cols-1 gap-6 mb-6">
                     <div id="quick-access" className="scroll-mt-28">
                         <QuickAccessComponent />
-                        <BackupsReport />
+                        {/* <BackupsReport /> */}
                     </div>
                 </div>
             </div>

@@ -33,23 +33,6 @@ export const sidebarModules: SidebarModule[] = [
                 profiles: ['Administrador', 'Suporte', 'Desenvolvedor', 'Infraestrutura']
             },
             {
-                label: "Organograma",
-                path: "/organograma",
-                icon: Building2,
-                profiles: ['Administrador', 'Suporte', 'Desenvolvedor', 'Infraestrutura']
-            },
-            // {
-            //     label: "Calendário",
-            //     path: "/calendar",
-            //     icon: Calendar,
-            // },
-            {
-                label: "Documentos ISO",
-                path: "/documents",
-                icon: FileText,
-                profiles: ['Administrador', 'Suporte', 'Desenvolvedor', 'Infraestrutura']
-            },
-            {
                 label: "Campanhas",
                 path: "/campaigns",
                 icon: Megaphone,
@@ -57,7 +40,23 @@ export const sidebarModules: SidebarModule[] = [
             },
         ],
     },
-
+    {
+        title: "Governança",
+        items: [
+            {
+                label: "Organograma",
+                path: "/organograma",
+                icon: Building2,
+                profiles: ['Administrador', 'Suporte', 'Desenvolvedor', 'Infraestrutura']
+            },
+            {
+                label: "Documentos ISO",
+                path: "/documents",
+                icon: FileText,
+                profiles: ['Administrador', 'Suporte', 'Desenvolvedor', 'Infraestrutura']
+            },
+        ]
+    },
     {
         title: "Infraestrutura",
         items: [
@@ -95,7 +94,7 @@ export const sidebarModules: SidebarModule[] = [
                 path: "/operations",
                 icon: MonitorCog,
                 isBlocked: false,
-                profiles: ['Administrador']
+                profiles: ['Administrador', 'Suporte']
             },
             {
                 label: "Central de Segurança",
