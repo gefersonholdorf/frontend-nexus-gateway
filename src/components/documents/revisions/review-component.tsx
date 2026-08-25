@@ -1,296 +1,224 @@
-import { useFetchSummarys } from "@/api/documents/fetch-summary";
-import { useFetchReviews, type Review } from "@/api/documents/reviews/fetch-reviews";
-import { TableComponent, type Column } from "@/components/table-component";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { useUser } from "@/contexts/user-context";
-import { differenceInDays, formatDate } from "date-fns";
-import { CheckCircle, Clock, Edit, FileText, LoaderCircle, MoreHorizontalIcon, XCircle } from "lucide-react";
-import { useState } from "react";
-import {
-    AlertTriangle,
-    Ban,
-    RotateCcw,
-} from "lucide-react";
-import { FilteringReviews, type Filters } from "./filtering-reviews-component";
-
-const REVIEW_STATUS = {
-    Pendente: {
-        icon: Clock,
-        color: "text-amber-500",
-        label: "Pendente",
-    },
-    "Em Revisão": {
-        icon: Edit,
-        color: "text-blue-500",
-        label: "Em Revisão",
-    },
-    "Solicitado Ajustes": {
-        icon: RotateCcw,
-        color: "text-amber-500",
-        label: "Solicitado Ajustes",
-    },
-    Ajustado: {
-        icon: Edit,
-        color: "text-cyan-500",
-        label: "Ajustado",
-    },
-    Aprovada: {
-        icon: CheckCircle,
-        color: "text-emerald-500",
-        label: "Aprovada",
-    },
-    Rejeitada: {
-        icon: XCircle,
-        color: "text-red-500",
-        label: "Rejeitada",
-    },
-    Cancelada: {
-        icon: Ban,
-        color: "text-zinc-500",
-        label: "Cancelada",
-    },
-    Vencida: {
-        icon: AlertTriangle,
-        color: "text-red-600",
-        label: "Vencida",
-    },
-};
+import { useState } from "react"
+import { formatDate } from "date-fns"
+import { TableComponent, type Column } from "@/components/table-component"
+import { useFetchReviews, type Review } from "@/api/documents/reviews/fetch-reviews"
+import { ReviewStatusBadge } from "../review-status-badge"
+import { UserCell } from "../user-cell"
+import { cn } from "@/lib/utils"
+import { Badge } from "@/components/ui/badge"
 
 const columns: Column<Review>[] = [
     {
-        key: "document",
-        title: "Título",
+        key: "id",
+        title: "Revisão",
         render: (_, row) => (
-            <Tooltip>
-                <TooltipTrigger asChild>
-                    <div className="truncate max-w-60 flex flex-col">
-                        <span className="truncate">{row.document.title.toString()}</span>
-                    </div>
-                </TooltipTrigger>
-                <TooltipContent>
-                    <span>
-                        {row.document.title.toString()}
-                    </span>
-                </TooltipContent>
-            </Tooltip>
-        )
+            <div className="flex flex-col">
+                <span className="text-base">
+                    #{row.id}
+                </span>
+
+                <span className="text-[.8rem] text-muted-foreground">
+                    REV-{String(row.id).padStart(6, "0")}
+                </span>
+            </div>
+        ),
     },
+
     {
-        key: "applicant",
-        title: "Solicitante",
+        key: "document",
+        title: "Documento",
+        render: (_, row) => (
+            <div className="flex flex-col min-w-0 max-w-70">
+                <span className="truncate">
+                    {row.document.title}
+                </span>
+
+                <span className="text-[.8rem] text-muted-foreground">
+                    #{row.document.id}
+                </span>
+            </div>
+        ),
     },
+
     {
         key: "status",
         title: "Status",
-        render: (value) => {
-            const status =
-                REVIEW_STATUS[value as keyof typeof REVIEW_STATUS];
+        render: (_, row) => (
+            <div className="flex flex-col gap-1">
+                <ReviewStatusBadge status={row.status} />
 
-            if (!status) {
-                return (
-                    <Badge
-                        className="bg-transparent border border-border"
-                        variant="outline"
-                    >
-                        {value?.toString()}
-                    </Badge>
-                );
-            }
+                <span className="text-[.8rem] text-muted-foreground">
+                    {row.status === "EM_APROVACAO" &&
+                        "Aguardando aprovação"}
 
-            const Icon = status.icon;
+                    {row.status === "ABERTA" &&
+                        "Editando revisão"}
 
-            return (
-                <Badge
-                    variant="outline"
-                    className="
-                    gap-2
-                    bg-transparent
-                    border-border
-                    text-primary-text
-                "
-                >
-                    <Icon
-                        className={`size-4 ${status.color}`}
-                    />
-                    {status.label}
-                </Badge>
-            );
-        },
+                    {row.status === "APROVADA" &&
+                        "Revisão concluída"}
+
+                    {row.status === "CANCELADA" &&
+                        "Revisão cancelada"}
+                </span>
+            </div>
+        ),
     },
+
+    {
+        key: "reviserUser",
+        title: "Responsável",
+        render: (_, row) => (
+            <UserCell user={row.reviserUser} />
+        ),
+    },
+
+    {
+        key: "versions",
+        title: "Versões",
+        render: (_, row) => (
+            <div className="flex flex-col">
+                <span>
+                    {row.versions?.length ?? 0} versões
+                </span>
+
+                {row.versions && (
+                    <span className="text-[.8rem] text-muted-foreground">
+                        {row.versions[0].version} é a candidata
+                    </span>
+                )}
+            </div>
+        ),
+    },
+
+    {
+        key: "createdAt",
+        title: "Aberta em",
+        render: (_, row) => (
+            <div className="flex flex-col">
+                <span>
+                    {
+                        row.createdAt
+                            ? formatDate(
+                                new Date(row.createdAt),
+                                "dd/MM/yyyy, HH:mm"
+                            )
+                            : "---"
+                    }
+                </span>
+
+                <span className="text-[.8rem] text-muted-foreground">
+                    Há 3 dias
+                </span>
+            </div>
+        ),
+    },
+
     {
         key: "dueDate",
         title: "Prazo",
         render: (_, row) => {
             if (!row.dueDate) {
                 return (
-                    <span className="text-sm text-muted-foreground">
+                    <span className="text-muted-foreground">
                         ---
                     </span>
-                );
+                )
             }
 
-            const daysRemaining = differenceInDays(
-                new Date(row.dueDate),
-                new Date()
-            );
+            const dueDate = new Date(row.dueDate)
 
-            const getBadgeVariant = () => {
-                if (daysRemaining <= 5) {
-                    return "destructive"; // vermelho
-                }
+            if (isNaN(dueDate.getTime())) {
+                return (
+                    <span className="text-muted-foreground">
+                        ---
+                    </span>
+                )
+            }
 
-                if (daysRemaining <= 10) {
-                    return "secondary"; // amarelo
-                }
+            const now = new Date()
 
-                return "default"; // verde
-            };
+            const diffTime =
+                dueDate.getTime() - now.getTime()
+
+            const daysRemaining = Math.ceil(
+                diffTime / (1000 * 60 * 60 * 24)
+            )
+
+            const badgeClass =
+                daysRemaining < 0
+                    ? "border-red-500/30 bg-red-500/10 text-red-500"
+                    : daysRemaining <= 5
+                        ? "border-red-500/30 bg-red-500/10 text-red-500"
+                        : daysRemaining <= 10
+                            ? "border-amber-500/30 bg-amber-500/10 text-amber-500"
+                            : "border-emerald-500/30 bg-emerald-500/10 text-emerald-500"
 
             return (
-                <div className="flex items-center gap-2">
-                    <span>
-                        {formatDate(row.dueDate.toString(), "dd/MM/yyyy")}
+                <div className="flex flex-col gap-1">
+                    <span className="text-sm">
+                        {formatDate(
+                            dueDate,
+                            "dd/MM/yyyy"
+                        )}
                     </span>
 
                     <Badge
-                        variant={getBadgeVariant()}
-                        className={
-                            daysRemaining > 10
-                                ? "bg-emerald-500 hover:bg-green-600 text-white"
-                                : daysRemaining <= 10 && daysRemaining > 5
-                                    ? "bg-amber-500 hover:bg-amber-600 text-black"
-                                    : "bg-red-500"
-                        }
+                        variant="outline"
+                        className={badgeClass}
                     >
                         {daysRemaining < 0
                             ? `${Math.abs(daysRemaining)} dias atrasado`
-                            : `${daysRemaining} dias`}
+                            : daysRemaining === 0
+                                ? "Vence hoje"
+                                : `${daysRemaining} dias restantes`}
                     </Badge>
                 </div>
-            );
-        }
-    },
-    {
-        key: "reviser",
-        title: "Revisor",
-    },
+            )
+        },
+    }
 ]
 
-export function ReviewComponent() {
-    const { user } = useUser()
+interface ReviewComponentProps {
+    documentId?: number
+}
 
+export function ReviewComponent({
+    documentId,
+}: ReviewComponentProps) {
     const [page, setPage] = useState(1)
-    const [filters, setFilters] = useState<Filters>({
-        type: "all"
-    });
 
-    const { isLoading, data, isError, refetch } = useFetchReviews({
+    const {
+        isLoading,
+        data,
+        isError,
+        refetch,
+    } = useFetchReviews({
         page,
         perPage: 10,
-        type: "all"
+        documentId,
     })
 
-    // const { isLoading: isLoadingSummary, data: dataSummary } = useFetchSummarys({
-    //     page,
-    //     perPage: 10,
-    //     type: "all"
-    // })
-
-    function handleFiltering(newFilters: Filters) {
-        setFilters(newFilters);
-        setPage(1);
-    }
-
-    // const summarys = dataSummary
-    //     ? [
-    //         {
-    //             title: "Total",
-    //             value: dataSummary.summary.total,
-    //             icon: FileText,
-    //             colorText: "text-primary",
-    //             borderColor: "hover:border-primary",
-    //         },
-    //         {
-    //             title: "Vigentes",
-    //             value: dataSummary.summary.present,
-    //             icon: CheckCircle,
-    //             colorText: "text-emerald-500",
-    //             borderColor: "hover:border-emerald-500",
-    //         },
-    //         {
-    //             title: "Em Aprovação",
-    //             value: dataSummary.summary.revision,
-    //             icon: LoaderCircle,
-    //             colorText: "text-purple-400",
-    //             borderColor: "hover:border-purple-400",
-    //         },
-    //         {
-    //             title: "Em Revisão",
-    //             value: dataSummary.summary.revision,
-    //             icon: Edit,
-    //             colorText: "text-amber-500",
-    //             borderColor: "hover:border-amber-500",
-    //         },
-    //         {
-    //             title: "Em Andamento",
-    //             value: dataSummary.summary.progress,
-    //             icon: Clock,
-    //             colorText: "text-blue-500",
-    //             borderColor: "hover:border-blue-500",
-    //         },
-    //         {
-    //             title: "Pendentes",
-    //             value: dataSummary.summary.pending,
-    //             icon: XCircle,
-    //             colorText: "text-red-500",
-    //             borderColor: "hover:border-red-500",
-    //         },
-    //     ]
-    //     : [];
-
     return (
-        <>
-            <div className="flex-1 px-16 pb-8 space-y-6">
-                <TableComponent
-                    data={data?.revisions ?? []}
-                    // cardsQuantity={{
-                    //     summarys: summarys ?? [],
-                    //     isLoading: isLoadingSummary,
-                    // }}
-                    registerName="Documentos"
-                    isLoading={isLoading}
-                    isError={isError}
-                    onRetry={refetch}
-                    filteringComponent={
-                        <FilteringReviews onFilterChange={handleFiltering} />
+        <div className="flex-1 px-16 pb-8">
+            <TableComponent
+                registerName="Revisões"
+                data={data?.revisions ?? []}
+                columns={columns}
+                isLoading={isLoading}
+                isError={isError}
+                onRetry={refetch}
+                pagination={
+                    data?.pagination ?? {
+                        page: 1,
+                        perPage: 10,
+                        total: 0,
+                        totalPages: 1,
+                        hasNextPage: false,
+                        hasPreviousPage: false,
                     }
-                    columns={columns}
-                    pagination={
-                        data?.pagination ?? {
-                            page: 1,
-                            perPage: 10,
-                            total: 0,
-                            totalPages: 1,
-                            hasNextPage: false,
-                            hasPreviousPage: false,
-                        }
-                    }
-                    onPageChange={setPage}
-                    actions={(revision) => (
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="icon" className="size-8" >
-                                    <MoreHorizontalIcon />
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-fit">
-
-                            </DropdownMenuContent>
-                        </DropdownMenu>)} />
-            </div>
-        </>
+                }
+                onPageChange={setPage}
+            />
+        </div>
     )
 }

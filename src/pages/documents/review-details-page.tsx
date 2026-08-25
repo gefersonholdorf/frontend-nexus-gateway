@@ -1,16 +1,23 @@
-import { DocumentFlowCard } from "@/components/documents/document-flow-card"
-import { CreateDocumentComponent } from "@/components/documents/form-document/create-document-component"
+import { useGetReviewById } from "@/api/documents/reviews/get-review-by-id"
 import { DocumentsModulesComponent } from "@/components/documents/modules"
+import { ReviewDetailsComponent } from "@/components/documents/revisions/review-details-component"
 import { HeaderPage } from "@/components/header-page"
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
 import { Settings } from "lucide-react"
+import { useParams } from "react-router"
 
-export function CreateDocumentPage() {
+export function ReviewDetailsDocumentPage() {
+    const { id } = useParams<{ id: string }>();
+
+    const { isLoading, data, isError } = useGetReviewById({
+        revisionId: Number(id)
+    })
+
     return (
         <>
             <HeaderPage
-                title="Cadastro de Documento"
-                description="Preencha as informações gerais do documento."
+                title={`Revisão #${id}`}
+                description="Detalhes e versões do documento."
                 icon={Settings}
                 breadcrumb={
                     <Breadcrumb>
@@ -24,7 +31,11 @@ export function CreateDocumentPage() {
                             </BreadcrumbItem>
                             <BreadcrumbSeparator />
                             <BreadcrumbItem>
-                                <BreadcrumbPage>Novo Documento</BreadcrumbPage>
+                                <BreadcrumbLink href="/reviews">Revisões</BreadcrumbLink>
+                            </BreadcrumbItem>
+                            <BreadcrumbSeparator />
+                            <BreadcrumbItem>
+                                <BreadcrumbPage>Revisão #{id}</BreadcrumbPage>
                             </BreadcrumbItem>
                         </BreadcrumbList>
                     </Breadcrumb>
@@ -33,10 +44,11 @@ export function CreateDocumentPage() {
             <div className="px-10 mb-6">
                 <DocumentsModulesComponent />
             </div>
-            <div className="flex-1 px-16 pb-8 space-y-6">
-                <DocumentFlowCard />
-                <CreateDocumentComponent />
-            </div>
+            <ReviewDetailsComponent
+                review={data?.revision}
+                isError={isError}
+                isLoading={isLoading}
+            />
         </>
     )
 }
