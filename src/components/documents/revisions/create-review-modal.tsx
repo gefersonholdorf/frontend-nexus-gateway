@@ -1,15 +1,4 @@
-import {
-    Stepper,
-    StepperContent,
-    StepperDescription,
-    StepperIndicator,
-    StepperItem,
-    StepperNav,
-    StepperSeparator,
-    StepperTitle,
-    StepperTrigger,
-} from "@/components/reui/stepper";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useCreateReview } from "@/api/documents/reviews/create-review";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,7 +9,6 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
     Select,
@@ -29,36 +17,22 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
     ArrowLeftIcon,
-    CalendarIcon,
-    CheckIcon,
     FileTextIcon,
     InfoIcon,
     LoaderCircleIcon,
-    PlusIcon,
+    PlusIcon
 } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import {
     Controller,
     useForm,
 } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-
-const steps = [
-    {
-        title: "Informações da Revisão",
-        description: "Informe o motivo e o responsável",
-    },
-    {
-        title: "Confirmação",
-        description: "Revise os dados antes de criar",
-    },
-];
 
 const reviewReasons = [
     {
@@ -95,7 +69,6 @@ const createReviewSchema = z.object({
     reason: z
         .string()
         .min(1, "Selecione o motivo da revisão"),
-
     description: z
         .string()
         .trim()
@@ -107,39 +80,6 @@ const createReviewSchema = z.object({
             500,
             "A descrição deve possuir no máximo 500 caracteres"
         ),
-
-    responsibleId: z
-        .number()
-        .int("O responsável selecionado é inválido")
-        .positive("Selecione o responsável pela revisão"),
-
-    expectedCompletionDate: z
-        .string()
-        .nullable()
-        .optional()
-        .refine(
-            (value) => {
-                if (!value) {
-                    return true;
-                }
-
-                const date = new Date(`${value}T12:00:00`);
-
-                return !Number.isNaN(date.getTime());
-            },
-            {
-                message: "Informe uma data válida",
-            }
-        ),
-
-    observations: z
-        .string()
-        .trim()
-        .max(
-            300,
-            "As observações devem possuir no máximo 300 caracteres"
-        )
-        .optional(),
 });
 
 export type CreateReviewSchema = z.infer<
@@ -165,81 +105,26 @@ export interface RevisionUser {
 
 interface CreateReviewModalProps {
     open: boolean;
-
     onOpenChange: (open: boolean) => void;
-
     document: RevisionDocumentSummary | null;
-
     users: RevisionUser[];
-
     currentUserId?: number;
-
     nextVersion: string;
-
     nextRevisionCode?: string;
-
     isPending?: boolean;
-
-    onSubmit: (
-        documentId: number,
-        data: CreateReviewSchema
-    ) => Promise<void>;
-}
-
-function getInitials(name: string) {
-    return name
-        .trim()
-        .split(/\s+/)
-        .slice(0, 2)
-        .map((part) => part.charAt(0).toUpperCase())
-        .join("");
-}
-
-function getReasonLabel(reason: string) {
-    return (
-        reviewReasons.find(
-            (reviewReason) => reviewReason.value === reason
-        )?.label ?? reason
-    );
-}
-
-function formatDate(value: string | null | undefined) {
-    if (!value) {
-        return "Não informada";
-    }
-
-    const date = new Date(`${value}T12:00:00`);
-
-    if (Number.isNaN(date.getTime())) {
-        return "Data inválida";
-    }
-
-    return new Intl.DateTimeFormat("pt-BR", {
-        dateStyle: "short",
-    }).format(date);
-}
-
-function getTodayDate() {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, "0");
-    const day = String(today.getDate()).padStart(2, "0");
-
-    return `${year}-${month}-${day}`;
 }
 
 export function CreateReviewModal({
     open,
     onOpenChange,
     document,
-    users,
     currentUserId,
     nextVersion,
     nextRevisionCode = "R01",
     isPending = false,
-    onSubmit,
 }: CreateReviewModalProps) {
     const [step, setStep] = useState(1);
+    const { mutateAsync } = useCreateReview()
 
     const {
         control,
@@ -256,26 +141,9 @@ export function CreateReviewModal({
         defaultValues: {
             reason: "",
             description: "",
-            responsibleId: currentUserId ?? 0,
-            expectedCompletionDate: null,
-            observations: "",
         },
     });
-
-    const reason = watch("reason");
     const description = watch("description");
-    const responsibleId = watch("responsibleId");
-    const expectedCompletionDate = watch(
-        "expectedCompletionDate"
-    );
-    const observations = watch("observations");
-
-    const selectedResponsible = useMemo(() => {
-        return users.find(
-            (user) => user.id === responsibleId
-        );
-    }, [responsibleId, users]);
-
     const isLoading = isPending || isSubmitting;
 
     useEffect(() => {
@@ -286,9 +154,6 @@ export function CreateReviewModal({
         reset({
             reason: "",
             description: "",
-            responsibleId: currentUserId ?? 0,
-            expectedCompletionDate: null,
-            observations: "",
         });
 
         setStep(1);
@@ -306,9 +171,6 @@ export function CreateReviewModal({
         const isValid = await trigger([
             "reason",
             "description",
-            "responsibleId",
-            "expectedCompletionDate",
-            "observations",
         ]);
 
         if (!isValid) {
@@ -340,14 +202,9 @@ export function CreateReviewModal({
         }
 
         try {
-            await onSubmit(document.id, {
+            await mutateAsync({
                 ...data,
-
-                expectedCompletionDate:
-                    data.expectedCompletionDate || null,
-
-                observations:
-                    data.observations?.trim() || undefined,
+                documentId: document.id
             });
 
             toast.success("Revisão criada com sucesso!", {
@@ -358,9 +215,6 @@ export function CreateReviewModal({
             reset({
                 reason: "",
                 description: "",
-                responsibleId: currentUserId ?? 0,
-                expectedCompletionDate: null,
-                observations: "",
             });
 
             setStep(1);
@@ -572,209 +426,6 @@ export function CreateReviewModal({
                                 </p>
                             )}
                         </div>
-
-                        <div className="grid gap-4 md:grid-cols-2">
-                            <div className="space-y-2">
-                                <Label htmlFor="responsibleId">
-                                    Responsável pela revisão *
-                                </Label>
-
-                                <Controller
-                                    control={control}
-                                    name="responsibleId"
-                                    render={({ field }) => (
-                                        <Select
-                                            value={
-                                                field.value > 0
-                                                    ? String(
-                                                        field.value
-                                                    )
-                                                    : ""
-                                            }
-                                            onValueChange={(
-                                                value
-                                            ) => {
-                                                field.onChange(
-                                                    Number(
-                                                        value
-                                                    )
-                                                );
-                                            }}
-                                            disabled={isLoading}
-                                        >
-                                            <SelectTrigger
-                                                id="responsibleId"
-                                                aria-invalid={
-                                                    !!errors.responsibleId
-                                                }
-                                                className="h-auto min-h-10 w-full"
-                                            >
-                                                <SelectValue placeholder="Selecione o responsável" />
-                                            </SelectTrigger>
-
-                                            <SelectContent>
-                                                {users.map(
-                                                    (user) => (
-                                                        <SelectItem
-                                                            key={
-                                                                user.id
-                                                            }
-                                                            value={String(
-                                                                user.id
-                                                            )}
-                                                        >
-                                                            <div className="flex items-center gap-2">
-                                                                <Avatar className="size-6">
-                                                                    <AvatarImage
-                                                                        src={
-                                                                            user.avatarUrl ??
-                                                                            ""
-                                                                        }
-                                                                        alt=""
-                                                                    />
-
-                                                                    <AvatarFallback className="text-[10px]">
-                                                                        {getInitials(
-                                                                            user.name
-                                                                        )}
-                                                                    </AvatarFallback>
-                                                                </Avatar>
-
-                                                                <span>
-                                                                    {
-                                                                        user.name
-                                                                    }
-                                                                </span>
-                                                            </div>
-                                                        </SelectItem>
-                                                    )
-                                                )}
-                                            </SelectContent>
-                                        </Select>
-                                    )}
-                                />
-
-                                {errors.responsibleId && (
-                                    <p className="text-sm text-red-500">
-                                        {
-                                            errors
-                                                .responsibleId
-                                                .message
-                                        }
-                                    </p>
-                                )}
-                            </div>
-
-                            <div className="space-y-2">
-                                <Label htmlFor="expectedCompletionDate">
-                                    Data prevista para conclusão
-                                </Label>
-
-                                <div className="relative">
-                                    <CalendarIcon
-                                        className="
-                                                    pointer-events-none
-                                                    absolute
-                                                    top-1/2
-                                                    left-3
-                                                    size-4
-                                                    -translate-y-1/2
-                                                    text-muted-foreground
-                                                "
-                                    />
-
-                                    <Controller
-                                        control={control}
-                                        name="expectedCompletionDate"
-                                        render={({ field }) => (
-                                            <Input
-                                                id="expectedCompletionDate"
-                                                type="date"
-                                                min={getTodayDate()}
-                                                disabled={
-                                                    isLoading
-                                                }
-                                                value={
-                                                    field.value ??
-                                                    ""
-                                                }
-                                                onChange={(
-                                                    event
-                                                ) => {
-                                                    field.onChange(
-                                                        event
-                                                            .target
-                                                            .value ||
-                                                        null
-                                                    );
-                                                }}
-                                                aria-invalid={
-                                                    !!errors.expectedCompletionDate
-                                                }
-                                                className="pl-9"
-                                            />
-                                        )}
-                                    />
-                                </div>
-
-                                {errors.expectedCompletionDate && (
-                                    <p className="text-sm text-red-500">
-                                        {
-                                            errors
-                                                .expectedCompletionDate
-                                                .message
-                                        }
-                                    </p>
-                                )}
-                            </div>
-                        </div>
-
-                        <div className="space-y-2">
-                            <div className="flex items-center justify-between gap-4">
-                                <Label htmlFor="observations">
-                                    Observações (opcional)
-                                </Label>
-
-                                <span className="text-xs text-muted-foreground">
-                                    {observations?.length ??
-                                        0}
-                                    /300
-                                </span>
-                            </div>
-
-                            <Controller
-                                control={control}
-                                name="observations"
-                                render={({ field }) => (
-                                    <Textarea
-                                        {...field}
-                                        id="observations"
-                                        value={
-                                            field.value ?? ""
-                                        }
-                                        rows={3}
-                                        maxLength={300}
-                                        disabled={isLoading}
-                                        aria-invalid={
-                                            !!errors.observations
-                                        }
-                                        placeholder="Informações adicionais sobre esta revisão..."
-                                        className="resize-none"
-                                    />
-                                )}
-                            />
-
-                            {errors.observations && (
-                                <p className="text-sm text-red-500">
-                                    {
-                                        errors.observations
-                                            .message
-                                    }
-                                </p>
-                            )}
-                        </div>
-                        <Separator />
-
                         <DialogFooter className="flex-row justify-end gap-3 p-6">
                             <Button
                                 type="button"
@@ -881,37 +532,6 @@ function DocumentSummary({
                     </span>
                 </div>
             </div>
-        </div>
-    );
-}
-
-interface ConfirmationRowProps {
-    label: string;
-    value: string;
-}
-
-function ConfirmationRow({
-    label,
-    value,
-}: ConfirmationRowProps) {
-    return (
-        <div
-            className="
-                grid
-                grid-cols-[minmax(120px,1fr)_2fr]
-                gap-4
-                px-4
-                py-3
-                text-sm
-            "
-        >
-            <span className="text-muted-foreground">
-                {label}
-            </span>
-
-            <span className="break-words font-medium">
-                {value}
-            </span>
         </div>
     );
 }

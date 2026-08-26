@@ -5,9 +5,7 @@ import { useFetchUserLists } from "@/api/users/use-users-list";
 import { DeleteDocumentModal } from "@/components/documents/delete-document";
 import { FilteringDocuments, type Filters } from "@/components/documents/filtering-documents";
 import { DocumentsModulesComponent } from "@/components/documents/modules";
-import { ContinueReviewModal } from "@/components/documents/revisions/continue-review-modal";
 import { CreateReviewModal } from "@/components/documents/revisions/create-review-modal";
-import type { OpenDocumentRevision } from "@/components/documents/revisions/revision-modal.types";
 import { HeaderPage } from "@/components/header-page";
 import { TableComponent, type Column } from "@/components/table-component";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -18,36 +16,9 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useUser } from "@/contexts/user-context";
 import { formatDate } from "date-fns";
-import { CheckCircle, Clock, Edit, Eye, FileText, Globe, LoaderCircle, MoreHorizontalIcon, Users, X, XCircle } from "lucide-react";
+import { CheckCircle, ClipboardClock, Clock, ClockAlert, Edit, Eye, FileText, MoreHorizontalIcon, SquarePen, X, XCircle } from "lucide-react";
 import { useState } from "react";
-
-const mockOpenRevision: OpenDocumentRevision = {
-  id: 1,
-  documentId: 15,
-  versionId: 42,
-
-  version: "1.1",
-  revisionCode: "R01",
-
-  status: "Rascunho",
-
-  responsible: {
-    id: 7,
-    name: "Geferson Holdorf",
-    avatarUrl: "https://i.pravatar.cc/150?img=12",
-    role: "Infraestrutura | DevOps",
-  },
-
-  createdAt: "2026-08-21T10:30:00.000Z",
-  updatedAt: "2026-08-21T14:15:00.000Z",
-
-  reason: "SECURITY_IMPROVEMENT",
-
-  description:
-    "Adequação da política de segurança da informação para contemplar novos controles relacionados ao gerenciamento de vulnerabilidades e atualização dos procedimentos operacionais.",
-
-  expectedCompletionDate: "2026-09-05T00:00:00.000Z",
-};
+import { useNavigate } from "react-router";
 
 const columns: Column<Document>[] = [
   {
@@ -72,6 +43,23 @@ const columns: Column<Document>[] = [
   {
     key: "category",
     title: "Categoria",
+    render: (_, row) => {
+      if (!row.classification) {
+        return (
+          <div className="flex flex-col">
+            <span>{row.category}</span>
+            <span>---</span>
+          </div>
+        )
+      }
+
+      return (
+        <div className="flex flex-col">
+          <span>{row.category}</span>
+          <span className="text-muted-foreground text-[.8rem]">{row.classification}</span>
+        </div>
+      )
+    }
   },
   {
     key: "version",
@@ -93,118 +81,48 @@ const columns: Column<Document>[] = [
     title: "Status",
     render: (value) => (
       <div className="flex items-center gap-1">
-        {value === 'Vigente' && (
+        {value === 'VIGENTE' && (
           <>
             <Badge className="bg-transparent text-primary-text/10 border border-border">
               <CheckCircle className="size-4 text-emerald-500" />
-              <span className="">Vigente</span>
+              <span className="text-emerald-500">Vigente</span>
             </Badge>
           </>
         )}
-        {value === 'Pendente' && (
+        {value === 'RASCUNHO' && (
           <>
             <Badge className="bg-transparent text-primary-text/10 border border-border">
-              <XCircle className="size-4 text-red-500" />
-              Pendente
+              <XCircle className="size-4 text-amber-500" />
+              <span className="text-amber-500">Rascunho</span>
             </Badge>
           </>
         )}
-        {value === 'Em Andamento' && (
+        {value === 'EM_REVISAO' && (
           <>
             <Badge className="bg-transparent text-primary-text/10 border border-border">
-              <Clock className="size-4 text-blue-500" />
-              Em Andamento
+              <Clock className="size-4 text-orange-500" />
+              <span className="text-orange-500">Em Revisão</span>
             </Badge>
           </>
         )}
-        {value === 'Em Revisão' && (
+        {value === 'EXPIRADO' && (
           <>
             <Badge className="bg-transparent text-primary-text/10 border border-border">
-              <Edit className="size-4 text-amber-500" />
-              Em Revisão
+              <X className="size-4 text-red-500" />
+              <span className="text-red-500">Expirado</span>
+            </Badge>
+          </>
+        )}
+        {value === 'CANCELADO' && (
+          <>
+            <Badge className="bg-transparent text-primary-text/10 border border-border">
+              <X className="size-4 text-gray-500" />
+              <span className="text-gray-500">Cancelado</span>
             </Badge>
           </>
         )}
       </div>
     )
-  },
-  {
-    key: "profiles",
-    title: "Acesso",
-    render: (value, row: Document) => {
-      const profiles = Array.isArray(value) ? value : [];
-      const totalProfiles = row?.profilesCount ?? 0;
-
-      // Acesso geral: a quantidade de perfis do documento é igual ao total de perfis existentes
-      const isGeneralAccess = profiles.length === totalProfiles && totalProfiles > 0;
-
-      if (isGeneralAccess) {
-        return (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div className="flex items-center gap-1 cursor-default">
-                <div className="flex items-center justify-center size-9 rounded-full">
-                  <Globe className="size-4" />
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-sm font-medium">Todos</span>
-                  <span className="text-xs text-muted-foreground">Acesso geral</span>
-                </div>
-              </div>
-            </TooltipTrigger>
-            <TooltipContent>
-              <span>Acesso liberado para todos os perfis</span>
-            </TooltipContent>
-          </Tooltip>
-        );
-      }
-
-      // Restrito — Somente 1 perfil
-      if (profiles.length === 1) {
-        return (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div className="flex max-w-30 items-center gap-3 cursor-default">
-                <div className="flex items-center justify-center size-9 rounded-full bg-emerald-500/10 text-emerald-500">
-                  <Globe className="size-4" />
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-sm font-medium">{profiles[0].name}</span>
-                  <span className="text-xs text-muted-foreground">Somente este perfil</span>
-                </div>
-              </div>
-            </TooltipTrigger>
-            <TooltipContent>
-              <span>{profiles[0].name}</span>
-            </TooltipContent>
-          </Tooltip>
-        );
-      }
-
-      // Restrito — Múltiplos perfis
-      return (
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <div className="flex items-center gap-1 cursor-default">
-              <div className="flex items-center justify-center size-9 rounded-full">
-                <Users className="size-4" />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-sm font-medium">{profiles.length} perfis</span>
-                <span className="text-xs text-muted-foreground">Restrito</span>
-              </div>
-            </div>
-          </TooltipTrigger>
-          <TooltipContent>
-            <div className="flex flex-col gap-1">
-              {profiles.map((p) => (
-                <span key={p.id}>{p.name}</span>
-              ))}
-            </div>
-          </TooltipContent>
-        </Tooltip>
-      );
-    },
   },
   {
     key: "updatedAt",
@@ -305,6 +223,8 @@ export interface Document {
   classification: string | null
   nextReview: string | null
   profilesCount: number
+  isDocumentRevisionPending: boolean
+  reviewId: number | null
   profiles: {
     id: number
     name: string
@@ -321,20 +241,16 @@ export interface Document {
 export function DocumentsPage() {
   const { user } = useUser()
   const { data: users } = useFetchUserLists()
+  const navigate = useNavigate()
   const [openUpdateModal, setOpenUpdateModal] = useState(false)
 
   const [createReviewOpen, setCreateReviewOpen] = useState(false)
-
-  const [continueReviewOpen, setContinueReviewOpen] = useState(false)
 
   const [selectedDocument, setSelectedDocument] =
     useState<Document | null>(null)
 
   function handleReview(document: Document) {
     setSelectedDocument(document)
-
-    setContinueReviewOpen(false)
-
     setCreateReviewOpen(true)
   }
 
@@ -381,7 +297,6 @@ export function DocumentsPage() {
       console.error("Erro ao criar evento do documento:", error);
     }
   };
-
   const summarys = dataSummary
     ? [
       {
@@ -399,33 +314,33 @@ export function DocumentsPage() {
         borderColor: "hover:border-emerald-500",
       },
       {
-        title: "Em Aprovação",
-        value: dataSummary.summary.revision,
-        icon: LoaderCircle,
-        colorText: "text-purple-400",
-        borderColor: "hover:border-purple-400",
+        title: "Aprovação",
+        value: dataSummary.summary.pendingApproval,
+        icon: XCircle,
+        colorText: "text-emerald-400",
+        borderColor: "hover:border-emerald-400",
       },
       {
-        title: "Em Revisão",
+        title: "Revisão",
         value: dataSummary.summary.revision,
-        icon: Edit,
+        icon: ClipboardClock,
+        colorText: "text-orange-500",
+        borderColor: "hover:border-orange-500",
+      },
+      {
+        title: "Rascunho",
+        value: dataSummary.summary.sketch,
+        icon: SquarePen,
         colorText: "text-amber-500",
         borderColor: "hover:border-amber-500",
       },
       {
-        title: "Em Andamento",
-        value: dataSummary.summary.progress,
-        icon: Clock,
-        colorText: "text-blue-500",
-        borderColor: "hover:border-blue-500",
-      },
-      {
-        title: "Pendentes",
-        value: dataSummary.summary.pending,
-        icon: XCircle,
-        colorText: "text-red-500",
-        borderColor: "hover:border-red-500",
-      },
+        title: "Expirado",
+        value: dataSummary.summary.expired,
+        icon: ClockAlert,
+        colorText: "text-red-400",
+        borderColor: "hover:border-red-400",
+      }
     ]
     : [];
 
@@ -468,7 +383,8 @@ export function DocumentsPage() {
           }
           columns={columns}
           pagination={
-            data?.pagination ?? {
+            data?.pagination ??
+            {
               page: 1,
               perPage: 10,
               total: 0,
@@ -511,20 +427,22 @@ export function DocumentsPage() {
                   </>
                 )}
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => handleReview(document)}>
-                  <Edit />
-                  Criar Revisão
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => handleReview(document)}>
-                  <Edit />
-                  Continuar Revisão
-                </DropdownMenuItem>
+                {document.isDocumentRevisionPending ? (
+                  <DropdownMenuItem onClick={() => handleReview(document)}>
+                    <Edit />
+                    Criar Revisão
+                  </DropdownMenuItem>
+                ) : (
+                  <DropdownMenuItem onClick={() => navigate(`/documents/reviews/${document.reviewId}`)}>
+                    <Edit />
+                    Continuar Revisão
+                  </DropdownMenuItem>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
           )}
         />
-      </div>
+      </div >
       <CreateReviewModal
         open={createReviewOpen}
         onOpenChange={setCreateReviewOpen}
@@ -547,30 +465,6 @@ export function DocumentsPage() {
         nextVersion="1.1"
         nextRevisionCode="R01"
         isPending={false}
-        onSubmit={async (documentId, data) => {
-          console.log(documentId)
-          console.log(data)
-          refetch()
-        }}
-      />
-      <ContinueReviewModal
-        open={continueReviewOpen}
-        onOpenChange={setCreateReviewOpen}
-        document={
-          selectedDocument
-            ? {
-              id: selectedDocument.id,
-              code: selectedDocument.code,
-              title: selectedDocument.title,
-              currentVersion:
-                selectedDocument.version ?? "1.0",
-              status: selectedDocument.status,
-            }
-            : null
-        }
-        isPending={false}
-        // onContinue={(1, 2) => void}
-        revision={mockOpenRevision}
       />
     </>
   )

@@ -34,6 +34,16 @@ export interface Review {
         version: string
         changeLog: string | null
         createdAt: string
+        editUrl: string | null
+        viewUrl: string | null
+        createUser: {
+            id: number
+            name: string
+            avatarUrl: string | null
+            roleDescription: string | null
+        },
+        major: number
+        minor: number,
         status: "RASCUNHO" | "EM_APROVACAO" | "APROVADA" | "CANCELADA",
     }[]
     createUser: {

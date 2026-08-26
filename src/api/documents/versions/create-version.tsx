@@ -2,40 +2,31 @@ import { useLoginExpired } from "@/contexts/login-expired";
 import { useUser } from "@/contexts/user-context";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-interface CreateDocumentRequest {
-    classification: string,
-    process: string,
-    ownerId: string,
-    code: string,
-    title: string,
-    category: string,
-    editUrl: string
-    profiles: number[]
+interface CreateVersionRequest {
+    documentId: number,
+    editUrl: string,
+    changeLog: string,
+    onwerId: number,
 }
 
-export function useCreateDocument() {
+export function useCreateVersion() {
     const { user } = useUser()
     const queryClient = useQueryClient()
     const { handleSetLoginExpired } = useLoginExpired()
 
     return useMutation({
-        mutationKey: ['create-document-user'],
-        mutationFn: async (data: CreateDocumentRequest) => {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/documents`, {
+        mutationKey: ['create-version'],
+        mutationFn: async (data: CreateVersionRequest) => {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/documents/${data.documentId}/versions`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${user?.token}`
                 },
                 body: JSON.stringify({
-                    code: data.code,
-                    title: data.title,
-                    category: data.category,
-                    profiles: data.profiles,
-                    classification: data.classification,
-                    process: data.process,
-                    ownerId: data.ownerId,
-                    editUrl: data.editUrl
+                    editUrl: data.editUrl,
+                    changeLog: data.changeLog,
+                    onwerId: data.onwerId,
                 })
             })
 
@@ -44,16 +35,16 @@ export function useCreateDocument() {
             }
 
             if (response.status !== 201) {
-                throw new Error("Erro ao criar novo documento.")
+                throw new Error("Erro ao criar nova revisão.")
             }
         },
         onSuccess: async () => {
             await queryClient.invalidateQueries({
-                queryKey: ['fetch-documents']
+                queryKey: ['fetch-versions']
             })
 
             await queryClient.invalidateQueries({
-                queryKey: ["fetch-summarys-documents"]
+                queryKey: ["fetch-summarys-versions"]
             })
         }
     })

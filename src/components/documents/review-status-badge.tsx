@@ -10,17 +10,17 @@ const STATUS_MAP: Record<AnyStatus, { label: string; className: string }> = {
     ABERTA: {
         label: "Aberta",
         className:
-            "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-900",
+            "bg-blue-50 text-blue-700 border-blue-200 dark:bg-transparent dark:text-blue-500 dark:border-border",
     },
     RASCUNHO: {
         label: "Rascunho",
         className:
-            "bg-slate-50 text-slate-700 border-slate-200 dark:bg-slate-900 dark:text-slate-300 dark:border-slate-800",
+            "bg-slate-50 text-slate-700 border-slate-200 dark:bg-transparent dark:text-slate-500 dark:border-border",
     },
     EM_APROVACAO: {
         label: "Em aprovação",
         className:
-            "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950 dark:text-amber-300 dark:border-amber-900",
+            "bg-amber-50 text-amber-700 border-amber-200 dark:bg-transparent dark:text-amber-500 dark:border-border",
     },
     APROVADA: {
         label: "Aprovada",
@@ -30,7 +30,7 @@ const STATUS_MAP: Record<AnyStatus, { label: string; className: string }> = {
     CANCELADA: {
         label: "Cancelada",
         className:
-            "bg-red-50 text-red-700 border-red-200 dark:bg-red-950 dark:text-red-300 dark:border-red-900",
+            "bg-red-50 text-red-700 border-red-200 dark:bg-transparent dark:text-red-500 dark:border-border",
     },
 }
 

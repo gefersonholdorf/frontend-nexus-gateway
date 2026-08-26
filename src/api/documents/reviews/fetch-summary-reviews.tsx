@@ -4,21 +4,16 @@ import { useQuery } from "@tanstack/react-query";
 
 export interface Summary {
     total: number,
-    sketch: number,
-    pendingApproval: number,
-    revision: number,
-    present: number,
-    cancel: number,
-    expired: number,
+    open: number
+    pendingApproval: number
+    approved: number
+    cancelled: number
 }
 
 interface FetchSummarysRequest {
     page: number;
     perPage: number;
-    text?: string;
-    category?: string;
-    status?: string;
-    profile?: string;
+    documentId?: number
 }
 
 interface FetchSummarysResponse {
@@ -33,19 +28,16 @@ interface FetchSummarysResponse {
     }
 }
 
-export function useFetchSummarys({ page = 1, perPage = 10, category, status, text, profile }: FetchSummarysRequest) {
+export function useFetchSummarysReviews({ page = 1, perPage = 10, documentId }: FetchSummarysRequest) {
     const { user } = useUser()
     const { handleSetLoginExpired } = useLoginExpired()
 
     return useQuery({
         queryKey: [
-            "fetch-summarys-documents",
+            "fetch-summarys-reviews",
             page,
             perPage,
-            text,
-            category,
-            status,
-            profile
+            documentId
         ],
         queryFn: async () => {
             const query = new URLSearchParams();
@@ -53,29 +45,12 @@ export function useFetchSummarys({ page = 1, perPage = 10, category, status, tex
             query.append("page", String(page));
             query.append("perPage", String(perPage));
 
-            if (text) {
-                query.append("text", text);
+            if (documentId) {
+                query.append("documentId", String(documentId));
+
             }
 
-            if (category) {
-                if (category !== "all") {
-                    query.append("category", category);
-                }
-            }
-
-            if (status) {
-                if (status !== "all") {
-                    query.append("status", status);
-                }
-            }
-
-            if (profile) {
-                if (profile !== "all") {
-                    query.append("profile", profile);
-                }
-            }
-
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/documents/summary?${query.toString()}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/documents/revisions/summary?${query.toString()}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",

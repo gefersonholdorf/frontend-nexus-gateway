@@ -1,64 +1,45 @@
-import { useState } from "react"
-import { formatDate } from "date-fns"
-import { TableComponent, type Column } from "@/components/table-component"
 import { useFetchReviews, type Review } from "@/api/documents/reviews/fetch-reviews"
+import { useFetchSummarysReviews } from "@/api/documents/reviews/fetch-summary-reviews"
+import { TableComponent, type Column } from "@/components/table-component"
+import { Badge } from "@/components/ui/badge"
+import { formatDate } from "date-fns"
+import { CheckIcon, Clock, FileText, LoaderCircle, X } from "lucide-react"
+import { useState } from "react"
 import { ReviewStatusBadge } from "../review-status-badge"
 import { UserCell } from "../user-cell"
-import { cn } from "@/lib/utils"
-import { Badge } from "@/components/ui/badge"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 
 const columns: Column<Review>[] = [
     {
         key: "id",
         title: "Revisão",
         render: (_, row) => (
-            <div className="flex flex-col">
-                <span className="text-base">
-                    #{row.id}
-                </span>
-
-                <span className="text-[.8rem] text-muted-foreground">
-                    REV-{String(row.id).padStart(6, "0")}
-                </span>
-            </div>
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <div className="truncate max-w-60 flex flex-col">
+                        <span className="truncate">{row.document.title}</span>
+                        <span className="text-sm text-muted-foreground">#{row.id} - REV-{row.id}-DOC-{row.document.id}</span>
+                    </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                    <span>
+                        {row.document.title}
+                    </span>
+                </TooltipContent>
+            </Tooltip>
         ),
     },
-
-    {
-        key: "document",
-        title: "Documento",
-        render: (_, row) => (
-            <div className="flex flex-col min-w-0 max-w-70">
-                <span className="truncate">
-                    {row.document.title}
-                </span>
-
-                <span className="text-[.8rem] text-muted-foreground">
-                    #{row.document.id}
-                </span>
-            </div>
-        ),
-    },
-
     {
         key: "status",
         title: "Status",
         render: (_, row) => (
             <div className="flex flex-col gap-1">
                 <ReviewStatusBadge status={row.status} />
-
                 <span className="text-[.8rem] text-muted-foreground">
-                    {row.status === "EM_APROVACAO" &&
-                        "Aguardando aprovação"}
-
-                    {row.status === "ABERTA" &&
-                        "Editando revisão"}
-
-                    {row.status === "APROVADA" &&
-                        "Revisão concluída"}
-
-                    {row.status === "CANCELADA" &&
-                        "Revisão cancelada"}
+                    {row.status === "EM_APROVACAO"}
+                    {row.status === "ABERTA"}
+                    {row.status === "APROVADA"}
+                    {row.status === "CANCELADA"}
                 </span>
             </div>
         ),
@@ -155,24 +136,31 @@ const columns: Column<Review>[] = [
 
             return (
                 <div className="flex flex-col gap-1">
-                    <span className="text-sm">
-                        {formatDate(
-                            dueDate,
-                            "dd/MM/yyyy"
-                        )}
-                    </span>
+                    {((row.status === 'APROVADA') || (row.status === 'CANCELADA')) ? (
+                        <span>---</span>
+                    ) : (
+                        <div className="flex flex-col">
+                            <span className="text-sm">
+                                {formatDate(
+                                    dueDate,
+                                    "dd/MM/yyyy"
+                                )}
+                            </span>
 
-                    <Badge
-                        variant="outline"
-                        className={badgeClass}
-                    >
-                        {daysRemaining < 0
-                            ? `${Math.abs(daysRemaining)} dias atrasado`
-                            : daysRemaining === 0
-                                ? "Vence hoje"
-                                : `${daysRemaining} dias restantes`}
-                    </Badge>
-                </div>
+                            <Badge
+                                variant="outline"
+                                className={badgeClass}
+                            >
+                                {daysRemaining < 0
+                                    ? `há ${Math.abs(daysRemaining)} dias`
+                                    : daysRemaining === 0
+                                        ? "hoje"
+                                        : `em ${daysRemaining} dias`}
+                            </Badge>
+                        </div>
+                    )
+                    }
+                </div >
             )
         },
     }
@@ -198,12 +186,62 @@ export function ReviewComponent({
         documentId,
     })
 
+    const { isLoading: isLoadingSummary, data: dataSummary } = useFetchSummarysReviews({
+        page,
+        perPage: 10,
+        documentId
+    })
+
+    const summarys = dataSummary
+        ? [
+            {
+                title: "Total",
+                value: dataSummary.summary.total,
+                icon: FileText,
+                colorText: "text-primary",
+                borderColor: "hover:border-primary",
+            },
+            {
+                title: "Aberto",
+                value: dataSummary.summary.open,
+                icon: Clock,
+                colorText: "text-blue-500",
+                borderColor: "hover:border-blue-500",
+            },
+            {
+                title: "Em Aprovação",
+                value: dataSummary.summary.pendingApproval,
+                icon: LoaderCircle,
+                colorText: "text-purple-400",
+                borderColor: "hover:border-purple-400",
+            },
+            {
+                title: "Aprovado",
+                value: dataSummary.summary.approved,
+                icon: CheckIcon,
+                colorText: "text-emerald-500",
+                borderColor: "hover:border-emerald-500",
+            },
+            {
+                title: "Cancelado",
+                value: dataSummary.summary.cancelled,
+                icon: X,
+                colorText: "text-red-500",
+                borderColor: "hover:border-red-500",
+            }
+        ]
+        : [];
+
     return (
-        <div className="flex-1 px-16 pb-8">
+        <div className="flex-1 px-16 pb-8 space-y-6">
             <TableComponent
                 registerName="Revisões"
                 data={data?.revisions ?? []}
                 columns={columns}
+                cardsQuantity={{
+                    summarys: summarys ?? [],
+                    isLoading: isLoadingSummary,
+                }}
                 isLoading={isLoading}
                 isError={isError}
                 onRetry={refetch}

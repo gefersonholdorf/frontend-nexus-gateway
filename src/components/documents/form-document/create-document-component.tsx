@@ -18,7 +18,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CheckCheck, File, FileText, X } from "lucide-react";
+import { CheckCheck, FileText, X } from "lucide-react";
 import {
     Controller,
     useForm

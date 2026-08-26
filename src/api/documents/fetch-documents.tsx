@@ -17,6 +17,8 @@ interface Document {
     process: string | null
     nextReview: string | null
     profilesCount: number
+    isDocumentRevisionPending: boolean
+    reviewId: number | null
     profiles: {
         id: number
         name: string
