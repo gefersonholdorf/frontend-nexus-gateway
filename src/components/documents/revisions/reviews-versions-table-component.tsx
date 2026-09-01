@@ -6,6 +6,7 @@ import {
 } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import {
     Tooltip,
     TooltipContent,
@@ -14,7 +15,8 @@ import {
 import { formatDate } from "date-fns"
 import {
     CircleCheck,
-    FileText,
+    Eye,
+    MoreHorizontalIcon,
     X
 } from "lucide-react"
 
@@ -102,23 +104,15 @@ export function ReviewVersionsTableComponent({
                 return (
                     <div className="flex flex-col items-center gap-1">
                         <div className="flex items-center gap-2">
-                            <FileText className="h-4 w-4 text-muted-foreground" />
                             <span className="font-medium">
                                 {row.version}
                             </span>
                         </div>
+                        {getStatusBadge(row.status)}
                     </div>
                 )
             },
         },
-
-        {
-            key: "status",
-            title: "Status",
-            render: (_, row) =>
-                getStatusBadge(row.status),
-        },
-
         {
             key: "id",
             title: "Alterações",
@@ -200,39 +194,6 @@ export function ReviewVersionsTableComponent({
                 </div>
             ),
         },
-
-        {
-            key: "id",
-            title: "Ações",
-            render: (_, row) => {
-                if (row.status === "EM_APROVACAO"
-                ) {
-                    return (
-                        <span className="text-muted-foreground text-sm">
-                            —
-                        </span>
-                    )
-                }
-
-                return (
-                    <div className="flex gap-2 justify-center">
-                        <Button
-                            size="icon"
-                            className="bg-emerald-500 hover:bg-emerald-600"
-                        >
-                            <CircleCheck className="h-4 w-4" />
-                        </Button>
-
-                        <Button
-                            size="icon"
-                            variant="destructive"
-                        >
-                            <X className="h-4 w-4" />
-                        </Button>
-                    </div>
-                )
-            },
-        },
     ]
 
     return (
@@ -243,6 +204,28 @@ export function ReviewVersionsTableComponent({
             isLoading={false}
             isError={false}
             onRetry={() => { }}
+            actions={(_) => (
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon" className="size-8" >
+                            <MoreHorizontalIcon />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-fit">
+                        <DropdownMenuItem>
+                            <Eye /> Visualizar
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem>
+                            <CircleCheck /> Aprovar
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem>
+                            <X /> Cancelar
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            )}
         />
     )
 }

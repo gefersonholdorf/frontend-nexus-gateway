@@ -40,6 +40,7 @@ import { ReviewsDocumentPage } from "./pages/documents/reviews-page.tsx"
 import { DocumentsSettingsPage } from "./pages/documents/documents-settings-page.tsx"
 import { DocumentsPage } from "./pages/documents/documents-page.tsx"
 import { ReviewDetailsDocumentPage } from "./pages/documents/review-details-page.tsx"
+import { UsersPage } from "./modules/users/pages/users-list-page.tsx"
 
 const queryClient = new QueryClient()
 
@@ -75,7 +76,7 @@ createRoot(document.getElementById('root')!).render(
                         <Route path="/documents/reviews" element={<ReviewsDocumentPage />} />
                         <Route path="/documents/reviews/:id" element={<ReviewDetailsDocumentPage />} />
                         <Route path="/documents/events" element={<DocumentsChartsPage />} />
-                        {/* <Route path="/users" element={<UsersPage />} /> */}
+                        <Route path="/users" element={<UsersPage />} />
                         <Route path="/profiles" element={<ProfilePage />} />
                         <Route path="/profiles/:id" element={<ProfilesUpdatedPage />} />
                         <Route path="/profiles/create" element={<ProfilesUpdatedPage />} />
