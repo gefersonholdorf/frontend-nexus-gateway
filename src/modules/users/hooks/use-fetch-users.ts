@@ -14,6 +14,11 @@ export interface User {
   dt_created_at?: string;
   dt_updated_at?: string;
   dt_last_login?: string;
+  roles: {
+    cd_id: number
+    ds_name: string
+    ds_description: string
+  }[]
 }
 
 export type FetchUsersResponse = User[];

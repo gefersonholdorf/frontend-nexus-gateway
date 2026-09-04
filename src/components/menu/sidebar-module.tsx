@@ -1,13 +1,19 @@
 import {
     AppWindow,
+    Boxes,
     Building2,
     Cctv,
     EyeOff,
     FileText,
+    History,
+    KeyRound,
     LayoutDashboard,
     Megaphone,
     MonitorCloud,
     MonitorCog,
+    Plug,
+    Shield,
+    Users,
     type LucideIcon
 } from "lucide-react";
 
@@ -131,21 +137,45 @@ export const sidebarModules: SidebarModule[] = [
     //         },
     //     ],
     // },
-    // {
-    //     title: "Administração",
-    //     items: [
-    //         {
-    //             label: "Usuários",
-    //             path: "/users",
-    //             icon: Users,
-    //             profiles: ['Administrador']
-    //         },
-    //         {
-    //             label: "Perfis",
-    //             path: "/profiles",
-    //             icon: UserRoundKey,
-    //             profiles: ['Administrador']
-    //         }
-    //     ]
-    // }
+    {
+        title: "Administração",
+        items: [
+            {
+                label: "Usuários",
+                path: "/users",
+                icon: Users,
+                profiles: ['Administrador']
+            },
+            {
+                label: "Módulos",
+                path: "/modules",
+                icon: Boxes,
+                profiles: ['Administrador']
+            },
+            {
+                label: "Integrações",
+                path: "/integrations",
+                icon: Plug,
+                profiles: ['Administrador']
+            },
+            {
+                label: "Auditoria",
+                path: "/audits",
+                icon: History,
+                profiles: ['Administrador']
+            },
+            {
+                label: "Perfis",
+                path: "/roles",
+                icon: Shield,
+                profiles: ['Administrador']
+            },
+            {
+                label: "Permissões",
+                path: "/permissions",
+                icon: KeyRound,
+                profiles: ['Administrador']
+            }
+        ]
+    }
 ];

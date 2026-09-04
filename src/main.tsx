@@ -41,6 +41,15 @@ import { DocumentsSettingsPage } from "./pages/documents/documents-settings-page
 import { DocumentsPage } from "./pages/documents/documents-page.tsx"
 import { ReviewDetailsDocumentPage } from "./pages/documents/review-details-page.tsx"
 import { UsersPage } from "./modules/users/pages/users-list-page.tsx"
+import { RolesPage } from "./modules/rbac/pages/roles-page.tsx"
+import { PermissionsPage } from "./modules/users/pages/permissions-page.tsx"
+import { RoleDetailPage } from "./modules/users/pages/role-detail-page.tsx"
+import { ModulesPage } from "./modules/modules/pages/modules-page.tsx"
+import { ModuleDetailPage } from "./modules/modules/pages/module-detail-page.tsx"
+import { IntegrationsPage } from "./modules/integrations/pages/integrations-page.tsx"
+import { AuditPage } from "./modules/audit/pages/audit-page.tsx"
+import { PermissionProvider } from "./modules/providers/permission-provider.tsx"
+import { UserDetailPage } from "./modules/users/pages/user-detail-page.tsx"
 
 const queryClient = new QueryClient()
 
@@ -53,46 +62,57 @@ createRoot(document.getElementById('root')!).render(
           <UserProvider>
             {/* <OperationsProvider> */}
             <LoginExpiredProvider>
-              <CampaignActiveProvider>
-                <RootLayout>
-                  <Routes>
-                    <Route path="/" element={<LoginPage />} />
-                    <Route path="/403" element={<ForbiddenPage />} />
-                    <Route element={<ProtectedRoute />}>
-                      <Route element={<LayoutPages />}>
-                        <Route path="/welcome" element={<WelcomePage />} />
-                        <Route path="/ipmap" element={<IpMapPage />} />
-                        <Route path="/security-center" element={<SecurityCenterPage />} />
-                        <Route path="/systems" element={<SystemsPage />} />
-                        <Route path="/services" element={<ServicesPage />} />
-                        <Route path="/calendar" element={<CalendarPage />} />
-                        <Route path="/servers" element={<ServersPage />} />
-                        <Route path="/comunications" element={<CommunicationsPage />} />
-                        <Route path="/documents" element={<DocumentsPage />} />
-                        {/* <Route path="/documents/:id" element={<DocumentDetailPage documentId={1} currentUserId={1} />} /> */}
-                        <Route path="/documents/profiles" element={<DocumentsProfilePage />} />
-                        <Route path="/documents/create" element={<CreateDocumentPage />} />
-                        <Route path="/documents/configurations" element={<DocumentsSettingsPage />} />
-                        <Route path="/documents/reviews" element={<ReviewsDocumentPage />} />
-                        <Route path="/documents/reviews/:id" element={<ReviewDetailsDocumentPage />} />
-                        <Route path="/documents/events" element={<DocumentsChartsPage />} />
-                        <Route path="/users" element={<UsersPage />} />
-                        <Route path="/profiles" element={<ProfilePage />} />
-                        <Route path="/profiles/:id" element={<ProfilesUpdatedPage />} />
-                        <Route path="/profiles/create" element={<ProfilesUpdatedPage />} />
-                        <Route path="/organograma" element={<OrganogramaPage />} />
-                        {/* <Route path="/backups" element={<BackupsRestoresPages />} /> */}
-                        <Route path="/masking" element={<MaskingPage />} />
-                        <Route path="/tickets-validations-pendings" element={<TicketsValidationPendingsPage />} />
-                        <Route path="/operations" element={<OperationsCenterPage />} />
-                        <Route path="/tickets" element={<TicketsCenterPage />} />
-                        <Route path="/campaigns" element={<CampaignsPage />} />
+              <PermissionProvider>
+                <CampaignActiveProvider>
+                  <RootLayout>
+                    <Routes>
+                      <Route path="/" element={<LoginPage />} />
+                      <Route path="/403" element={<ForbiddenPage />} />
+                      <Route element={<ProtectedRoute />}>
+                        <Route element={<LayoutPages />}>
+                          <Route path="/welcome" element={<WelcomePage />} />
+                          <Route path="/ipmap" element={<IpMapPage />} />
+                          <Route path="/security-center" element={<SecurityCenterPage />} />
+                          <Route path="/systems" element={<SystemsPage />} />
+                          <Route path="/services" element={<ServicesPage />} />
+                          <Route path="/calendar" element={<CalendarPage />} />
+                          <Route path="/servers" element={<ServersPage />} />
+                          <Route path="/comunications" element={<CommunicationsPage />} />
+                          <Route path="/documents" element={<DocumentsPage />} />
+                          {/* <Route path="/documents/:id" element={<DocumentDetailPage documentId={1} currentUserId={1} />} /> */}
+                          <Route path="/documents/profiles" element={<DocumentsProfilePage />} />
+                          <Route path="/documents/create" element={<CreateDocumentPage />} />
+                          <Route path="/documents/configurations" element={<DocumentsSettingsPage />} />
+                          <Route path="/documents/reviews" element={<ReviewsDocumentPage />} />
+                          <Route path="/documents/reviews/:id" element={<ReviewDetailsDocumentPage />} />
+                          <Route path="/documents/events" element={<DocumentsChartsPage />} />
+                          <Route path="/users" element={<UsersPage />} />
+                          <Route path="/users/:id" element={<UserDetailPage />} />
+                          <Route path="/roles" element={<RolesPage />} />
+                          <Route path="/permissions" element={<PermissionsPage />} />
+                          <Route path="/roles/:id" element={<RoleDetailPage />} />
+                          <Route path="/modules" element={<ModulesPage />} />
+                          <Route path="/modules/:id" element={<ModuleDetailPage />} />
+                          <Route path="/integrations" element={<IntegrationsPage />} />
+                          <Route path="/audits" element={<AuditPage />} />
+
+                          <Route path="/profiles" element={<ProfilePage />} />
+                          <Route path="/profiles/:id" element={<ProfilesUpdatedPage />} />
+                          <Route path="/profiles/create" element={<ProfilesUpdatedPage />} />
+                          <Route path="/organograma" element={<OrganogramaPage />} />
+                          {/* <Route path="/backups" element={<BackupsRestoresPages />} /> */}
+                          <Route path="/masking" element={<MaskingPage />} />
+                          <Route path="/tickets-validations-pendings" element={<TicketsValidationPendingsPage />} />
+                          <Route path="/operations" element={<OperationsCenterPage />} />
+                          <Route path="/tickets" element={<TicketsCenterPage />} />
+                          <Route path="/campaigns" element={<CampaignsPage />} />
+                        </Route>
                       </Route>
-                    </Route>
-                  </Routes>
-                </RootLayout>
-              </CampaignActiveProvider>
-              <LoginExpiredModal />
+                    </Routes>
+                  </RootLayout>
+                </CampaignActiveProvider>
+                <LoginExpiredModal />
+              </PermissionProvider>
             </LoginExpiredProvider>
             {/* </OperationsProvider> */}
           </UserProvider>
@@ -100,5 +120,5 @@ createRoot(document.getElementById('root')!).render(
       </BrowserRouter>
     </QueryClientProvider>
     <Toaster />
-  </StrictMode>,
+  </StrictMode >,
 )

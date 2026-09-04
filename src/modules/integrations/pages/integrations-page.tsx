@@ -1,6 +1,5 @@
-import { HeaderPage } from "@/components/header-page";
 import { TableComponentV2, type Column } from "@/components/table-component-v2";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { HeaderPage } from "@/components/header-page";
 import { Badge } from "@/components/ui/badge";
 import {
     Breadcrumb,
@@ -26,121 +25,77 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { Can } from "@/modules/auth/components/can";
-import { formatDate } from "date-fns";
 import {
     CheckCircle,
     Edit,
-    Eye,
-    KeyRound,
     MoreHorizontalIcon,
+    Plug,
+    PlugZap,
     Plus,
+    RefreshCw,
+    Tag,
     Trash2,
-    Users,
-    XCircle
+    XCircle,
 } from "lucide-react";
 import { useMemo, useState } from "react";
-import { useNavigate } from "react-router";
-import { useFetchUsers, type User } from "../hooks/use-fetch-users";
-import { CreateUserModal } from "../components/create-user-modal";
+import { useFetchIntegrations, type Integration } from "../hooks/use-fetch-integrations";
+import { useTestIntegration } from "../hooks/use-test-integration";
+import { useSyncIntegration } from "../hooks/use-sync-integration";
+import { useDeleteIntegration } from "../hooks/use-delete-integration";
+import { Can } from "@/modules/auth/components/can";
 
-// Gera as iniciais (até 2) a partir do nome, para o fallback do avatar.
-function getInitials(name: string): string {
-    return name
-        .split(" ")
-        .filter(Boolean)
-        .slice(0, 2)
-        .map((part) => part[0])
-        .join("")
-        .toUpperCase();
-}
-
-const columns: Column<User>[] = [
+const columns: Column<Integration>[] = [
     {
         key: "ds_name",
-        title: "Usuário",
+        title: "Integração",
+        icon: Plug,
+        // NOTA: secret é write-only — nunca exibido aqui nem em qualquer célula.
         render: (_, row) => (
-            <Tooltip>
-                <TooltipTrigger asChild>
-                    <div className="flex min-w-0 max-w-60 items-center gap-2">
-                        <Avatar className="h-9 w-9 shrink-0">
-                            <AvatarImage src={row.ds_avatar_url ?? ""} alt={row.ds_name} />
-                            <AvatarFallback className="bg-primary/90 text-white">
-                                {getInitials(row.ds_name)}
-                            </AvatarFallback>
-                        </Avatar>
-
-                        <div className="flex min-w-0 flex-col">
-                            <span className="truncate font-medium">{row.ds_name}</span>
-                            <span className="truncate text-[.8rem] text-muted-foreground">
-                                {row.ds_email}
-                            </span>
-                        </div>
-                    </div>
-                </TooltipTrigger>
-
-                <TooltipContent>
-                    <div className="flex flex-col">
-                        <span className="font-medium">{row.ds_name}</span>
-                        <span className="text-xs text-muted-foreground">{row.ds_email}</span>
-                    </div>
-                </TooltipContent>
-            </Tooltip>
+            <div className="flex min-w-0 max-w-72 flex-col">
+                <span className="truncate font-medium">{row.ds_name}</span>
+                <span className="truncate text-[.8rem] text-muted-foreground">
+                    {row.ds_type}
+                </span>
+            </div>
         ),
     },
     {
-        key: "ds_role_description",
-        title: "Cargo",
+        key: "ds_type",
+        title: "Tipo",
+        icon: Tag,
         render: (value) => {
             if (!value) {
                 return <span className="text-sm text-muted-foreground">---</span>;
             }
-            return <span>{value.toString()}</span>;
+            return (
+                <Badge variant="outline" className="text-xs">
+                    {value.toString()}
+                </Badge>
+            );
         },
     },
     {
         key: "fl_active",
         title: "Status",
+        icon: CheckCircle,
         render: (value) => (
             <div className="flex items-center gap-1">
                 {value ? (
                     <Badge className="border border-border bg-transparent text-primary-text/10">
                         <CheckCircle className="size-4 text-emerald-500" />
-                        <span className="text-emerald-500">Ativo</span>
+                        <span className="text-emerald-500">Ativa</span>
                     </Badge>
                 ) : (
                     <Badge className="border border-border bg-transparent text-primary-text/10">
-                        <XCircle className="size-4 text-red-500" />
-                        <span className="text-red-500">Inativo</span>
+                        <XCircle className="size-4 text-gray-500" />
+                        <span className="text-gray-500">Inativa</span>
                     </Badge>
                 )}
             </div>
         ),
     },
-    {
-        key: "dt_last_login",
-        title: "Último acesso",
-        render: (value) => {
-            if (!value) {
-                return <span className="text-sm text-muted-foreground">---</span>;
-            }
-            return <span>{formatDate(value.toString(), "dd/MM/yyyy")}</span>;
-        },
-    },
-    {
-        key: "dt_created_at",
-        title: "Criado em",
-        render: (value) => {
-            if (!value) {
-                return <span className="text-sm text-muted-foreground">---</span>;
-            }
-            return <span>{formatDate(value.toString(), "dd/MM/yyyy")}</span>;
-        },
-    },
 ];
 
-// Estado dos filtros client-side.
 interface Filters {
     text: string;
     status: "all" | "active" | "inactive";
@@ -148,49 +103,48 @@ interface Filters {
 
 const PER_PAGE = 10;
 
-export function UsersPage() {
-    const navigate = useNavigate();
-
+export function IntegrationsPage() {
     const [page, setPage] = useState(1);
     const [filters, setFilters] = useState<Filters>({ text: "", status: "all" });
 
-    // Estados dos modais (ainda não implementados — placeholders/TODO).
-    const [, setSelectedUser] = useState<User | null>(null);
-    const [openCreateModal, setOpenCreateModal] = useState(false);
+    // Estados de modais (TODO — componentes ainda não existem).
+    const [, setSelectedIntegration] = useState<Integration | null>(null);
+    const [, setOpenCreateModal] = useState(false);
     const [, setOpenEditModal] = useState(false);
-    const [, setOpenChangePasswordModal] = useState(false);
 
-    const { data, isLoading, isError, refetch } = useFetchUsers();
+    const { data, isLoading, isError, refetch } = useFetchIntegrations();
+    const testIntegration = useTestIntegration();
+    const syncIntegration = useSyncIntegration();
+    const deleteIntegration = useDeleteIntegration();
 
-    // Aplica filtro por texto (nome/email) e por status — client-side,
-    // pois o backend atual retorna um array simples sem paginação/filtro.
-    const filteredUsers = useMemo(() => {
-        const users = data ?? [];
+    // Filtro client-side por texto (nome/tipo) e status.
+    const filteredIntegrations = useMemo(() => {
+        const integrations = data ?? [];
         const text = filters.text.trim().toLowerCase();
 
-        return users.filter((user) => {
+        return integrations.filter((integration) => {
             const matchesText =
                 text.length === 0 ||
-                user.ds_name.toLowerCase().includes(text) ||
-                user.ds_email.toLowerCase().includes(text);
+                integration.ds_name.toLowerCase().includes(text) ||
+                integration.ds_type.toLowerCase().includes(text);
 
             const matchesStatus =
                 filters.status === "all" ||
-                (filters.status === "active" && user.fl_active) ||
-                (filters.status === "inactive" && !user.fl_active);
+                (filters.status === "active" && integration.fl_active) ||
+                (filters.status === "inactive" && !integration.fl_active);
 
             return matchesText && matchesStatus;
         });
     }, [data, filters]);
 
-    // Paginação client-side: fatiar o array filtrado por page/perPage.
-    const total = filteredUsers.length;
+    // Paginação client-side.
+    const total = filteredIntegrations.length;
     const totalPages = Math.max(1, Math.ceil(total / PER_PAGE));
     const currentPage = Math.min(page, totalPages);
-    const paginatedUsers = useMemo(() => {
+    const paginatedIntegrations = useMemo(() => {
         const start = (currentPage - 1) * PER_PAGE;
-        return filteredUsers.slice(start, start + PER_PAGE);
-    }, [filteredUsers, currentPage]);
+        return filteredIntegrations.slice(start, start + PER_PAGE);
+    }, [filteredIntegrations, currentPage]);
 
     const pagination = {
         page: currentPage,
@@ -201,29 +155,29 @@ export function UsersPage() {
         hasPreviousPage: currentPage > 1,
     };
 
-    // Cards de resumo derivados do próprio array (client-side).
+    // Cards de resumo derivados do array.
     const summarys = useMemo(() => {
-        const users = data ?? [];
-        const active = users.filter((u) => u.fl_active).length;
-        const inactive = users.filter((u) => !u.fl_active).length;
+        const integrations = data ?? [];
+        const active = integrations.filter((i) => i.fl_active).length;
+        const inactive = integrations.filter((i) => !i.fl_active).length;
 
         return [
             {
                 title: "Total",
-                value: users.length,
-                icon: Users,
+                value: integrations.length,
+                icon: Plug,
                 colorText: "text-primary",
                 borderColor: "hover:border-primary",
             },
             {
-                title: "Ativos",
+                title: "Ativas",
                 value: active,
                 icon: CheckCircle,
                 colorText: "text-emerald-500",
                 borderColor: "hover:border-emerald-500",
             },
             {
-                title: "Inativos",
+                title: "Inativas",
                 value: inactive,
                 icon: XCircle,
                 colorText: "text-red-400",
@@ -232,7 +186,6 @@ export function UsersPage() {
         ];
     }, [data]);
 
-    // Atualiza filtro e reseta a página.
     function handleFilterText(text: string) {
         setFilters((prev) => ({ ...prev, text }));
         setPage(1);
@@ -243,35 +196,70 @@ export function UsersPage() {
         setPage(1);
     }
 
-    // Handlers de ações — placeholders enquanto os modais não existem.
-    function handleEdit(user: User) {
-        setSelectedUser(user);
+    // Testar conexão da integração.
+    // NOTA: idealmente usar toast; window.alert é temporário.
+    async function handleTest(integration: Integration) {
+        try {
+            const result = await testIntegration.mutateAsync({ id: integration.cd_id });
+            window.alert(
+                result.ok
+                    ? result.message ?? "Conexão testada com sucesso."
+                    : result.message ?? "Falha ao testar a conexão.",
+            );
+        } catch (error) {
+            console.error("Erro ao testar integração:", error);
+            window.alert("Erro ao testar a conexão.");
+        }
+    }
+
+    // Sincronizar integração.
+    async function handleSync(integration: Integration) {
+        try {
+            const result = await syncIntegration.mutateAsync({ id: integration.cd_id });
+            window.alert(
+                result.ok
+                    ? result.message ?? "Sincronização iniciada com sucesso."
+                    : result.message ?? "Falha ao sincronizar.",
+            );
+        } catch (error) {
+            console.error("Erro ao sincronizar integração:", error);
+            window.alert("Erro ao sincronizar a integração.");
+        }
+    }
+
+    function handleEdit(integration: Integration) {
+        setSelectedIntegration(integration);
         setOpenEditModal(true);
-        /* TODO: abrir modal de edição de usuário */
+        /* TODO: abrir modal de edição ou navigate(`/integracoes/${integration.cd_id}/editar`) */
     }
 
-    function handleChangePassword(user: User) {
-        setSelectedUser(user);
-        setOpenChangePasswordModal(true);
-        /* TODO: abrir modal de alteração de senha */
-    }
+    // Exclusão com confirmação simples.
+    // TODO: substituir window.confirm por modal de confirmação (DeleteIntegrationModal).
+    async function handleDelete(integration: Integration) {
+        const confirmed = window.confirm(
+            `Deseja realmente excluir a integração "${integration.ds_name}"?`,
+        );
+        if (!confirmed) return;
 
-    function handleDelete(user: User) {
-        setSelectedUser(user);
-        /* TODO: abrir confirmação de exclusão de usuário */
+        try {
+            await deleteIntegration.mutateAsync({ id: integration.cd_id });
+        } catch (error) {
+            console.error("Erro ao excluir integração:", error);
+            window.alert("Erro ao excluir a integração.");
+        }
     }
 
     function handleCreate() {
         setOpenCreateModal(true);
-        /* TODO: abrir modal de criação de usuário */
+        /* TODO: abrir modal de criação de integração */
     }
 
     return (
         <>
             <HeaderPage
-                title="Gestão de Usuários"
-                description="Central de usuários, acessos e perfis do sistema. Gerencie cadastros, permissões e status de acesso."
-                icon={Users}
+                title="Integrações"
+                description="Gerencie as integrações externas do sistema, teste conexões e sincronize dados."
+                icon={Plug}
                 breadcrumb={
                     <Breadcrumb>
                         <BreadcrumbList>
@@ -280,7 +268,7 @@ export function UsersPage() {
                             </BreadcrumbItem>
                             <BreadcrumbSeparator />
                             <BreadcrumbItem>
-                                <BreadcrumbPage>Usuários</BreadcrumbPage>
+                                <BreadcrumbPage>Integrações</BreadcrumbPage>
                             </BreadcrumbItem>
                         </BreadcrumbList>
                     </Breadcrumb>
@@ -288,20 +276,19 @@ export function UsersPage() {
             />
 
             <div className="flex-1 space-y-6 px-16 pb-8">
-                {/* Ação de criação — protegida por permissão */}
                 <div className="flex justify-end">
-                    <Can permission="users.manage">
+                    <Can permission="integrations.manage">
                         <Button onClick={handleCreate} className="gap-2">
                             <Plus className="size-4" />
-                            Novo usuário
+                            Nova integração
                         </Button>
                     </Can>
                 </div>
 
                 <TableComponentV2
-                    data={paginatedUsers}
+                    data={paginatedIntegrations}
                     columns={columns}
-                    registerName="Usuários"
+                    registerName="Integrações"
                     isLoading={isLoading}
                     isError={isError}
                     onRetry={refetch}
@@ -310,10 +297,9 @@ export function UsersPage() {
                         isLoading,
                     }}
                     filteringComponent={
-                        // Filtro simples inline (client-side): busca + status.
                         <div className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center">
                             <Input
-                                placeholder="Buscar por nome ou e-mail..."
+                                placeholder="Buscar por nome ou tipo..."
                                 value={filters.text}
                                 onChange={(e) => handleFilterText(e.target.value)}
                                 className="sm:max-w-xs"
@@ -330,15 +316,15 @@ export function UsersPage() {
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectItem value="all">Todos os status</SelectItem>
-                                    <SelectItem value="active">Ativos</SelectItem>
-                                    <SelectItem value="inactive">Inativos</SelectItem>
+                                    <SelectItem value="active">Ativas</SelectItem>
+                                    <SelectItem value="inactive">Inativas</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
                     }
                     pagination={pagination}
                     onPageChange={setPage}
-                    actions={(user) => (
+                    actions={(integration) => (
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button variant="ghost" size="icon" className="size-8">
@@ -347,25 +333,25 @@ export function UsersPage() {
                             </DropdownMenuTrigger>
 
                             <DropdownMenuContent align="end" className="w-fit">
-                                <DropdownMenuItem onClick={() => navigate(`/users/${user.cd_id}`)}>
-                                    <Eye /> Ver detalhes
+                                <DropdownMenuItem onClick={() => handleTest(integration)}>
+                                    <PlugZap /> Testar conexão
                                 </DropdownMenuItem>
 
-                                <Can permission="users.manage">
+                                <DropdownMenuItem onClick={() => handleSync(integration)}>
+                                    <RefreshCw /> Sincronizar
+                                </DropdownMenuItem>
+
+                                <Can permission="integrations.manage">
                                     <DropdownMenuSeparator />
 
-                                    <DropdownMenuItem onClick={() => handleEdit(user)}>
+                                    <DropdownMenuItem onClick={() => handleEdit(integration)}>
                                         <Edit /> Editar
-                                    </DropdownMenuItem>
-
-                                    <DropdownMenuItem onClick={() => handleChangePassword(user)}>
-                                        <KeyRound /> Alterar senha
                                     </DropdownMenuItem>
 
                                     <DropdownMenuSeparator />
 
                                     <DropdownMenuItem
-                                        onClick={() => handleDelete(user)}
+                                        onClick={() => handleDelete(integration)}
                                         className="text-red-500 focus:text-red-500"
                                     >
                                         <Trash2 /> Excluir
@@ -377,10 +363,9 @@ export function UsersPage() {
                 />
             </div>
 
-            <CreateUserModal
-                open={openCreateModal}
-                onOpenChange={setOpenEditModal}
-            />
+            {/* TODO: modais de criação/edição de integração e confirmação de exclusão.
+          Estados prontos: setSelectedIntegration / setOpenCreateModal / setOpenEditModal.
+          LEMBRETE: secret é write-only — nunca exibir valor; apenas permitir escrita. */}
         </>
     );
 }
