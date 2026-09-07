@@ -35,11 +35,17 @@ export function useFetchCoreAudit(params: CoreAuditQueryParams = {}) {
                     return false;
                 }
 
-                if (from && item.dt_created_at < from) {
+                // Comparação por data (YYYY-MM-DD) — os inputs "de"/"até" são
+                // datas puras, enquanto dt_created_at é um timestamp ISO completo;
+                // comparar o timestamp inteiro excluiria incorretamente os
+                // eventos do próprio dia "até".
+                const eventDate = item.dt_created_at.slice(0, 10);
+
+                if (from && eventDate < from) {
                     return false;
                 }
 
-                if (to && item.dt_created_at > to) {
+                if (to && eventDate > to) {
                     return false;
                 }
 
