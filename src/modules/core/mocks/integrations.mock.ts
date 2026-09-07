@@ -18,6 +18,8 @@ export interface CoreIntegration {
     st_status: "ok" | "fail";
     ds_config: Record<string, string>;
     ds_secret: string;
+    /** Timestamp ISO do último "Testar Conexão" disparado nesta sessão (Etapa 6) — `null` até o primeiro teste. */
+    dt_last_tested_at: string | null;
 }
 
 export const integrationsMock: CoreIntegration[] = [
@@ -33,6 +35,7 @@ export const integrationsMock: CoreIntegration[] = [
             usuario: "integracao.jira@nexus.com",
         },
         ds_secret: "jira-token-8f2c1a9e",
+        dt_last_tested_at: null,
     },
     {
         cd_id: 2,
@@ -46,6 +49,7 @@ export const integrationsMock: CoreIntegration[] = [
             usuario: "integracao.glpi",
         },
         ds_secret: "glpi-app-token-4b7d02f1",
+        dt_last_tested_at: null,
     },
     {
         cd_id: 3,
@@ -59,6 +63,7 @@ export const integrationsMock: CoreIntegration[] = [
             usuario: "integracao.m365@nexus.com",
         },
         ds_secret: "ms-client-secret-9a3e77bc",
+        dt_last_tested_at: null,
     },
     {
         cd_id: 4,
@@ -72,5 +77,6 @@ export const integrationsMock: CoreIntegration[] = [
             usuario: "integracao.vpn",
         },
         ds_secret: "ovpn-key-1c5f9d33",
+        dt_last_tested_at: null,
     },
 ];

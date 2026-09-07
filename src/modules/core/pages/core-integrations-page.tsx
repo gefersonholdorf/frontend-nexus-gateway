@@ -9,57 +9,127 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { Eye, EyeOff, Plug, ShieldCheck, ShieldX } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Loader2, Pencil, Plug, RefreshCw, ShieldCheck, ShieldX } from "lucide-react";
 import { useMemo, useState } from "react";
+
+import { Can } from "@/modules/auth/components/can";
 
 import { CoreEntityCard } from "../components/core-entity-card";
 import { MonoValue } from "../components/core-mono-value";
 import { StatusDot } from "../components/core-status-dot";
+import { InactiveIntegrationModal } from "../components/inactive-integration-modal";
+import { IntegrationDetailsDrawer } from "../components/integration-details-drawer";
 import { useFetchIntegrations } from "../hooks/use-fetch-integrations";
+import { useTestIntegrationConnection } from "../hooks/use-test-integration-connection";
+import { useToggleIntegrationStatus } from "../hooks/use-toggle-integration-status";
+import type { CoreIntegration } from "../mocks/integrations.mock";
 
+type StatusFilter = "all" | "active" | "inactive";
+type TypeFilter = "all" | string;
+
+interface Filters {
+    ds_type: TypeFilter;
+    status: StatusFilter;
+}
+
+/**
+ * Listagem em cards das 4 integrações fixas do RN012 (Jira, GLPI, Microsoft,
+ * OpenVPN) — sem botão de criar (fora de escopo). Edição/detalhe abrem um
+ * `Drawer` a partir do card (não existe rota `/core/integrations/:id`);
+ * ativar/inativar usa o `Switch` do rodapé + confirmação de inativação;
+ * "Testar Conexão" tem resultado fixo por integração (RN012) e estado de
+ * carregamento próprio por card. Ações de escrita gated por
+ * `integrations.manage` (Etapa 4).
+ */
 export function CoreIntegrationsPage() {
     const { data, isLoading } = useFetchIntegrations();
-    const [revealedIds, setRevealedIds] = useState<Set<number>>(new Set());
+    const { mutate: toggleStatus, isPending: isToggling, variables: toggleVariables } =
+        useToggleIntegrationStatus();
+    const { mutate: testConnection, isPending: isTesting, variables: testVariables } =
+        useTestIntegrationConnection();
 
-    const items = useMemo(() => data ?? [], [data]);
+    const [filters, setFilters] = useState<Filters>({ ds_type: "all", status: "all" });
+    const [selectedIntegrationId, setSelectedIntegrationId] = useState<number | null>(null);
+    const [inactiveIntegrationId, setInactiveIntegrationId] = useState<number | null>(null);
 
+    const allIntegrations = useMemo(() => data ?? [], [data]);
+
+    const integrationTypes = useMemo(
+        () => Array.from(new Set(allIntegrations.map((integration) => integration.ds_type))),
+        [allIntegrations],
+    );
+
+    // Filtros client-side (tipo e status) — aceitável, pois é mock em memória.
+    const filteredIntegrations = useMemo(() => {
+        return allIntegrations.filter((integration) => {
+            const matchesType = filters.ds_type === "all" || integration.ds_type === filters.ds_type;
+            const matchesStatus =
+                filters.status === "all" ||
+                (filters.status === "active" ? integration.fl_active : !integration.fl_active);
+
+            return matchesType && matchesStatus;
+        });
+    }, [allIntegrations, filters]);
+
+    // KPIs refletem o catálogo completo, não a lista filtrada.
     const summarys = useMemo(
         () => [
             {
                 title: "Total de integrações",
-                value: items.length,
+                value: allIntegrations.length,
                 icon: Plug,
                 colorText: "text-core-signal",
                 borderColor: "hover:border-core-signal",
             },
             {
-                title: "Conectadas",
-                value: items.filter((integration) => integration.st_status === "ok").length,
+                title: "Ativas",
+                value: allIntegrations.filter((integration) => integration.fl_active).length,
                 icon: ShieldCheck,
                 colorText: "text-core-ok",
                 borderColor: "hover:border-core-ok",
             },
             {
                 title: "Com falha",
-                value: items.filter((integration) => integration.st_status === "fail").length,
+                value: allIntegrations.filter((integration) => integration.st_status === "fail").length,
                 icon: ShieldX,
                 colorText: "text-core-fail",
                 borderColor: "hover:border-core-fail",
             },
         ],
-        [items],
+        [allIntegrations],
     );
 
-    function toggleReveal(id: number) {
-        setRevealedIds((prev) => {
-            const next = new Set(prev);
-            if (next.has(id)) {
-                next.delete(id);
-            } else {
-                next.add(id);
-            }
-            return next;
-        });
+    const selectedIntegration = useMemo(
+        () => allIntegrations.find((integration) => integration.cd_id === selectedIntegrationId) ?? null,
+        [allIntegrations, selectedIntegrationId],
+    );
+
+    const inactiveIntegration = useMemo(
+        () => allIntegrations.find((integration) => integration.cd_id === inactiveIntegrationId) ?? null,
+        [allIntegrations, inactiveIntegrationId],
+    );
+
+    function handleFilterChange<K extends keyof Filters>(key: K, value: Filters[K]) {
+        setFilters((prev) => ({ ...prev, [key]: value }));
+    }
+
+    function handleToggleStatus(integration: CoreIntegration, checked: boolean) {
+        if (!checked) {
+            setInactiveIntegrationId(integration.cd_id);
+            return;
+        }
+
+        toggleStatus({ cd_id: integration.cd_id, fl_active: true });
     }
 
     return (
@@ -94,10 +164,46 @@ export function CoreIntegrationsPage() {
                     ))}
                 </div>
 
-                {/* "Testar Conexão" e edição de configuração chegam na Etapa 6. */}
+                <Card className="gap-0 overflow-hidden rounded-sm border border-border/10 bg-(image:--background-gradient) p-0 shadow-sm dark:border-border/80">
+                    <div className="flex flex-col gap-3 p-4 lg:flex-row lg:items-center lg:flex-wrap">
+                        <Select
+                            value={filters.ds_type}
+                            onValueChange={(value) => handleFilterChange("ds_type", value)}
+                        >
+                            <SelectTrigger className="lg:w-48">
+                                <SelectValue placeholder="Tipo" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="all">Todos os tipos</SelectItem>
+                                {integrationTypes.map((type) => (
+                                    <SelectItem key={type} value={type}>
+                                        {type}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+
+                        <Select
+                            value={filters.status}
+                            onValueChange={(value) => handleFilterChange("status", value as StatusFilter)}
+                        >
+                            <SelectTrigger className="lg:w-44">
+                                <SelectValue placeholder="Status" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="all">Todos os status</SelectItem>
+                                <SelectItem value="active">Ativa</SelectItem>
+                                <SelectItem value="inactive">Inativa</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                </Card>
+
+                {/* Grid rígido de cards (RF024/RF025) — sem botão de criar. */}
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
-                    {items.map((integration) => {
-                        const isRevealed = revealedIds.has(integration.cd_id);
+                    {filteredIntegrations.map((integration) => {
+                        const isTestingThis = isTesting && testVariables?.cd_id === integration.cd_id;
+                        const isTogglingThis = isToggling && toggleVariables?.cd_id === integration.cd_id;
 
                         return (
                             <CoreEntityCard
@@ -105,61 +211,121 @@ export function CoreIntegrationsPage() {
                                 icon={Plug}
                                 title={integration.ds_name}
                                 description={integration.ds_description}
-                                status={
-                                    <StatusDot
-                                        tone={integration.st_status === "ok" ? "ok" : "fail"}
-                                        label={integration.st_status === "ok" ? "Conectado" : "Falha na conexão"}
-                                    />
+                                onClick={() => setSelectedIntegrationId(integration.cd_id)}
+                                status={<MonoValue className="text-muted-foreground">{integration.ds_type}</MonoValue>}
+                                actions={
+                                    <div className="flex items-center gap-1">
+                                        <Can permission="integrations.manage" fallback={null}>
+                                            <Tooltip>
+                                                <TooltipTrigger asChild>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        className="size-8"
+                                                        disabled={isTestingThis}
+                                                        onClick={(event) => {
+                                                            event.stopPropagation();
+                                                            testConnection({ cd_id: integration.cd_id });
+                                                        }}
+                                                    >
+                                                        {isTestingThis ? (
+                                                            <Loader2 className="size-4 animate-spin" />
+                                                        ) : (
+                                                            <RefreshCw className="size-4" />
+                                                        )}
+                                                    </Button>
+                                                </TooltipTrigger>
+                                                <TooltipContent>Testar conexão</TooltipContent>
+                                            </Tooltip>
+                                        </Can>
+
+                                        <Can permission="integrations.manage" fallback={null}>
+                                            <Tooltip>
+                                                <TooltipTrigger asChild>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        className="size-8"
+                                                        onClick={(event) => {
+                                                            event.stopPropagation();
+                                                            setSelectedIntegrationId(integration.cd_id);
+                                                        }}
+                                                    >
+                                                        <Pencil className="size-4" />
+                                                    </Button>
+                                                </TooltipTrigger>
+                                                <TooltipContent>Editar integração</TooltipContent>
+                                            </Tooltip>
+                                        </Can>
+                                    </div>
                                 }
                                 footer={
-                                    <div className="flex w-full flex-col gap-2 text-xs text-muted-foreground">
-                                        <div className="flex items-center justify-between gap-2">
-                                            <span>Ativa</span>
-                                            {integration.fl_active ? (
-                                                <StatusDot tone="ok" label="Sim" />
-                                            ) : (
-                                                <StatusDot tone="off" label="Não" />
-                                            )}
-                                        </div>
-
-                                        {Object.entries(integration.ds_config).map(([key, value]) => (
-                                            <div key={key} className="flex items-center justify-between gap-2">
-                                                <span className="capitalize">{key}</span>
-                                                <MonoValue>{value}</MonoValue>
-                                            </div>
-                                        ))}
-
-                                        <div className="flex items-center justify-between gap-2">
-                                            <span>Segredo</span>
-                                            <div className="flex items-center gap-1.5">
-                                                <MonoValue>
-                                                    {isRevealed
-                                                        ? integration.ds_secret
-                                                        : "•".repeat(Math.min(integration.ds_secret.length, 12))}
-                                                </MonoValue>
-                                                <Button
-                                                    type="button"
-                                                    variant="ghost"
-                                                    size="icon"
-                                                    className="size-6"
-                                                    onClick={() => toggleReveal(integration.cd_id)}
-                                                    aria-label={isRevealed ? "Ocultar segredo" : "Revelar segredo"}
+                                    <div className="flex w-full items-center justify-between gap-2">
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <span
+                                                    className="flex items-center gap-2"
+                                                    onClick={(event) => event.stopPropagation()}
                                                 >
-                                                    {isRevealed ? (
-                                                        <EyeOff className="size-3.5" />
-                                                    ) : (
-                                                        <Eye className="size-3.5" />
-                                                    )}
-                                                </Button>
-                                            </div>
-                                        </div>
+                                                    <Can
+                                                        permission="integrations.manage"
+                                                        fallback={
+                                                            <Switch checked={integration.fl_active} disabled />
+                                                        }
+                                                    >
+                                                        <Switch
+                                                            checked={integration.fl_active}
+                                                            disabled={isTogglingThis}
+                                                            onCheckedChange={(checked) =>
+                                                                handleToggleStatus(integration, checked)
+                                                            }
+                                                        />
+                                                    </Can>
+                                                    <span className="text-xs text-muted-foreground">
+                                                        {integration.fl_active ? "Ativa" : "Inativa"}
+                                                    </span>
+                                                </span>
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                {integration.fl_active
+                                                    ? "Inativar integração"
+                                                    : "Ativar integração"}
+                                            </TooltipContent>
+                                        </Tooltip>
+
+                                        <StatusDot
+                                            tone={integration.st_status === "ok" ? "ok" : "fail"}
+                                            label={
+                                                integration.st_status === "ok"
+                                                    ? "Conectado"
+                                                    : "Falha na conexão"
+                                            }
+                                        />
                                     </div>
                                 }
                             />
                         );
                     })}
+
+                    {!isLoading && filteredIntegrations.length === 0 && (
+                        <p className="col-span-full py-10 text-center text-sm text-muted-foreground">
+                            Nenhuma integração encontrada para os filtros aplicados.
+                        </p>
+                    )}
                 </div>
             </div>
+
+            <IntegrationDetailsDrawer
+                open={Boolean(selectedIntegration)}
+                onOpenChange={(next) => !next && setSelectedIntegrationId(null)}
+                integration={selectedIntegration}
+            />
+
+            <InactiveIntegrationModal
+                open={Boolean(inactiveIntegration)}
+                onOpenChange={(next) => !next && setInactiveIntegrationId(null)}
+                integration={inactiveIntegration}
+            />
         </>
     );
 }
