@@ -142,37 +142,37 @@ export const sidebarModules: SidebarModule[] = [
         items: [
             {
                 label: "Usuários",
-                path: "/users",
+                path: "/core/users",
                 icon: Users,
                 profiles: ['Administrador']
             },
             {
                 label: "Módulos",
-                path: "/modules",
+                path: "/core/modules",
                 icon: Boxes,
                 profiles: ['Administrador']
             },
             {
                 label: "Integrações",
-                path: "/integrations",
+                path: "/core/integrations",
                 icon: Plug,
                 profiles: ['Administrador']
             },
             {
                 label: "Auditoria",
-                path: "/audits",
+                path: "/core/audit",
                 icon: History,
                 profiles: ['Administrador']
             },
             {
                 label: "Perfis",
-                path: "/roles",
+                path: "/core/roles",
                 icon: Shield,
                 profiles: ['Administrador']
             },
             {
                 label: "Permissões",
-                path: "/permissions",
+                path: "/core/permissions",
                 icon: KeyRound,
                 profiles: ['Administrador']
             }

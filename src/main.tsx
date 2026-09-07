@@ -40,16 +40,15 @@ import { ReviewsDocumentPage } from "./pages/documents/reviews-page.tsx"
 import { DocumentsSettingsPage } from "./pages/documents/documents-settings-page.tsx"
 import { DocumentsPage } from "./pages/documents/documents-page.tsx"
 import { ReviewDetailsDocumentPage } from "./pages/documents/review-details-page.tsx"
-import { UsersPage } from "./modules/users/pages/users-list-page.tsx"
-import { RolesPage } from "./modules/rbac/pages/roles-page.tsx"
-import { PermissionsPage } from "./modules/users/pages/permissions-page.tsx"
-import { RoleDetailPage } from "./modules/users/pages/role-detail-page.tsx"
-import { ModulesPage } from "./modules/modules/pages/modules-page.tsx"
-import { ModuleDetailPage } from "./modules/modules/pages/module-detail-page.tsx"
-import { IntegrationsPage } from "./modules/integrations/pages/integrations-page.tsx"
-import { AuditPage } from "./modules/audit/pages/audit-page.tsx"
 import { PermissionProvider } from "./modules/providers/permission-provider.tsx"
-import { UserDetailPage } from "./modules/users/pages/user-detail-page.tsx"
+import { CoreAuditPage } from "./modules/core/pages/core-audit-page.tsx"
+import { CoreHomePage } from "./modules/core/pages/core-home-page.tsx"
+import { CoreIntegrationsPage } from "./modules/core/pages/core-integrations-page.tsx"
+import { CoreModulesPage } from "./modules/core/pages/core-modules-page.tsx"
+import CoreModuleDetailPage from "./modules/core/pages/core-module-detail-page.tsx"
+import { CorePermissionsPage } from "./modules/core/pages/core-permissions-page.tsx"
+import { CoreRolesPage } from "./modules/core/pages/core-roles-page.tsx"
+import { CoreUsersPage } from "./modules/core/pages/core-users-page.tsx"
 
 const queryClient = new QueryClient()
 
@@ -86,15 +85,14 @@ createRoot(document.getElementById('root')!).render(
                           <Route path="/documents/reviews" element={<ReviewsDocumentPage />} />
                           <Route path="/documents/reviews/:id" element={<ReviewDetailsDocumentPage />} />
                           <Route path="/documents/events" element={<DocumentsChartsPage />} />
-                          <Route path="/users" element={<UsersPage />} />
-                          <Route path="/users/:id" element={<UserDetailPage />} />
-                          <Route path="/roles" element={<RolesPage />} />
-                          <Route path="/permissions" element={<PermissionsPage />} />
-                          <Route path="/roles/:id" element={<RoleDetailPage />} />
-                          <Route path="/modules" element={<ModulesPage />} />
-                          <Route path="/modules/:id" element={<ModuleDetailPage />} />
-                          <Route path="/integrations" element={<IntegrationsPage />} />
-                          <Route path="/audits" element={<AuditPage />} />
+                          <Route path="/core" element={<CoreHomePage />} />
+                          <Route path="/core/users" element={<CoreUsersPage />} />
+                          <Route path="/core/roles" element={<CoreRolesPage />} />
+                          <Route path="/core/permissions" element={<CorePermissionsPage />} />
+                          <Route path="/core/modules" element={<CoreModulesPage />} />
+                          <Route path="/core/modules/:id" element={<CoreModuleDetailPage />} />
+                          <Route path="/core/integrations" element={<CoreIntegrationsPage />} />
+                          <Route path="/core/audit" element={<CoreAuditPage />} />
 
                           <Route path="/profiles" element={<ProfilePage />} />
                           <Route path="/profiles/:id" element={<ProfilesUpdatedPage />} />
