@@ -4,56 +4,20 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { useCampaignActive } from "@/contexts/campaign-active";
 import { useTheme } from "@/contexts/theme-context";
 import { useUser } from "@/contexts/user-context";
-import { cn } from "@/lib/utils";
-import { useMutation } from "@tanstack/react-query";
-import { Loader2Icon, Lock, LogIn, Mail, Moon, Network, Sun } from "lucide-react";
+import { useLogin } from "@/modules/auth/hooks/use-login";
+import { Loader2Icon, Lock, LogIn, Mail, Moon, Sun } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
 
-interface LoginResponse {
-    token: string,
-    user: {
-        email: string
-        name: string,
-        roleDescription: string
-        logo: string | null
-        roles: string[]
-        permissions: string[]
-    }
-}
+const APP_NAME = "Nexus Gateway"
+const APP_TAGLINE = "Plataforma Corporativa de Intranet da Lusati"
+const APP_VERSION = "v1.6.0"
+const SUPPORT_URL = "https://wa.me/554896366798"
 
 export function LoginPage() {
     const { onLoginCompleted } = useCampaignActive()
-    const mutation = useMutation({
-        mutationKey: ["login"],
-        mutationFn: async ({
-            email,
-            password,
-        }: {
-            email: string
-            password: string
-        }) => {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/login`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    email,
-                    password,
-                }),
-            })
-
-            if (!response.ok) {
-                throw new Error("Usuário ou senha inválidos")
-            }
-
-            const result = await response.json() as LoginResponse
-
-            return result
-        },
-    })
+    const mutation = useLogin()
 
     const { setUser } = useUser();
 
@@ -119,19 +83,19 @@ export function LoginPage() {
 
         try {
             const { token, user } = await mutation.mutateAsync({
-                email,
-                password,
+                ds_email: email,
+                senha: password,
             })
 
             setUser({
-                ...user,
-                token
-            })
-
-            localStorage.setItem('user', JSON.stringify({
+                email: user.ds_email,
+                name: user.ds_name,
+                roleDescription: user.ds_role_description ?? "",
+                logo: user.ds_avatar_url,
+                roles: [],
+                permissions: [],
                 token,
-                user
-            }))
+            })
 
             toast.success("Login realizado com sucesso.", {
                 position: "top-center",
@@ -150,37 +114,59 @@ export function LoginPage() {
     }
 
     return (
-        <div className="h-screen w-screen p-x grid grid-cols-1 lg:grid-cols-2">
-            <div
-                className={cn(
-                    "bg-cover bg-center shadow-lg bg-no-repeat hidden lg:flex flex-col justify-between px-16 py-16",
-                    theme === "clean" && "bg-[url('/logo-light-1.png')]",
-                    theme === "dark" && "bg-[url('/logo-dark-1.png')]",
-                )}
-            >
-                <div className="flex items-center gap-2">
+        <div className="h-screen w-screen grid grid-cols-1 lg:grid-cols-2">
+            <div className="relative hidden lg:flex flex-col justify-between overflow-hidden px-16 py-16 bg-[#0B1220]">
+                <svg
+                    aria-hidden
+                    className="pointer-events-none absolute inset-0 h-full w-full text-primary/8"
+                    preserveAspectRatio="xMidYMid slice"
+                >
+                    <defs>
+                        <pattern id="login-hex-pattern" width="56" height="100" patternUnits="userSpaceOnUse">
+                            <path
+                                d="M28 66L0 50L0 16L28 0L56 16L56 50L28 66L28 100"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="1.5"
+                            />
+                        </pattern>
+                    </defs>
+                    <rect width="100%" height="100%" fill="url(#login-hex-pattern)" />
+                </svg>
+
+                <div className="relative flex items-center gap-3">
+                    <img src="/logo-nexus.png" alt={APP_NAME} className="h-9 w-9" />
+                    <span className="text-sm font-semibold text-white/80">{APP_NAME}</span>
                 </div>
-                <div className="flex flex-col gap-4 max-w-3/5">
+
+                <div className="relative flex flex-col gap-3 max-w-md">
+                    <h2 className="text-3xl font-bold leading-tight text-white">
+                        Gestão operacional em um só lugar
+                    </h2>
+                    <p className="text-sm text-white/70">
+                        {APP_TAGLINE}
+                    </p>
                 </div>
-                <div className="mt-8 w-full flex items-end justify-between">
+
+                <div className="relative mt-8 w-full flex items-end justify-between">
                     <div></div>
                     <div className="px-2 border border-primary bg-primary/10 text-primary rounded-sm">
-                        <span className="text-[.8rem] font-medium">v1.6.0</span>
+                        <span className="text-[.8rem] font-medium">{APP_VERSION}</span>
                     </div>
                 </div>
             </div>
-            <div className=" bg-(image:--background-gradient) w-full flex flex-col justify-center items-start px-16">
+            <div className="bg-(image:--background-gradient) w-full flex flex-col justify-center items-start px-16">
                 <div className="mb-10 flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-lg bg-primary/10 border border-primary flex items-center justify-center">
-                        <Network className="text-primary size-5" />
+                    <div className="w-12 h-12 rounded-lg bg-primary/10 border border-primary flex items-center justify-center overflow-hidden">
+                        <img src="/logo-nexus.png" alt={APP_NAME} className="h-8 w-8 object-contain" />
                     </div>
 
                     <div className="flex flex-col gap-1">
                         <h1 className="text-3xl font-bold text-primary-text">
-                            Nexus Gateway
+                            {APP_NAME}
                         </h1>
                         <p className="text-xs text-muted-foreground">
-                            Plataforma Corporativa de Intranet da Lusati
+                            {APP_TAGLINE}
                         </p>
                     </div>
                     <Tooltip>
@@ -254,10 +240,10 @@ export function LoginPage() {
                 </form>
                 <div className="w-full text-center pt-8">
                     <span className="text-[.8rem] font-normal text-primary-text">
-                        Problemas com acesso? <span className="text-blue-600 cursor-pointer hover:underline" onClick={() => window.open("https://wa.me/554896366798", "_blank")}>Contate o suporte</span>
+                        Problemas com acesso? <span className="text-blue-600 cursor-pointer hover:underline" onClick={() => window.open(SUPPORT_URL, "_blank")}>Contate o suporte</span>
                     </span>
                 </div>
             </div>
-        </div >
+        </div>
     )
 }

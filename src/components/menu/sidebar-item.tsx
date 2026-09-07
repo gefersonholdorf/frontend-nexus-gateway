@@ -1,5 +1,6 @@
 import { useUser } from "@/contexts/user-context";
 import { cn } from "@/lib/utils";
+import { useHasPermission } from "@/modules/providers/permission-provider";
 import type { LucideIcon } from "lucide-react";
 import { NavLink } from "react-router";
 
@@ -10,6 +11,11 @@ interface SidebarItemProps {
     collapsed: boolean;
     isBlocked?: boolean;
     profiles: string[];
+    /**
+     * Quando informado, a visibilidade do item é controlada por
+     * `useHasPermission(permission)` em vez de `profiles`/`user.roles`.
+     */
+    permission?: string;
 }
 
 export function SidebarItem({
@@ -18,12 +24,15 @@ export function SidebarItem({
     path,
     collapsed,
     isBlocked,
-    profiles
+    profiles,
+    permission
 }: SidebarItemProps) {
     const { user } = useUser()
-    const hasPermission = user?.roles?.some(permission =>
-    profiles.includes(permission)
-);
+    const hasRolePermission = user?.roles?.some(role =>
+        profiles.includes(role)
+    );
+    const hasRealPermission = useHasPermission(permission ?? "");
+    const hasPermission = permission ? hasRealPermission : hasRolePermission;
     return (
         <NavLink
             to={isBlocked ? "#" : path}

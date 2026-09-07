@@ -106,6 +106,7 @@ export function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
                                             collapsed={collapsed}
                                             isBlocked={item && item.isBlocked}
                                             profiles={item.profiles}
+                                            permission={item.permission}
                                         />
                                     ))}
                                 </div>

@@ -1,6 +1,7 @@
-import { createContext, useContext, useMemo, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useMemo, type ReactNode } from "react";
 
 import { useMe } from "@/modules/auth/hooks/use-me";
+import { useUser } from "@/contexts/user-context";
 
 /**
  * PermissionProvider — infraestrutura REAL de autorização do app (não é mock).
@@ -25,6 +26,7 @@ interface PermissionProviderProps {
 
 export function PermissionProvider({ children }: PermissionProviderProps) {
     const { data, isLoading } = useMe();
+    const { user, setUser } = useUser();
 
     const value = useMemo<PermissionContextValue>(() => {
         const permissions = data?.permissions ?? [];
@@ -35,6 +37,28 @@ export function PermissionProvider({ children }: PermissionProviderProps) {
             isLoading,
         };
     }, [data, isLoading]);
+
+    useEffect(() => {
+        if (!data || !user) return;
+
+        const nextRoles = data.roles.map((role) => role.ds_name);
+        const nextPermissions = data.permissions;
+
+        const rolesChanged =
+            nextRoles.length !== user.roles.length ||
+            nextRoles.some((role, index) => role !== user.roles[index]);
+        const permissionsChanged =
+            nextPermissions.length !== user.permissions.length ||
+            nextPermissions.some((permission, index) => permission !== user.permissions[index]);
+
+        if (!rolesChanged && !permissionsChanged) return;
+
+        setUser({
+            ...user,
+            roles: nextRoles,
+            permissions: nextPermissions,
+        });
+    }, [data, user, setUser]);
 
     return (
         <PermissionContext.Provider value={value}>

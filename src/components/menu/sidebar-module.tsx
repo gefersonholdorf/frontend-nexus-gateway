@@ -24,6 +24,13 @@ interface SidebarModule {
         icon: LucideIcon
         isBlocked?: boolean
         profiles: string[]
+        /**
+         * Quando informado, a visibilidade do item passa a ser controlada por
+         * `useHasPermission(permission)` (permissões reais via `/me`), em vez
+         * de `profiles`/`user.roles`. Usado hoje apenas pelos itens do grupo
+         * "Administração" (módulo Core).
+         */
+        permission?: string
     }[]
 }
 
@@ -143,31 +150,36 @@ export const sidebarModules: SidebarModule[] = [
                 label: "Usuários",
                 path: "/core/users",
                 icon: Users,
-                profiles: ['Administrador']
+                profiles: ['Administrador'],
+                permission: 'users.manage'
             },
             {
                 label: "Módulos",
                 path: "/core/modules",
                 icon: Boxes,
-                profiles: ['Administrador']
+                profiles: ['Administrador'],
+                permission: 'modules.manage'
             },
             {
                 label: "Integrações",
                 path: "/core/integrations",
                 icon: Plug,
-                profiles: ['Administrador']
+                profiles: ['Administrador'],
+                permission: 'integrations.manage'
             },
             {
                 label: "Auditoria",
                 path: "/core/audit",
                 icon: History,
-                profiles: ['Administrador']
+                profiles: ['Administrador'],
+                permission: 'audit.read'
             },
             {
                 label: "Perfis",
                 path: "/core/roles",
                 icon: Shield,
-                profiles: ['Administrador']
+                profiles: ['Administrador'],
+                permission: 'rbac.manage'
             },
         ]
     }

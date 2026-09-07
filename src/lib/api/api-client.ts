@@ -56,7 +56,7 @@ export class ApiClient {
     };
 
     if (token) {
-      headers["Authorization"] = `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjZF9pZCI6MSwiaWF0IjoxNzg4MzYzNTQ0LCJleHAiOjE3ODg0NDk5NDR9.9olZNO8ccK8265suCO65ID2JXfrWX5cSRehhEJdKYdY`;
+      headers["Authorization"] = `Bearer ${token}`;
     }
 
     const url = `${this.baseUrl}${path}${buildQueryString(query)}`;

@@ -1,8 +1,10 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { Clock3, LogIn } from "lucide-react";
+import { useUser } from "./user-context";
 
 export function LoginExpiredModal() {
   const { loginExpired, handleSetLoginExpired } = useLoginExpired();
+  const { setUser } = useUser();
 
   const [countdown, setCountdown] = useState(15);
 
@@ -11,6 +13,8 @@ export function LoginExpiredModal() {
       setCountdown(15);
       return;
     }
+
+    setUser(null);
 
     const interval = setInterval(() => {
       setCountdown((value) => {
@@ -27,7 +31,7 @@ export function LoginExpiredModal() {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [loginExpired]);
+  }, [loginExpired, setUser]);
 
   if (!loginExpired) {
     return null;
