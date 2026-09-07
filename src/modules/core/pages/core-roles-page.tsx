@@ -1,6 +1,5 @@
 import { HeaderPage } from "@/components/header-page";
 import { TableComponentV2, type Column } from "@/components/table-component-v2";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
     Breadcrumb,
@@ -72,11 +71,7 @@ export function CoreRolesPage() {
     const [deleteRole, setDeleteRole] = useState<CoreRole | null>(null);
     const [permissionsRole, setPermissionsRole] = useState<CoreRole | null>(null);
 
-    const permissionNameById = useMemo(() => {
-        const map = new Map<number, string>();
-        (permissions ?? []).forEach((permission) => map.set(permission.cd_id, permission.ds_name));
-        return map;
-    }, [permissions]);
+    const totalPermissionsCount = permissions?.length ?? 0;
 
     const allRoles = useMemo(() => roles ?? [], [roles]);
 
@@ -176,18 +171,10 @@ export function CoreRolesPage() {
             render: (value) => {
                 const permissionIds = (value as number[]) ?? [];
 
-                if (permissionIds.length === 0) {
-                    return <span className="text-sm text-muted-foreground">Nenhuma</span>;
-                }
-
                 return (
-                    <div className="flex flex-wrap gap-1">
-                        {permissionIds.map((permissionId) => (
-                            <Badge key={permissionId} variant="outline">
-                                {permissionNameById.get(permissionId) ?? `#${permissionId}`}
-                            </Badge>
-                        ))}
-                    </div>
+                    <span className="text-sm">
+                        {permissionIds.length}/{totalPermissionsCount}
+                    </span>
                 );
             },
         },
