@@ -7,32 +7,54 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { Boxes, Info, Plug } from "lucide-react";
-import { useMemo } from "react";
+import { Boxes, Info, Link2, Pencil, Plug, Unlink } from "lucide-react";
+import { useMemo, useState } from "react";
 import { useParams } from "react-router";
+
+import { Can } from "@/modules/auth/components/can";
+import { useHasPermission } from "@/modules/providers/permission-provider";
 
 import { MonoValue } from "../components/core-mono-value";
 import { StatusDot } from "../components/core-status-dot";
+import { EditModuleModal } from "../components/edit-module-modal";
+import { InactiveModuleModal } from "../components/inactive-module-modal";
 import { useFetchIntegrations } from "../hooks/use-fetch-integrations";
-import { useFetchModules } from "../hooks/use-fetch-modules";
+import { useFetchModule } from "../hooks/use-fetch-module";
+import { useLinkModuleIntegration } from "../hooks/use-link-module-integration";
+import { useToggleModuleStatus } from "../hooks/use-toggle-module-status";
+import { useUnlinkModuleIntegration } from "../hooks/use-unlink-module-integration";
 
 /**
- * Única rota de detalhe real do módulo Core (`/core/modules/:id`).
- * Toggle de status e conectar/desconectar integrações chegam na Etapa 5;
- * aqui o objetivo é ler o mock e exibir a identidade do módulo (fundação).
+ * Única rota de detalhe real do módulo Core (`/core/modules/:id`). Identidade
+ * do módulo, toggle de status (bloqueado para o módulo Core, RN001) e
+ * conectar/desconectar integrações (RF023). Ações gated por `modules.manage`.
  */
 export default function CoreModuleDetailPage() {
     const { id } = useParams<{ id: string }>();
-    const { data: modules, isLoading } = useFetchModules();
-    const { data: integrations } = useFetchIntegrations();
+    const moduleId = id ? Number(id) : undefined;
 
-    const moduleItem = useMemo(
-        () => modules?.find((module) => String(module.cd_id) === id),
-        [modules, id],
-    );
+    const { data: moduleItem, isLoading } = useFetchModule(moduleId);
+    const { data: integrations } = useFetchIntegrations();
+    const { mutate: toggleStatus, isPending: isToggling } = useToggleModuleStatus();
+    const { mutate: linkIntegration, isPending: isLinking } = useLinkModuleIntegration();
+    const { mutate: unlinkIntegration, isPending: isUnlinking } = useUnlinkModuleIntegration();
+
+    const canManage = useHasPermission("modules.manage");
+
+    const [editOpen, setEditOpen] = useState(false);
+    const [inactiveOpen, setInactiveOpen] = useState(false);
+    const [selectedIntegrationId, setSelectedIntegrationId] = useState<string>("");
 
     const linkedIntegrations = useMemo(
         () =>
@@ -42,7 +64,56 @@ export default function CoreModuleDetailPage() {
         [integrations, moduleItem],
     );
 
+    const availableIntegrations = useMemo(
+        () =>
+            (integrations ?? []).filter(
+                (integration) => !moduleItem?.cd_integrations.includes(integration.cd_id),
+            ),
+        [integrations, moduleItem],
+    );
+
     const isCoreModule = moduleItem?.ds_key === "core";
+    const canToggleStatus = canManage && !isCoreModule;
+
+    function handleToggleStatus(checked: boolean) {
+        if (!moduleItem || !canToggleStatus) {
+            return;
+        }
+
+        if (!checked) {
+            setInactiveOpen(true);
+            return;
+        }
+
+        toggleStatus({ cd_id: moduleItem.cd_id, fl_active: true });
+    }
+
+    function handleConnectIntegration() {
+        if (!moduleItem || !selectedIntegrationId) {
+            return;
+        }
+
+        linkIntegration(
+            { cd_module: moduleItem.cd_id, cd_integration: Number(selectedIntegrationId) },
+            { onSuccess: () => setSelectedIntegrationId("") },
+        );
+    }
+
+    function handleDisconnectIntegration(cd_integration: number) {
+        if (!moduleItem) {
+            return;
+        }
+
+        unlinkIntegration({ cd_module: moduleItem.cd_id, cd_integration });
+    }
+
+    const switchTooltip = isCoreModule
+        ? "O módulo Core nunca pode ser desativado."
+        : !canManage
+            ? "Você não tem permissão para alterar o status deste módulo."
+            : moduleItem?.fl_active
+                ? "Inativar módulo"
+                : "Ativar módulo";
 
     return (
         <>
@@ -68,6 +139,16 @@ export default function CoreModuleDetailPage() {
                             <BreadcrumbPage>{moduleItem?.ds_name ?? "Detalhe"}</BreadcrumbPage>
                         </BreadcrumbList>
                     </Breadcrumb>
+                }
+                actions={
+                    moduleItem && (
+                        <Can permission="modules.manage" fallback={null}>
+                            <Button variant="outline" size="sm" onClick={() => setEditOpen(true)}>
+                                <Pencil className="size-4" />
+                                Editar
+                            </Button>
+                        </Can>
+                    )
                 }
             />
 
@@ -99,14 +180,14 @@ export default function CoreModuleDetailPage() {
                                 <Tooltip>
                                     <TooltipTrigger asChild>
                                         <span>
-                                            <Switch checked={moduleItem.fl_active} disabled />
+                                            <Switch
+                                                checked={moduleItem.fl_active}
+                                                disabled={!canToggleStatus || isToggling}
+                                                onCheckedChange={handleToggleStatus}
+                                            />
                                         </span>
                                     </TooltipTrigger>
-                                    <TooltipContent>
-                                        {isCoreModule
-                                            ? "O módulo Core nunca pode ser desativado."
-                                            : "Alternar status chega na Etapa 5 (CRUD visual)."}
-                                    </TooltipContent>
+                                    <TooltipContent>{switchTooltip}</TooltipContent>
                                 </Tooltip>
                             </div>
 
@@ -145,22 +226,89 @@ export default function CoreModuleDetailPage() {
                                                     {integration.ds_type}
                                                 </MonoValue>
                                             </div>
-                                            <StatusDot
-                                                tone={integration.st_status === "ok" ? "ok" : "fail"}
-                                                label={integration.st_status === "ok" ? "Conectado" : "Falha"}
-                                            />
+
+                                            <div className="flex items-center gap-3">
+                                                <StatusDot
+                                                    tone={integration.st_status === "ok" ? "ok" : "fail"}
+                                                    label={integration.st_status === "ok" ? "Conectado" : "Falha"}
+                                                />
+
+                                                <Can permission="modules.manage" fallback={null}>
+                                                    <Tooltip>
+                                                        <TooltipTrigger asChild>
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="icon"
+                                                                className="size-8 text-core-fail hover:text-core-fail"
+                                                                disabled={isUnlinking}
+                                                                onClick={() =>
+                                                                    handleDisconnectIntegration(integration.cd_id)
+                                                                }
+                                                            >
+                                                                <Unlink className="size-4" />
+                                                            </Button>
+                                                        </TooltipTrigger>
+                                                        <TooltipContent>Desconectar integração</TooltipContent>
+                                                    </Tooltip>
+                                                </Can>
+                                            </div>
                                         </li>
                                     ))}
                                 </ul>
                             )}
 
-                            <p className="text-xs text-muted-foreground">
-                                Conectar/desconectar integrações chega na Etapa 5 (RF023).
-                            </p>
+                            <Can permission="modules.manage" fallback={null}>
+                                <div className="flex flex-col gap-2 border-t border-border/60 pt-3 sm:flex-row sm:items-center">
+                                    <Select
+                                        value={selectedIntegrationId}
+                                        onValueChange={setSelectedIntegrationId}
+                                        disabled={availableIntegrations.length === 0}
+                                    >
+                                        <SelectTrigger className="sm:w-64">
+                                            <SelectValue
+                                                placeholder={
+                                                    availableIntegrations.length === 0
+                                                        ? "Todas as integrações já vinculadas"
+                                                        : "Selecione uma integração"
+                                                }
+                                            />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {availableIntegrations.map((integration) => (
+                                                <SelectItem
+                                                    key={integration.cd_id}
+                                                    value={String(integration.cd_id)}
+                                                >
+                                                    {integration.ds_name}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        size="sm"
+                                        disabled={!selectedIntegrationId || isLinking}
+                                        onClick={handleConnectIntegration}
+                                    >
+                                        <Link2 className="size-4" />
+                                        Conectar integração
+                                    </Button>
+                                </div>
+                            </Can>
                         </Card>
                     </>
                 )}
             </div>
+
+            <EditModuleModal open={editOpen} onOpenChange={setEditOpen} module={moduleItem ?? null} />
+
+            <InactiveModuleModal
+                open={inactiveOpen}
+                onOpenChange={setInactiveOpen}
+                module={moduleItem ?? null}
+            />
         </>
     );
 }
