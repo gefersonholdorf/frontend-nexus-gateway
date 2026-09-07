@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import { useDeleteRole } from "../hooks/use-delete-role";
-import type { CoreRole } from "../mocks/roles.mock";
+import type { CoreRole } from "../hooks/use-fetch-roles";
 
 interface DeleteRoleModalProps {
     open: boolean;

@@ -29,10 +29,9 @@ interface UserRolesDrawerProps {
  * não existe rota `/core/users/:id`, ambos são resolvidos aqui, num `Drawer`
  * aberto a partir da linha da tabela.
  *
- * `useAssignRoleToUser`/`useUnassignRoleFromUser` chamam a API real
- * (`POST`/`DELETE /users/{id}/roles`), mas `useFetchRoles` (lista de roles
- * disponíveis para vincular) ainda é mockado — a entidade Roles é migrada em
- * etapa própria.
+ * `useAssignRoleToUser`/`useUnassignRoleFromUser` e `useFetchRoles` (lista de
+ * roles disponíveis para vincular) chamam a API real (`POST`/`DELETE
+ * /users/{id}/roles` e `GET /roles`).
  */
 export function UserRolesDrawer({ open, onOpenChange, user }: UserRolesDrawerProps) {
     const { data: roles, isLoading } = useFetchRoles();

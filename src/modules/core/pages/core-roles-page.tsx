@@ -45,7 +45,7 @@ import { RolePermissionsDrawer } from "../components/role-permissions-drawer";
 import { useFetchPermissions } from "../hooks/use-fetch-permissions";
 import { useFetchRoles } from "../hooks/use-fetch-roles";
 import { useToggleRoleStatus } from "../hooks/use-toggle-role-status";
-import type { CoreRole } from "../mocks/roles.mock";
+import type { CoreRole } from "../hooks/use-fetch-roles";
 
 type StatusFilter = "all" | "active" | "inactive";
 
@@ -75,7 +75,8 @@ export function CoreRolesPage() {
 
     const allRoles = useMemo(() => roles ?? [], [roles]);
 
-    // Filtros client-side (RF011): nome e status — aceitável, pois é mock em memória.
+    // Filtros client-side: nome e status. Listagem sem paginação server-side
+    // nesta etapa (mesma decisão registrada para usuários).
     const filteredRoles = useMemo(() => {
         const name = filters.ds_name.trim().toLowerCase();
 
@@ -184,7 +185,7 @@ export function CoreRolesPage() {
         <>
             <HeaderPage
                 title="Roles"
-                description="Perfis de acesso e atribuição de permissões do catálogo fixo. Dados mockados, sem persistência real."
+                description="Perfis de acesso e atribuição de permissões do catálogo fixo."
                 icon={Shield}
                 breadcrumb={
                     <Breadcrumb>

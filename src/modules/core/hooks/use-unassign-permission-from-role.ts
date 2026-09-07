@@ -2,8 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import { queryKeys } from "@/lib/api/query-keys";
-import { simulateLatency } from "../mocks/simulate-latency";
-import { rolesMock, type CoreRole } from "../mocks/roles.mock";
+import { useApiClient } from "@/lib/api/use-api-client";
 
 export interface UnassignPermissionFromRoleInput {
     cd_role: number;
@@ -11,34 +10,21 @@ export interface UnassignPermissionFromRoleInput {
 }
 
 /**
- * Hook 100% mockado (sem `fetch`/`ApiClient`) — desvincula uma permissão de
- * uma role, removendo de `rolesMock.cd_permissions`.
- * Ver docs/architecture/core-module-roadmap.md.
+ * `DELETE /roles/{id}/permissions/{permId}` (RF018) — desvincula uma
+ * permissão de uma role.
  */
 export function useUnassignPermissionFromRole() {
+    const api = useApiClient();
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async ({
-            cd_role,
-            cd_permission,
-        }: UnassignPermissionFromRoleInput): Promise<CoreRole> => {
-            await simulateLatency(200);
-
-            const role = rolesMock.find((item) => item.cd_id === cd_role);
-
-            if (!role) {
-                throw new Error("Role não encontrada.");
-            }
-
-            role.cd_permissions = role.cd_permissions.filter(
-                (permissionId) => permissionId !== cd_permission,
-            );
-
-            return role;
-        },
-        onSuccess: () => {
+        mutationFn: ({ cd_role, cd_permission }: UnassignPermissionFromRoleInput) =>
+            api.delete<void>(`/roles/${cd_role}/permissions/${cd_permission}`, {
+                errorMessage: "Erro ao desvincular permissão da role",
+            }),
+        onSuccess: (_data, variables) => {
             queryClient.invalidateQueries({ queryKey: queryKeys.roles.all() });
+            queryClient.invalidateQueries({ queryKey: queryKeys.roles.detail(variables.cd_role) });
             toast.success("Permissão desvinculada da role.", {
                 position: "top-center",
                 richColors: true,

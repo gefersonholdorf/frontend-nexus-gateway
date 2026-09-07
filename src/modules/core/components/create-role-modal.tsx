@@ -28,8 +28,7 @@ const DEFAULT_VALUES: RoleFormValues = {
 };
 
 /**
- * Modal de criação de role (RF013) — mutation mockada via `useCreateRole`,
- * sem persistência real. Ver docs/architecture/core-module-roadmap.md.
+ * Modal de criação de role (RF013) — `useCreateRole` chama `POST /roles`.
  */
 export function CreateRoleModal({ open, onOpenChange }: CreateRoleModalProps) {
     const { mutateAsync, isPending } = useCreateRole();
@@ -70,7 +69,6 @@ export function CreateRoleModal({ open, onOpenChange }: CreateRoleModalProps) {
                     <DialogTitle>Nova role</DialogTitle>
                     <DialogDescription>
                         Cadastre uma nova role (perfil de acesso) administrada pelo módulo Core.
-                        Dado mockado, sem persistência real.
                     </DialogDescription>
                 </DialogHeader>
 

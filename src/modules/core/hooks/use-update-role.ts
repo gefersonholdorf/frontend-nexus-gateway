@@ -2,8 +2,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import { queryKeys } from "@/lib/api/query-keys";
-import { simulateLatency } from "../mocks/simulate-latency";
-import { rolesMock, type CoreRole } from "../mocks/roles.mock";
+import { useApiClient } from "@/lib/api/use-api-client";
+import type { CoreRole } from "./use-fetch-roles";
 
 export interface UpdateRoleInput {
     cd_id: number;
@@ -13,30 +13,21 @@ export interface UpdateRoleInput {
 }
 
 /**
- * Hook 100% mockado (sem `fetch`/`ApiClient`) — atualiza `rolesMock` em memória.
- * Ver docs/architecture/core-module-roadmap.md.
+ * `PUT /roles/{id}` (RF016).
  */
 export function useUpdateRole() {
+    const api = useApiClient();
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async (input: UpdateRoleInput): Promise<CoreRole> => {
-            await simulateLatency();
-
-            const role = rolesMock.find((item) => item.cd_id === input.cd_id);
-
-            if (!role) {
-                throw new Error("Role não encontrada.");
-            }
-
-            role.ds_name = input.ds_name;
-            role.ds_description = input.ds_description;
-            role.fl_active = input.fl_active;
-
-            return role;
-        },
-        onSuccess: () => {
+        mutationFn: ({ cd_id, ...input }: UpdateRoleInput) =>
+            api.put<CoreRole>(`/roles/${cd_id}`, {
+                body: input,
+                errorMessage: "Erro ao atualizar role",
+            }),
+        onSuccess: (_role, variables) => {
             queryClient.invalidateQueries({ queryKey: queryKeys.roles.all() });
+            queryClient.invalidateQueries({ queryKey: queryKeys.roles.detail(variables.cd_id) });
             toast.success("Role atualizada com sucesso.", {
                 position: "top-center",
                 richColors: true,

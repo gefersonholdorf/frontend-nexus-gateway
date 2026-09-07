@@ -14,8 +14,7 @@ import { useMemo } from "react";
 import { Can } from "@/modules/auth/components/can";
 
 import { MonoValue } from "../components/core-mono-value";
-import { useFetchPermissions } from "../hooks/use-fetch-permissions";
-import type { CorePermission } from "../mocks/permissions.mock";
+import { useFetchPermissions, type CorePermission } from "../hooks/use-fetch-permissions";
 
 const columns: Column<CorePermission>[] = [
     {

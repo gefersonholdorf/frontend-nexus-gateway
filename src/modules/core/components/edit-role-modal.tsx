@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/dialog";
 
 import { useUpdateRole } from "../hooks/use-update-role";
-import type { CoreRole } from "../mocks/roles.mock";
+import type { CoreRole } from "../hooks/use-fetch-roles";
 import { RoleFormFields } from "./role-form-fields";
 import { roleFormSchema, type RoleFormValues } from "./role-form-schema";
 
@@ -25,8 +25,7 @@ interface EditRoleModalProps {
 }
 
 /**
- * Modal de edição de role (RF013) — mutation mockada via `useUpdateRole`,
- * sem persistência real. Ver docs/architecture/core-module-roadmap.md.
+ * Modal de edição de role (RF013) — `useUpdateRole` chama `PUT /roles/{id}`.
  */
 export function EditRoleModal({ open, onOpenChange, role }: EditRoleModalProps) {
     const { mutateAsync, isPending } = useUpdateRole();
@@ -77,8 +76,7 @@ export function EditRoleModal({ open, onOpenChange, role }: EditRoleModalProps) 
                 <DialogHeader>
                     <DialogTitle>Editar role</DialogTitle>
                     <DialogDescription>
-                        Atualize os dados de {role?.ds_name ?? "role"}. Dado mockado, sem
-                        persistência real.
+                        Atualize os dados de {role?.ds_name ?? "role"}.
                     </DialogDescription>
                 </DialogHeader>
 

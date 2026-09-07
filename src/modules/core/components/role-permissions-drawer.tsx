@@ -23,10 +23,10 @@ import {
 import { useHasPermission } from "@/modules/providers/permission-provider";
 
 import { useAssignPermissionToRole } from "../hooks/use-assign-permission-to-role";
-import { useFetchPermissions } from "../hooks/use-fetch-permissions";
+import { useFetchPermissions, type CorePermission } from "../hooks/use-fetch-permissions";
+import { useFetchRoleById } from "../hooks/use-fetch-role-by-id";
+import type { CoreRole } from "../hooks/use-fetch-roles";
 import { useUnassignPermissionFromRole } from "../hooks/use-unassign-permission-from-role";
-import type { CorePermission } from "../mocks/permissions.mock";
-import type { CoreRole } from "../mocks/roles.mock";
 import { MonoValue } from "./core-mono-value";
 import { StatusDot } from "./core-status-dot";
 
@@ -68,6 +68,12 @@ function groupPermissionsByDomain(
  */
 export function RolePermissionsDrawer({ open, onOpenChange, role }: RolePermissionsDrawerProps) {
     const { data: permissions, isLoading } = useFetchPermissions();
+    // Refetch pontual da role (RF015/RF018) para manter os checkboxes em
+    // sincronia com o servidor enquanto o drawer permanece aberto — ver
+    // JSDoc de `useFetchRoleById`. `role` (prop) é usado como fallback
+    // enquanto o detalhe ainda não chegou.
+    const { data: roleDetail } = useFetchRoleById(role?.cd_id);
+    const effectiveRole = roleDetail ?? role;
     const { mutate: assignPermission, isPending: isAssigning } = useAssignPermissionToRole();
     const { mutate: unassignPermission, isPending: isUnassigning } =
         useUnassignPermissionFromRole();
@@ -108,18 +114,20 @@ export function RolePermissionsDrawer({ open, onOpenChange, role }: RolePermissi
                     </DrawerTitle>
                     <DrawerDescription>
                         Atribua ou remova permissões do catálogo fixo desta role. Alterações são
-                        aplicadas imediatamente (mock, sem persistência real).
+                        aplicadas imediatamente.
                     </DrawerDescription>
 
-                    {role && (
+                    {effectiveRole && (
                         <div className="mt-3 grid grid-cols-1 gap-1.5 rounded-md border border-border/60 bg-muted/30 p-3 text-xs sm:grid-cols-2">
                             <span className="text-muted-foreground">
                                 Descrição:{" "}
-                                <span className="text-foreground">{role.ds_description}</span>
+                                <span className="text-foreground">
+                                    {effectiveRole.ds_description}
+                                </span>
                             </span>
                             <span className="flex items-center gap-1 text-muted-foreground">
                                 Status:{" "}
-                                {role.fl_active ? (
+                                {effectiveRole.fl_active ? (
                                     <StatusDot tone="ok" label="Ativo" />
                                 ) : (
                                     <StatusDot tone="off" label="Inativo" />
@@ -128,13 +136,13 @@ export function RolePermissionsDrawer({ open, onOpenChange, role }: RolePermissi
                             <span className="text-muted-foreground">
                                 Criada em:{" "}
                                 <span className="text-foreground">
-                                    {formatDate(role.dt_created_at, "dd/MM/yyyy")}
+                                    {formatDate(effectiveRole.dt_created_at, "dd/MM/yyyy")}
                                 </span>
                             </span>
                             <span className="text-muted-foreground">
                                 Permissões vinculadas:{" "}
                                 <span className="text-foreground">
-                                    {role.cd_permissions.length}
+                                    {effectiveRole.cd_permissions.length}
                                 </span>
                             </span>
                         </div>
@@ -162,7 +170,7 @@ export function RolePermissionsDrawer({ open, onOpenChange, role }: RolePermissi
                             {domains.map((domain) => {
                                 const domainPermissions = groupedPermissions.get(domain) ?? [];
                                 const assignedCount = domainPermissions.filter((permission) =>
-                                    role?.cd_permissions.includes(permission.cd_id),
+                                    effectiveRole?.cd_permissions.includes(permission.cd_id),
                                 ).length;
 
                                 return (
@@ -181,7 +189,7 @@ export function RolePermissionsDrawer({ open, onOpenChange, role }: RolePermissi
                                             <ul className="space-y-2">
                                                 {domainPermissions.map((permission) => {
                                                     const checked = Boolean(
-                                                        role?.cd_permissions.includes(
+                                                        effectiveRole?.cd_permissions.includes(
                                                             permission.cd_id,
                                                         ),
                                                     );

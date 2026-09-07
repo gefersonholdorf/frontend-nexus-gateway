@@ -1,20 +1,34 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { queryKeys } from "@/lib/api/query-keys";
-import { simulateLatency } from "../mocks/simulate-latency";
-import { permissionsMock, type CorePermission } from "../mocks/permissions.mock";
+import { useApiClient } from "@/lib/api/use-api-client";
 
 /**
- * Hook 100% mockado (sem `fetch`/`ApiClient`) — lê `permissionsMock` em memória.
- * Catálogo fixo, somente leitura (RN008). Ver docs/architecture/core-module-roadmap.md.
+ * Permissão do catálogo fixo do sistema (RF019).
+ *
+ * Somente leitura — nunca sofre CRUD (nem aqui, nem na tela
+ * `/core/permissions`), inclusive após a migração para API real.
+ */
+export interface CorePermission {
+    cd_id: number;
+    ds_key: string;
+    ds_name: string;
+    ds_description: string;
+}
+
+/**
+ * `GET /permissions` (RF019). Catálogo fixo, somente leitura — consumido pela
+ * tela de Roles (atribuição, RF018) e pela tela `/core/permissions`
+ * (listagem).
  */
 export function useFetchPermissions() {
+    const api = useApiClient();
+
     return useQuery({
         queryKey: queryKeys.permissions.all(),
-        queryFn: async (): Promise<CorePermission[]> => {
-            await simulateLatency();
-
-            return [...permissionsMock];
-        },
+        queryFn: () =>
+            api.get<CorePermission[]>("/permissions", {
+                errorMessage: "Erro ao consultar permissões",
+            }),
     });
 }

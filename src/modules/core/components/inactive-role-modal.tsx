@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import { useToggleRoleStatus } from "../hooks/use-toggle-role-status";
-import type { CoreRole } from "../mocks/roles.mock";
+import type { CoreRole } from "../hooks/use-fetch-roles";
 
 interface InactiveRoleModalProps {
     open: boolean;
