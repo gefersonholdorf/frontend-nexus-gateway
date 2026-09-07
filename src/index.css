@@ -43,6 +43,15 @@
     --radius-2xl: calc(var(--radius) * 1.8);
     --radius-3xl: calc(var(--radius) * 2.2);
     --radius-4xl: calc(var(--radius) * 2.6);
+
+    --font-mono: ui-monospace, SFMono-Regular, "Roboto Mono", Menlo, Consolas, monospace;
+
+    /* Identidade visual própria do módulo Core ("painel de controle de sistemas"). */
+    --color-core-signal: var(--core-signal);
+    --color-core-ink: var(--core-ink);
+    --color-core-ok: var(--core-ok);
+    --color-core-fail: var(--core-fail);
+    --color-core-neutral: var(--core-neutral);
 }
 
 :root {
@@ -167,6 +176,16 @@
 
     --shadow-lg:
         0 12px 32px rgba(15, 23, 42, 0.08);
+
+    /* =========================
+       CORE (módulo de administração)
+    ========================= */
+
+    --core-signal: #4F52D6;
+    --core-ink: #171B2E;
+    --core-ok: #1FAE6B;
+    --core-fail: #E5484D;
+    --core-neutral: var(--menu);
 }
 
 .dark {
@@ -230,6 +249,10 @@
     --sidebar-accent-foreground: #F8FAFC;
 
     --sidebar-border: rgba(255,255,255,0.06);
+
+    /* Core: ink vira claro sobre fundo escuro; signal ganha um pouco mais de brilho para contraste. */
+    --core-signal: #6C6FE8;
+    --core-ink: #E7E8FA;
 }
 
 /* =========================

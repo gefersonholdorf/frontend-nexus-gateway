@@ -6,7 +6,6 @@ import {
     EyeOff,
     FileText,
     History,
-    KeyRound,
     LayoutDashboard,
     Megaphone,
     MonitorCloud,
@@ -170,12 +169,6 @@ export const sidebarModules: SidebarModule[] = [
                 icon: Shield,
                 profiles: ['Administrador']
             },
-            {
-                label: "Permissões",
-                path: "/core/permissions",
-                icon: KeyRound,
-                profiles: ['Administrador']
-            }
         ]
     }
 ];
