@@ -29,10 +29,9 @@ import { MonoValue } from "../components/core-mono-value";
 import { StatusDot } from "../components/core-status-dot";
 import { InactiveIntegrationModal } from "../components/inactive-integration-modal";
 import { IntegrationDetailsDrawer } from "../components/integration-details-drawer";
-import { useFetchIntegrations } from "../hooks/use-fetch-integrations";
+import { useFetchIntegrations, type CoreIntegration } from "../hooks/use-fetch-integrations";
 import { useTestIntegrationConnection } from "../hooks/use-test-integration-connection";
 import { useToggleIntegrationStatus } from "../hooks/use-toggle-integration-status";
-import type { CoreIntegration } from "../mocks/integrations.mock";
 
 type StatusFilter = "all" | "active" | "inactive";
 type TypeFilter = "all" | string;
@@ -43,13 +42,12 @@ interface Filters {
 }
 
 /**
- * Listagem em cards das 4 integrações fixas do RN012 (Jira, GLPI, Microsoft,
- * OpenVPN) — sem botão de criar (fora de escopo). Edição/detalhe abrem um
- * `Drawer` a partir do card (não existe rota `/core/integrations/:id`);
- * ativar/inativar usa o `Switch` do rodapé + confirmação de inativação;
- * "Testar Conexão" tem resultado fixo por integração (RN012) e estado de
- * carregamento próprio por card. Ações de escrita gated por
- * `integrations.manage` (Etapa 4).
+ * Listagem em cards das integrações (`GET /integrations`, RF024) — sem botão
+ * de criar (fora de escopo). Edição/detalhe abrem um `Drawer` a partir do
+ * card (não existe rota `/core/integrations/:id`); ativar/inativar usa o
+ * `Switch` do rodapé + confirmação de inativação; "Testar Conexão" chama a
+ * API (RF027) e tem estado de carregamento próprio por card. Ações de
+ * escrita gated por `integrations.manage`.
  */
 export function CoreIntegrationsPage() {
     const { data, isLoading } = useFetchIntegrations();
@@ -136,7 +134,7 @@ export function CoreIntegrationsPage() {
         <>
             <HeaderPage
                 title="Integrações"
-                description="Conexões externas simuladas (Jira, GLPI, Microsoft, OpenVPN). Segredos nunca aparecem em texto puro por padrão."
+                description="Conexões externas administradas pelo Core. Segredos nunca aparecem em texto puro por padrão."
                 icon={Plug}
                 breadcrumb={
                     <Breadcrumb>

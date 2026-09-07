@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import { useToggleIntegrationStatus } from "../hooks/use-toggle-integration-status";
-import type { CoreIntegration } from "../mocks/integrations.mock";
+import type { CoreIntegration } from "../hooks/use-fetch-integrations";
 
 interface InactiveIntegrationModalProps {
     open: boolean;

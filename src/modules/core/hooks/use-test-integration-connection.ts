@@ -2,63 +2,54 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import { queryKeys } from "@/lib/api/query-keys";
-import { simulateLatency } from "../mocks/simulate-latency";
-import { integrationsMock, type CoreIntegration } from "../mocks/integrations.mock";
+import { useApiClient } from "@/lib/api/use-api-client";
 
 export interface TestIntegrationConnectionInput {
     cd_id: number;
 }
 
 /**
- * Resultado FIXO por integração (RN012) — não é aleatório. Chaveado por
- * `ds_type` (não por `cd_id`), reproduzindo exatamente a tabela da regra de
- * negócio: Jira/GLPI/OpenVPN → sucesso, Microsoft → falha.
+ * Resposta de `POST /integrations/{id}/test` (RF027). `ok: false` é uma
+ * resposta de negócio válida (Cenário de Exceção 5), não um erro HTTP — a
+ * `mutationFn` resolve normalmente em ambos os casos.
  */
-const FIXED_TEST_RESULT: Record<string, "ok" | "fail"> = {
-    Jira: "ok",
-    GLPI: "ok",
-    Microsoft: "fail",
-    OpenVPN: "ok",
-};
+export interface TestIntegrationConnectionResult {
+    ok: boolean;
+    message?: string;
+}
 
 /**
- * Hook 100% mockado (sem `fetch`/`ApiClient`) — simula "Testar Conexão"
- * (RF028) com latência maior que as demais mutations do Core (uma checagem de
- * conectividade real demoraria mais que um simples salvar), grava o resultado
- * fixo em `st_status` + o timestamp do teste (RN015), e mostra um toast de
- * sucesso ou erro correspondente. Ver docs/architecture/core-module-roadmap.md.
+ * `POST /integrations/{id}/test` (RF027). O backend é responsável por
+ * persistir o novo `st_status`/`dt_last_tested_at` da integração testada; o
+ * frontend não deriva esse valor localmente — após a resposta, invalida
+ * `integrations.all()`/`.detail(id)` para que a UI reflita o `st_status`
+ * atualizado (RN006) vindo do `GET /integrations` seguinte.
+ *
+ * Cenário de Exceção 5 — se `ok` vier `false`, a mutation ainda é tratada como
+ * sucesso (não lança erro): exibe a `message` retornada num toast de erro e
+ * deixa a atualização de `st_status` a cargo do refetch disparado pela
+ * invalidação.
  */
 export function useTestIntegrationConnection() {
+    const api = useApiClient();
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async ({
-            cd_id,
-        }: TestIntegrationConnectionInput): Promise<CoreIntegration> => {
-            await simulateLatency(800 + Math.round(Math.random() * 400));
-
-            const integration = integrationsMock.find((item) => item.cd_id === cd_id);
-
-            if (!integration) {
-                throw new Error("Integração não encontrada.");
-            }
-
-            integration.st_status = FIXED_TEST_RESULT[integration.ds_type] ?? "fail";
-            integration.dt_last_tested_at = new Date().toISOString();
-
-            return integration;
-        },
-        onSuccess: (integration) => {
+        mutationFn: ({ cd_id }: TestIntegrationConnectionInput) =>
+            api.post<TestIntegrationConnectionResult>(`/integrations/${cd_id}/test`, {
+                errorMessage: "Erro ao testar conexão",
+            }),
+        onSuccess: (result, variables) => {
             queryClient.invalidateQueries({ queryKey: queryKeys.integrations.all() });
-            queryClient.invalidateQueries({ queryKey: queryKeys.integrations.detail(integration.cd_id) });
+            queryClient.invalidateQueries({ queryKey: queryKeys.integrations.detail(variables.cd_id) });
 
-            if (integration.st_status === "ok") {
-                toast.success(`Conexão com ${integration.ds_name} estabelecida com sucesso.`, {
+            if (result.ok) {
+                toast.success(result.message ?? "Conexão estabelecida com sucesso.", {
                     position: "top-center",
                     richColors: true,
                 });
             } else {
-                toast.error(`Falha ao conectar com ${integration.ds_name}.`, {
+                toast.error(result.message ?? "Falha ao testar conexão.", {
                     position: "top-center",
                     richColors: true,
                 });

@@ -2,8 +2,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import { queryKeys } from "@/lib/api/query-keys";
-import { simulateLatency } from "../mocks/simulate-latency";
-import { integrationsMock, type CoreIntegration } from "../mocks/integrations.mock";
+import { useApiClient } from "@/lib/api/use-api-client";
+import type { CoreIntegration } from "./use-fetch-integrations";
 
 export interface ToggleIntegrationStatusInput {
     cd_id: number;
@@ -11,36 +11,34 @@ export interface ToggleIntegrationStatusInput {
 }
 
 /**
- * Hook 100% mockado (sem `fetch`/`ApiClient`) — liga/desliga uma integração em
- * `integrationsMock` em memória. `fl_active` é o interruptor manual do
- * administrador; é independente de `st_status`, que só reflete o resultado do
- * último "Testar Conexão" (RN015). Ver docs/architecture/core-module-roadmap.md.
+ * O documento de refatoração (RF024-RF027) não lista um endpoint dedicado de
+ * ativar/inativar integração — diferente de usuários (`PATCH
+ * /users/{id}/active`, RF012) e módulos (`PATCH /modules/{id}/active`,
+ * RF022), que têm rota própria. A opção adotada aqui trata `fl_active` como
+ * um campo aceito pelo mesmo `PUT /integrations/{id}` do RF026 (edição),
+ * enviando somente esse campo no corpo — mantendo a ação de ativar/inativar
+ * na UI em vez de removê-la, já que cabe dentro de um RF já documentado. Se o
+ * backend rejeitar atualizações parciais desse PUT (exigindo os demais
+ * campos), esta suposição precisa ser revista com o time de backend.
+ *
+ * `fl_active` (interruptor manual do administrador) é independente de
+ * `st_status` (resultado do último "Testar Conexão", RN006).
  */
 export function useToggleIntegrationStatus() {
+    const api = useApiClient();
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async ({
-            cd_id,
-            fl_active,
-        }: ToggleIntegrationStatusInput): Promise<CoreIntegration> => {
-            await simulateLatency();
-
-            const integration = integrationsMock.find((item) => item.cd_id === cd_id);
-
-            if (!integration) {
-                throw new Error("Integração não encontrada.");
-            }
-
-            integration.fl_active = fl_active;
-
-            return integration;
-        },
-        onSuccess: (integration) => {
+        mutationFn: ({ cd_id, fl_active }: ToggleIntegrationStatusInput) =>
+            api.put<CoreIntegration>(`/integrations/${cd_id}`, {
+                body: { fl_active },
+                errorMessage: "Erro ao atualizar status da integração",
+            }),
+        onSuccess: (integration, variables) => {
             queryClient.invalidateQueries({ queryKey: queryKeys.integrations.all() });
-            queryClient.invalidateQueries({ queryKey: queryKeys.integrations.detail(integration.cd_id) });
+            queryClient.invalidateQueries({ queryKey: queryKeys.integrations.detail(variables.cd_id) });
             toast.success(
-                integration.fl_active
+                (integration?.fl_active ?? variables.fl_active)
                     ? "Integração ativada com sucesso."
                     : "Integração inativada com sucesso.",
                 { position: "top-center", richColors: true },

@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { formatDate } from "date-fns";
-import { Eye, EyeOff, Loader2, Plug, RefreshCw, Save } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Loader2, Plug, RefreshCw, Save } from "lucide-react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
@@ -19,7 +19,7 @@ import { useHasPermission } from "@/modules/providers/permission-provider";
 
 import { useTestIntegrationConnection } from "../hooks/use-test-integration-connection";
 import { useUpdateIntegration } from "../hooks/use-update-integration";
-import type { CoreIntegration } from "../mocks/integrations.mock";
+import type { CoreIntegration } from "../hooks/use-fetch-integrations";
 import { MonoValue } from "./core-mono-value";
 import { StatusDot } from "./core-status-dot";
 import { IntegrationFormFields } from "./integration-form-fields";
@@ -32,13 +32,15 @@ interface IntegrationDetailsDrawerProps {
 }
 
 /**
- * "Página de detalhe" + edição da integração (RF026/RF027) — como não existe
+ * "Página de detalhe" + edição da integração (RF025/RF026) — como não existe
  * rota `/core/integrations/:id`, ambos são resolvidos aqui, num `Drawer`
- * aberto a partir do card (Etapa 6). `ds_config` é exibido/editado
- * dinamicamente a partir das chaves do mock; `ds_secret` nunca aparece em
- * texto puro por padrão (RF027); "Testar Conexão" (RF028) mostra o resultado
- * mais recente e o timestamp do último teste. Ações de escrita ficam
- * desabilitadas/ocultas sem `integrations.manage` (Etapa 4).
+ * aberto a partir do card. `ds_config` é exibido/editado dinamicamente a
+ * partir das chaves retornadas pela API; `ds_secret` é exibido exatamente
+ * como recebido — já vem mascarado do backend (RN005), então o frontend não
+ * implementa nenhuma lógica própria de mascaramento/revelação. "Testar
+ * Conexão" (RF027) mostra o resultado mais recente e o timestamp do último
+ * teste. Ações de escrita ficam desabilitadas/ocultas sem
+ * `integrations.manage`.
  */
 export function IntegrationDetailsDrawer({
     open,
@@ -48,8 +50,6 @@ export function IntegrationDetailsDrawer({
     const { mutateAsync: updateIntegration, isPending: isSaving } = useUpdateIntegration();
     const { mutate: testConnection, isPending: isTesting } = useTestIntegrationConnection();
     const canManage = useHasPermission("integrations.manage");
-
-    const [isSecretRevealed, setIsSecretRevealed] = useState(false);
 
     const {
         register,
@@ -93,19 +93,9 @@ export function IntegrationDetailsDrawer({
     }
 
     const configKeys = integration ? Object.keys(integration.ds_config) : [];
-    const maskedSecret = integration ? "•".repeat(Math.min(integration.ds_secret.length, 16)) : "";
-
-    // Segredo volta a ficar mascarado sempre que o drawer fecha (RF027) — evita
-    // um `useEffect` de sincronização de estado local para esse reset.
-    function handleOpenChange(next: boolean) {
-        if (!next) {
-            setIsSecretRevealed(false);
-        }
-        onOpenChange(next);
-    }
 
     return (
-        <Drawer direction="right" open={open} onOpenChange={handleOpenChange}>
+        <Drawer direction="right" open={open} onOpenChange={onOpenChange}>
             <DrawerContent className="flex h-full flex-col sm:max-w-lg">
                 <DrawerHeader className="border-b border-border/60 text-left">
                     <DrawerTitle className="flex items-center gap-2">
@@ -113,8 +103,7 @@ export function IntegrationDetailsDrawer({
                         {integration?.ds_name ?? "Integração"}
                     </DrawerTitle>
                     <DrawerDescription>
-                        Tipo <MonoValue>{integration?.ds_type ?? "-"}</MonoValue> — dados mockados,
-                        sem persistência real.
+                        Tipo <MonoValue>{integration?.ds_type ?? "-"}</MonoValue>
                     </DrawerDescription>
                 </DrawerHeader>
 
@@ -175,30 +164,20 @@ export function IntegrationDetailsDrawer({
 
                     <div className="space-y-1.5">
                         <p className="text-sm font-medium text-foreground">Segredo</p>
+                        {/*
+                            RN005: o backend nunca retorna o segredo em texto claro — este
+                            valor já vem mascarado da API. O frontend apenas exibe
+                            `ds_secret` como recebido, sem lógica própria de
+                            mascaramento/revelação.
+                        */}
                         <div className="flex items-center gap-2 rounded-md border border-border/60 p-2.5">
-                            <MonoValue className="flex-1 truncate">
-                                {isSecretRevealed ? integration?.ds_secret : maskedSecret}
-                            </MonoValue>
-                            <Button
-                                type="button"
-                                variant="ghost"
-                                size="icon"
-                                className="size-7"
-                                onClick={() => setIsSecretRevealed((prev) => !prev)}
-                                aria-label={isSecretRevealed ? "Ocultar segredo" : "Revelar segredo"}
-                            >
-                                {isSecretRevealed ? (
-                                    <EyeOff className="size-4" />
-                                ) : (
-                                    <Eye className="size-4" />
-                                )}
-                            </Button>
+                            <MonoValue className="flex-1 truncate">{integration?.ds_secret}</MonoValue>
                         </div>
                     </div>
                 </div>
 
                 <DrawerFooter className="border-t border-border/60 sm:flex-row sm:justify-end">
-                    <Button type="button" variant="outline" onClick={() => handleOpenChange(false)}>
+                    <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
                         Fechar
                     </Button>
                     <Can permission="integrations.manage" fallback={null}>
