@@ -34,22 +34,21 @@ import { useMemo, useState } from "react";
 import { Can } from "@/modules/auth/components/can";
 
 import { MonoValue } from "../components/core-mono-value";
-import { useFetchCoreAudit } from "../hooks/use-fetch-core-audit";
-import { auditMock, type CoreAuditItem } from "../mocks/audit.mock";
+import { useFetchAudit, type AuditItem } from "@/modules/audit/hooks/use-fetch-audit";
 
-type AuditAction = "all" | "CREATE" | "UPDATE" | "DELETE" | "READ";
+type AuditAction = "all" | "CREATE" | "UPDATE" | "DELETE";
 
 interface Filters {
-    ds_user: string;
+    cd_user: string;
     ds_action: AuditAction;
-    ds_module: string;
+    ds_entity: string;
     from: string;
     to: string;
 }
 
 const PAGE_SIZE = 10;
 
-const columns: Column<CoreAuditItem>[] = [
+const columns: Column<AuditItem>[] = [
     {
         key: "ds_action",
         title: "Ação",
@@ -85,115 +84,141 @@ const columns: Column<CoreAuditItem>[] = [
         },
     },
     {
-        key: "ds_module",
+        key: "ds_entity",
         title: "Módulo/Entidade",
         icon: Boxes,
+        render: (value) => {
+            if (!value) {
+                return <span className="text-sm text-muted-foreground">---</span>;
+            }
+            return <span>{value.toString()}</span>;
+        },
     },
     {
-        key: "ds_user",
+        key: "ds_user_name",
         title: "Usuário",
         icon: UserIcon,
+        // Sem cd_user, a ação foi executada pelo próprio sistema; com cd_user
+        // mas sem ds_user_name, mostramos o ID como fallback.
+        render: (_value, row) => {
+            if (row.cd_user === null || row.cd_user === undefined) {
+                return <span className="text-sm text-muted-foreground">Sistema</span>;
+            }
+            return <span>{row.ds_user_name ?? `#${row.cd_user}`}</span>;
+        },
     },
     {
         key: "dt_created_at",
         title: "Data/Hora",
         icon: Clock,
-        render: (value) => <span>{formatDate(value as string, "dd/MM/yyyy HH:mm")}</span>,
+        render: (value) => {
+            if (!value) {
+                return <span className="text-sm text-muted-foreground">---</span>;
+            }
+            return <span>{formatDate(value.toString(), "dd/MM/yyyy HH:mm")}</span>;
+        },
     },
     {
         key: "ds_ip",
         title: "IP",
         icon: Network,
-        render: (value) => <MonoValue>{value as string}</MonoValue>,
+        render: (value) => {
+            if (!value) {
+                return <span className="text-sm text-muted-foreground">---</span>;
+            }
+            return <MonoValue>{value as string}</MonoValue>;
+        },
     },
     {
         key: "ds_agent",
         title: "Agente",
         icon: Laptop,
+        render: (value) => {
+            if (!value) {
+                return <span className="text-sm text-muted-foreground">---</span>;
+            }
+            return <span>{value.toString()}</span>;
+        },
     },
 ];
 
 /**
- * Trilha de auditoria mockada do Core (RF029/RF030). Somente leitura: sem
- * botão de criação, sem coluna/ação de escrita. Filtros (usuário, ação,
- * módulo, período) e paginação são aplicados client-side sobre o mock em
- * memória, no mesmo padrão de `core-users-page.tsx`/`core-integrations-page.tsx`.
+ * Trilha de auditoria do Core (RF028). Somente leitura: sem botão de
+ * criação, sem coluna/ação de escrita. Consome o hook V2 real
+ * (`useFetchAudit`, `GET /audit`) — mesma fonte de dados usada por
+ * `src/modules/audit/pages/audit-page.tsx`. Paginação e filtros são
+ * SERVER-SIDE (enviados ao hook), não client-side.
  */
 export function CoreAuditPage() {
     const [filters, setFilters] = useState<Filters>({
-        ds_user: "",
+        cd_user: "",
         ds_action: "all",
-        ds_module: "",
+        ds_entity: "",
         from: "",
         to: "",
     });
     const [page, setPage] = useState(1);
 
-    const { data, isLoading, isError, refetch } = useFetchCoreAudit({
-        ds_user: filters.ds_user.trim() || undefined,
+    const { data, isLoading, isError, refetch } = useFetchAudit({
+        page,
+        pageSize: PAGE_SIZE,
+        cd_user: filters.cd_user.trim() ? Number(filters.cd_user) : undefined,
         ds_action: filters.ds_action === "all" ? undefined : filters.ds_action,
-        ds_module: filters.ds_module === "all" ? undefined : filters.ds_module,
+        ds_entity: filters.ds_entity.trim() || undefined,
         from: filters.from || undefined,
         to: filters.to || undefined,
     });
 
-    const allItems = useMemo(() => data ?? [], [data]);
+    const items = useMemo(() => data?.items ?? [], [data]);
 
-    const totalItems = allItems.length;
-    const totalPages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE));
-    const currentPage = Math.min(page, totalPages);
-
-    const pagedItems = useMemo(
-        () => allItems.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE),
-        [allItems, currentPage],
-    );
-
+    // LIMITAÇÃO DO BACKEND: o retorno atual NÃO traz total/totalPages.
+    // Estimamos o total como (page-1)*pageSize + items.length (apenas o
+    // visto até aqui) e usamos hasNextPage = items.length === pageSize como
+    // heurística de "há próxima página" — mesmo padrão de
+    // `src/modules/audit/pages/audit-page.tsx`.
     const pagination = {
-        page: currentPage,
+        page,
         perPage: PAGE_SIZE,
-        total: totalItems,
-        totalPages,
-        hasNextPage: currentPage < totalPages,
-        hasPreviousPage: currentPage > 1,
+        total: (page - 1) * PAGE_SIZE + items.length,
+        totalPages: page + (items.length === PAGE_SIZE ? 1 : 0),
+        hasNextPage: items.length === PAGE_SIZE,
+        hasPreviousPage: page > 1,
     };
 
-    // Opções do filtro de módulo vêm do catálogo completo (não da lista já
-    // filtrada), para o Select não perder opções conforme o usuário filtra.
-    const moduleOptions = useMemo(() => Array.from(new Set(auditModules(auditMock))), []);
-
-    // KPIs (RF030) refletem os eventos que atendem aos filtros aplicados.
+    // KPIs (RF028) refletem apenas os eventos da PÁGINA atual — mesma
+    // limitação de paginação descrita acima.
     const summarys = useMemo(
         () => [
             {
-                title: "Eventos",
-                value: allItems.length,
+                title: "Eventos (página)",
+                value: items.length,
                 icon: History,
                 colorText: "text-core-signal",
                 borderColor: "hover:border-core-signal",
             },
             {
                 title: "Criações",
-                value: allItems.filter((item) => item.ds_action === "CREATE").length,
+                value: items.filter((item) => item.ds_action === "CREATE").length,
                 icon: FilePlus2,
                 colorText: "text-core-ok",
                 borderColor: "hover:border-core-ok",
             },
             {
                 title: "Atualizações",
-                value: allItems.filter((item) => item.ds_action === "UPDATE").length,
+                value: items.filter((item) => item.ds_action === "UPDATE").length,
                 icon: PencilLine,
                 colorText: "text-amber-500",
                 borderColor: "hover:border-amber-500",
             },
             {
                 title: "Exclusões",
-                value: allItems.filter((item) => item.ds_action === "DELETE").length,
+                value: items.filter((item) => item.ds_action === "DELETE").length,
                 icon: Trash2,
                 colorText: "text-core-fail",
                 borderColor: "hover:border-core-fail",
             },
         ],
-        [allItems],
+        [items],
     );
 
     function handleFilterChange<K extends keyof Filters>(key: K, value: Filters[K]) {
@@ -202,12 +227,12 @@ export function CoreAuditPage() {
     }
 
     return (
-        // Tela inteira exige permissão de leitura de auditoria (RF029/RN013) —
+        // Tela inteira exige permissão de leitura de auditoria (RF028) —
         // sem fallback, mesmo padrão de `src/modules/audit/pages/audit-page.tsx`.
         <Can permission="audit.read">
             <HeaderPage
                 title="Auditoria"
-                description="Trilha de eventos administrativos do módulo Core. Tela somente leitura, dados mockados e estáticos."
+                description="Trilha de eventos administrativos do módulo Core."
                 icon={History}
                 breadcrumb={
                     <Breadcrumb>
@@ -229,9 +254,9 @@ export function CoreAuditPage() {
             />
 
             <div className="flex-1 space-y-6 px-16 pb-8">
-                {/* Somente leitura (RN013): sem botão de criação, sem ações por linha. */}
+                {/* Somente leitura: sem botão de criação, sem ações por linha. */}
                 <TableComponentV2
-                    data={pagedItems}
+                    data={items}
                     columns={columns}
                     registerName="Eventos"
                     isLoading={isLoading}
@@ -244,10 +269,11 @@ export function CoreAuditPage() {
                     filteringComponent={
                         <div className="flex flex-col gap-3 p-4 lg:flex-row lg:items-center lg:flex-wrap">
                             <Input
-                                placeholder="Buscar por usuário"
-                                value={filters.ds_user}
-                                onChange={(e) => handleFilterChange("ds_user", e.target.value)}
-                                className="lg:max-w-xs"
+                                type="number"
+                                placeholder="ID do usuário"
+                                value={filters.cd_user}
+                                onChange={(e) => handleFilterChange("cd_user", e.target.value)}
+                                className="lg:w-40"
                             />
 
                             <Select
@@ -264,26 +290,15 @@ export function CoreAuditPage() {
                                     <SelectItem value="CREATE">CREATE</SelectItem>
                                     <SelectItem value="UPDATE">UPDATE</SelectItem>
                                     <SelectItem value="DELETE">DELETE</SelectItem>
-                                    <SelectItem value="READ">READ</SelectItem>
                                 </SelectContent>
                             </Select>
 
-                            <Select
-                                value={filters.ds_module || "all"}
-                                onValueChange={(value) => handleFilterChange("ds_module", value)}
-                            >
-                                <SelectTrigger className="lg:w-48">
-                                    <SelectValue placeholder="Módulo" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="all">Todos os módulos</SelectItem>
-                                    {moduleOptions.map((module) => (
-                                        <SelectItem key={module} value={module}>
-                                            {module}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
+                            <Input
+                                placeholder="Módulo/Entidade (ex.: user, role...)"
+                                value={filters.ds_entity}
+                                onChange={(e) => handleFilterChange("ds_entity", e.target.value)}
+                                className="lg:max-w-xs"
+                            />
 
                             <Input
                                 type="date"
@@ -306,10 +321,4 @@ export function CoreAuditPage() {
             </div>
         </Can>
     );
-}
-
-// Opções de módulo do filtro são derivadas dos próprios dados mockados, para
-// não precisar manter uma lista fixa em paralelo ao mock.
-function auditModules(items: CoreAuditItem[]): string[] {
-    return items.map((item) => item.ds_module).sort((a, b) => a.localeCompare(b));
 }
