@@ -1,6 +1,5 @@
 import { HeaderPage } from "@/components/header-page";
 import { CardQuantityComponent } from "@/components/table-component-v2";
-import { Button } from "@/components/ui/button";
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -18,19 +17,14 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { Boxes, Pencil, Plug, ShieldCheck, ShieldOff } from "lucide-react";
+import { Boxes, Plug, ShieldCheck, ShieldOff } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router";
-
-import { Can } from "@/modules/auth/components/can";
 
 import { CoreEntityCard } from "../components/core-entity-card";
 import { MonoValue } from "../components/core-mono-value";
 import { StatusDot } from "../components/core-status-dot";
-import { EditModuleModal } from "../components/edit-module-modal";
 import { useFetchModules } from "../hooks/use-fetch-modules";
-import type { CoreModule } from "../mocks/modules.mock";
 
 type StatusFilter = "all" | "active" | "inactive";
 
@@ -40,22 +34,25 @@ interface Filters {
 }
 
 /**
- * Listagem em cards (RF017) — sem botão de criar (RF018). Edição fica
- * disponível diretamente no card; ativar/inativar e conectar/desconectar
- * integrações ficam concentrados na página de detalhe (`/core/modules/:id`),
- * alcançável clicando em qualquer card — paridade de recursos entre as duas
- * telas, sem duplicar a confirmação destrutiva de inativação aqui.
+ * Listagem em cards (RF020) — sem botão de criar (fora de escopo). Não há
+ * edição de nome/descrição nesta tela: a API real não expõe
+ * `PUT /modules/{id}` (RF020-023 só cobrem listagem, detalhe, ativar/desativar
+ * e vincular/desvincular integração) — ver `use-fetch-module.ts` e o
+ * relatório da Etapa 3 para o histórico dessa divergência com a spec
+ * mockada anterior. Ativar/inativar e conectar/desconectar integrações ficam
+ * concentrados na página de detalhe (`/core/modules/:id`), alcançável
+ * clicando em qualquer card.
  */
 export function CoreModulesPage() {
     const { data, isLoading } = useFetchModules();
     const navigate = useNavigate();
 
     const [filters, setFilters] = useState<Filters>({ ds_name: "", status: "all" });
-    const [editModule, setEditModule] = useState<CoreModule | null>(null);
 
     const allModules = useMemo(() => data ?? [], [data]);
 
-    // Filtros client-side (RF017/RF019): nome e status — aceitável, pois é mock em memória.
+    // Filtros client-side: nome e status — mesma decisão já registrada para
+    // usuários/roles (sem paginação/filtro server-side nesta etapa).
     const filteredModules = useMemo(() => {
         const name = filters.ds_name.trim().toLowerCase();
 
@@ -158,7 +155,7 @@ export function CoreModulesPage() {
                     </div>
                 </Card>
 
-                {/* Grid rígido de cards (RF017/RF019) — sem botão de criar (RF018). */}
+                {/* Grid rígido de cards (RF020) — sem botão de criar (fora de escopo). */}
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
                     {filteredModules.map((module) => (
                         <CoreEntityCard
@@ -174,30 +171,10 @@ export function CoreModulesPage() {
                                     <StatusDot tone="off" label="Inativo" />
                                 )
                             }
-                            actions={
-                                <Can permission="modules.manage" fallback={null}>
-                                    <Tooltip>
-                                        <TooltipTrigger asChild>
-                                            <Button
-                                                variant="ghost"
-                                                size="icon"
-                                                className="size-8"
-                                                onClick={(event) => {
-                                                    event.stopPropagation();
-                                                    setEditModule(module);
-                                                }}
-                                            >
-                                                <Pencil className="size-4" />
-                                            </Button>
-                                        </TooltipTrigger>
-                                        <TooltipContent>Editar módulo</TooltipContent>
-                                    </Tooltip>
-                                </Can>
-                            }
                             footer={
                                 <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                                     <Plug className="size-3.5" aria-hidden="true" />
-                                    <MonoValue>{module.cd_integrations.length}</MonoValue>
+                                    <MonoValue>{module.qt_integrations}</MonoValue>
                                     <span>integração(ões) vinculada(s)</span>
                                 </div>
                             }
@@ -211,12 +188,6 @@ export function CoreModulesPage() {
                     )}
                 </div>
             </div>
-
-            <EditModuleModal
-                open={Boolean(editModule)}
-                onOpenChange={(next) => !next && setEditModule(null)}
-                module={editModule}
-            />
         </>
     );
 }

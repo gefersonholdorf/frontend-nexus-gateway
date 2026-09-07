@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { Boxes, Info, Link2, Pencil, Plug, Unlink } from "lucide-react";
+import { Boxes, Info, Link2, Plug, Unlink } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useParams } from "react-router";
 
@@ -27,7 +27,6 @@ import { useHasPermission } from "@/modules/providers/permission-provider";
 
 import { MonoValue } from "../components/core-mono-value";
 import { StatusDot } from "../components/core-status-dot";
-import { EditModuleModal } from "../components/edit-module-modal";
 import { InactiveModuleModal } from "../components/inactive-module-modal";
 import { useFetchIntegrations } from "../hooks/use-fetch-integrations";
 import { useFetchModule } from "../hooks/use-fetch-module";
@@ -37,8 +36,11 @@ import { useUnlinkModuleIntegration } from "../hooks/use-unlink-module-integrati
 
 /**
  * Única rota de detalhe real do módulo Core (`/core/modules/:id`). Identidade
- * do módulo, toggle de status (bloqueado para o módulo Core, RN001) e
- * conectar/desconectar integrações (RF023). Ações gated por `modules.manage`.
+ * do módulo, toggle de status (bloqueado para o módulo Core, RF022) e
+ * conectar/desconectar integrações (RF023, ainda contra o catálogo mockado de
+ * integrações). Ações gated por `modules.manage`. Sem edição de nome/
+ * descrição — não há `PUT /modules/{id}` na spec real (ver
+ * `core-modules-page.tsx`).
  */
 export default function CoreModuleDetailPage() {
     const { id } = useParams<{ id: string }>();
@@ -52,7 +54,6 @@ export default function CoreModuleDetailPage() {
 
     const canManage = useHasPermission("modules.manage");
 
-    const [editOpen, setEditOpen] = useState(false);
     const [inactiveOpen, setInactiveOpen] = useState(false);
     const [selectedIntegrationId, setSelectedIntegrationId] = useState<string>("");
 
@@ -85,7 +86,7 @@ export default function CoreModuleDetailPage() {
             return;
         }
 
-        toggleStatus({ cd_id: moduleItem.cd_id, fl_active: true });
+        toggleStatus({ cd_id: moduleItem.cd_id, ds_key: moduleItem.ds_key, fl_active: true });
     }
 
     function handleConnectIntegration() {
@@ -140,22 +141,12 @@ export default function CoreModuleDetailPage() {
                         </BreadcrumbList>
                     </Breadcrumb>
                 }
-                actions={
-                    moduleItem && (
-                        <Can permission="modules.manage" fallback={null}>
-                            <Button variant="outline" size="sm" onClick={() => setEditOpen(true)}>
-                                <Pencil className="size-4" />
-                                Editar
-                            </Button>
-                        </Can>
-                    )
-                }
             />
 
             <div className="flex-1 space-y-6 px-16 pb-8">
                 {!isLoading && !moduleItem && (
                     <Card className="p-6 text-sm text-muted-foreground">
-                        Módulo não encontrado no catálogo mockado.
+                        Módulo não encontrado.
                     </Card>
                 )}
 
@@ -301,8 +292,6 @@ export default function CoreModuleDetailPage() {
                     </>
                 )}
             </div>
-
-            <EditModuleModal open={editOpen} onOpenChange={setEditOpen} module={moduleItem ?? null} />
 
             <InactiveModuleModal
                 open={inactiveOpen}

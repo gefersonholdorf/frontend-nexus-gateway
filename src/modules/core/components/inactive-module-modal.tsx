@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import { useToggleModuleStatus } from "../hooks/use-toggle-module-status";
-import type { CoreModule } from "../mocks/modules.mock";
+import type { CoreModule } from "../hooks/use-fetch-modules";
 
 interface InactiveModuleModalProps {
     open: boolean;
@@ -22,9 +22,10 @@ interface InactiveModuleModalProps {
 
 /**
  * Confirmação destrutiva de inativação de módulo (RF022) via `AlertDialog`.
- * Nunca é aberto para o módulo "Core" (RN001) — a UI já bloqueia o gatilho,
- * e `useToggleModuleStatus` rejeitaria a mutation de qualquer forma.
- * Reativar não passa por este modal — é uma ação direta (não é destrutiva).
+ * Nunca é aberto para o módulo "Core" (`ds_key === "core"`) — a UI já bloqueia
+ * o gatilho, e `useToggleModuleStatus` rejeitaria a mutation de qualquer
+ * forma. Reativar não passa por este modal — é uma ação direta (não é
+ * destrutiva).
  */
 export function InactiveModuleModal({ open, onOpenChange, module }: InactiveModuleModalProps) {
     const { mutate, isPending } = useToggleModuleStatus();
@@ -35,7 +36,7 @@ export function InactiveModuleModal({ open, onOpenChange, module }: InactiveModu
         }
 
         mutate(
-            { cd_id: module.cd_id, fl_active: false },
+            { cd_id: module.cd_id, ds_key: module.ds_key, fl_active: false },
             { onSettled: () => onOpenChange(false) },
         );
     }

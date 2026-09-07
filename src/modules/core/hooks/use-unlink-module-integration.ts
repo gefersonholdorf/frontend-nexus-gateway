@@ -2,8 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import { queryKeys } from "@/lib/api/query-keys";
-import { simulateLatency } from "../mocks/simulate-latency";
-import { modulesMock, type CoreModule } from "../mocks/modules.mock";
+import { useApiClient } from "@/lib/api/use-api-client";
 
 export interface UnlinkModuleIntegrationInput {
     cd_module: number;
@@ -11,35 +10,21 @@ export interface UnlinkModuleIntegrationInput {
 }
 
 /**
- * Hook 100% mockado (sem `fetch`/`ApiClient`) — desvincula uma integração de
- * um módulo, removendo o id de `modulesMock.cd_integrations` (RF023).
- * Ver docs/architecture/core-module-roadmap.md.
+ * `DELETE /modules/{id}/integrations/{intId}` (RF023) — desvincula uma
+ * integração de um módulo.
  */
 export function useUnlinkModuleIntegration() {
+    const api = useApiClient();
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async ({
-            cd_module,
-            cd_integration,
-        }: UnlinkModuleIntegrationInput): Promise<CoreModule> => {
-            await simulateLatency(200);
-
-            const module = modulesMock.find((item) => item.cd_id === cd_module);
-
-            if (!module) {
-                throw new Error("Módulo não encontrado.");
-            }
-
-            module.cd_integrations = module.cd_integrations.filter(
-                (id) => id !== cd_integration,
-            );
-
-            return module;
-        },
-        onSuccess: (module) => {
+        mutationFn: ({ cd_module, cd_integration }: UnlinkModuleIntegrationInput) =>
+            api.delete<void>(`/modules/${cd_module}/integrations/${cd_integration}`, {
+                errorMessage: "Erro ao desconectar integração do módulo",
+            }),
+        onSuccess: (_data, variables) => {
             queryClient.invalidateQueries({ queryKey: queryKeys.modules.all() });
-            queryClient.invalidateQueries({ queryKey: queryKeys.modules.detail(module.cd_id) });
+            queryClient.invalidateQueries({ queryKey: queryKeys.modules.detail(variables.cd_module) });
             toast.success("Integração desconectada do módulo.", {
                 position: "top-center",
                 richColors: true,

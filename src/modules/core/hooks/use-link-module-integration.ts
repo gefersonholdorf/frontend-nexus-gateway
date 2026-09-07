@@ -2,8 +2,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import { queryKeys } from "@/lib/api/query-keys";
-import { simulateLatency } from "../mocks/simulate-latency";
-import { modulesMock, type CoreModule } from "../mocks/modules.mock";
+import { useApiClient } from "@/lib/api/use-api-client";
+import type { CoreModuleDetail } from "./use-fetch-module";
 
 export interface LinkModuleIntegrationInput {
     cd_module: number;
@@ -11,36 +11,22 @@ export interface LinkModuleIntegrationInput {
 }
 
 /**
- * Hook 100% mockado (sem `fetch`/`ApiClient`) — vincula uma integração do
- * mock (`integrations.mock.ts`) a um módulo, gravando em
- * `modulesMock.cd_integrations` (RN009: módulo possui múltiplas integrações).
- * Ver docs/architecture/core-module-roadmap.md.
+ * `POST /modules/{id}/integrations` (RF023) — vincula uma integração do
+ * catálogo (ainda mockado, `useFetchIntegrations`) a um módulo.
  */
 export function useLinkModuleIntegration() {
+    const api = useApiClient();
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async ({
-            cd_module,
-            cd_integration,
-        }: LinkModuleIntegrationInput): Promise<CoreModule> => {
-            await simulateLatency(200);
-
-            const module = modulesMock.find((item) => item.cd_id === cd_module);
-
-            if (!module) {
-                throw new Error("Módulo não encontrado.");
-            }
-
-            if (!module.cd_integrations.includes(cd_integration)) {
-                module.cd_integrations = [...module.cd_integrations, cd_integration];
-            }
-
-            return module;
-        },
-        onSuccess: (module) => {
+        mutationFn: ({ cd_module, cd_integration }: LinkModuleIntegrationInput) =>
+            api.post<CoreModuleDetail>(`/modules/${cd_module}/integrations`, {
+                body: { cd_integration },
+                errorMessage: "Erro ao conectar integração ao módulo",
+            }),
+        onSuccess: (_module, variables) => {
             queryClient.invalidateQueries({ queryKey: queryKeys.modules.all() });
-            queryClient.invalidateQueries({ queryKey: queryKeys.modules.detail(module.cd_id) });
+            queryClient.invalidateQueries({ queryKey: queryKeys.modules.detail(variables.cd_module) });
             toast.success("Integração conectada ao módulo.", {
                 position: "top-center",
                 richColors: true,
