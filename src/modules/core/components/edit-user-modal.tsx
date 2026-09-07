@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/dialog";
 
 import { useUpdateUser } from "../hooks/use-update-user";
-import type { CoreUser } from "../mocks/users.mock";
+import type { CoreUser } from "../hooks/use-fetch-users";
 import { UserFormFields } from "./user-form-fields";
 import { userFormSchema, type UserFormValues } from "./user-form-schema";
 
@@ -25,8 +25,7 @@ interface EditUserModalProps {
 }
 
 /**
- * Modal de edição de usuário (RF008) — mutation mockada via `useUpdateUser`,
- * sem persistência real. Ver docs/architecture/core-module-roadmap.md.
+ * Modal de edição de usuário (RF011) — `useUpdateUser` chama `PUT /users/{id}`.
  */
 export function EditUserModal({ open, onOpenChange, user }: EditUserModalProps) {
     const { mutateAsync, isPending } = useUpdateUser();
@@ -80,8 +79,7 @@ export function EditUserModal({ open, onOpenChange, user }: EditUserModalProps) 
                 <DialogHeader>
                     <DialogTitle>Editar usuário</DialogTitle>
                     <DialogDescription>
-                        Atualize os dados de {user?.ds_name ?? "usuário"}. Dado mockado, sem
-                        persistência real.
+                        Atualize os dados de {user?.ds_name ?? "usuário"}.
                     </DialogDescription>
                 </DialogHeader>
 

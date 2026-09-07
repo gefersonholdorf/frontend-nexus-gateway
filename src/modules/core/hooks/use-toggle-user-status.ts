@@ -2,8 +2,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import { queryKeys } from "@/lib/api/query-keys";
-import { simulateLatency } from "../mocks/simulate-latency";
-import { usersMock, type CoreUser } from "../mocks/users.mock";
+import { useApiClient } from "@/lib/api/use-api-client";
+import type { CoreUser } from "./use-fetch-users";
 
 export interface ToggleUserStatusInput {
     cd_id: number;
@@ -11,31 +11,25 @@ export interface ToggleUserStatusInput {
 }
 
 /**
- * Hook 100% mockado (sem `fetch`/`ApiClient`) — ativa/inativa um usuário em
- * `usersMock` em memória (RN004: status é binário, Ativo/Inativo).
- * Ver docs/architecture/core-module-roadmap.md.
+ * `PATCH /users/{id}/active` (RF012). Status é binário (Ativo/Inativo).
  */
 export function useToggleUserStatus() {
+    const api = useApiClient();
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async ({ cd_id, fl_active }: ToggleUserStatusInput): Promise<CoreUser> => {
-            await simulateLatency();
-
-            const user = usersMock.find((item) => item.cd_id === cd_id);
-
-            if (!user) {
-                throw new Error("Usuário não encontrado.");
-            }
-
-            user.fl_active = fl_active;
-
-            return user;
-        },
-        onSuccess: (user) => {
+        mutationFn: ({ cd_id, fl_active }: ToggleUserStatusInput) =>
+            api.patch<CoreUser>(`/users/${cd_id}/active`, {
+                body: { fl_active },
+                errorMessage: "Erro ao atualizar status do usuário",
+            }),
+        onSuccess: (user, variables) => {
             queryClient.invalidateQueries({ queryKey: queryKeys.users.all() });
+            queryClient.invalidateQueries({ queryKey: queryKeys.users.detail(variables.cd_id) });
             toast.success(
-                user.fl_active ? "Usuário ativado com sucesso." : "Usuário inativado com sucesso.",
+                (user?.fl_active ?? variables.fl_active)
+                    ? "Usuário ativado com sucesso."
+                    : "Usuário inativado com sucesso.",
                 { position: "top-center", richColors: true },
             );
         },

@@ -2,28 +2,20 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import { queryKeys } from "@/lib/api/query-keys";
-import { simulateLatency } from "../mocks/simulate-latency";
-import { usersMock } from "../mocks/users.mock";
+import { useApiClient } from "@/lib/api/use-api-client";
 
 /**
- * Hook 100% mockado (sem `fetch`/`ApiClient`) — remove de `usersMock` em memória.
- * Ver docs/architecture/core-module-roadmap.md.
+ * `DELETE /users/{id}` (RF011).
  */
 export function useDeleteUser() {
+    const api = useApiClient();
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async (cd_id: number): Promise<void> => {
-            await simulateLatency();
-
-            const index = usersMock.findIndex((item) => item.cd_id === cd_id);
-
-            if (index === -1) {
-                throw new Error("Usuário não encontrado.");
-            }
-
-            usersMock.splice(index, 1);
-        },
+        mutationFn: (cd_id: number) =>
+            api.delete<void>(`/users/${cd_id}`, {
+                errorMessage: "Erro ao excluir usuário",
+            }),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: queryKeys.users.all() });
             toast.success("Usuário excluído com sucesso.", {

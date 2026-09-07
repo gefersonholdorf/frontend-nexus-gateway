@@ -2,8 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import { queryKeys } from "@/lib/api/query-keys";
-import { simulateLatency } from "../mocks/simulate-latency";
-import { usersMock, type CoreUser } from "../mocks/users.mock";
+import { useApiClient } from "@/lib/api/use-api-client";
 
 export interface UnassignRoleFromUserInput {
     cd_user: number;
@@ -11,29 +10,21 @@ export interface UnassignRoleFromUserInput {
 }
 
 /**
- * Hook 100% mockado (sem `fetch`/`ApiClient`) — desvincula uma role de um
- * usuário, removendo de `usersMock.cd_roles`.
- * Ver docs/architecture/core-module-roadmap.md.
+ * `DELETE /users/{id}/roles/{roleId}` (RF014) — desvincula uma role de um
+ * usuário.
  */
 export function useUnassignRoleFromUser() {
+    const api = useApiClient();
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async ({ cd_user, cd_role }: UnassignRoleFromUserInput): Promise<CoreUser> => {
-            await simulateLatency(200);
-
-            const user = usersMock.find((item) => item.cd_id === cd_user);
-
-            if (!user) {
-                throw new Error("Usuário não encontrado.");
-            }
-
-            user.cd_roles = user.cd_roles.filter((roleId) => roleId !== cd_role);
-
-            return user;
-        },
-        onSuccess: () => {
+        mutationFn: ({ cd_user, cd_role }: UnassignRoleFromUserInput) =>
+            api.delete<void>(`/users/${cd_user}/roles/${cd_role}`, {
+                errorMessage: "Erro ao desvincular role do usuário",
+            }),
+        onSuccess: (_data, variables) => {
             queryClient.invalidateQueries({ queryKey: queryKeys.users.all() });
+            queryClient.invalidateQueries({ queryKey: queryKeys.users.detail(variables.cd_user) });
             toast.success("Role desvinculada do usuário.", {
                 position: "top-center",
                 richColors: true,

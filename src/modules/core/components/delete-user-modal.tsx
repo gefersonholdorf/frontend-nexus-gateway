@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import { useDeleteUser } from "../hooks/use-delete-user";
-import type { CoreUser } from "../mocks/users.mock";
+import type { CoreUser } from "../hooks/use-fetch-users";
 
 interface DeleteUserModalProps {
     open: boolean;
@@ -21,7 +21,8 @@ interface DeleteUserModalProps {
 }
 
 /**
- * Confirmação destrutiva de exclusão de usuário (RF008) via `AlertDialog`.
+ * Confirmação destrutiva de exclusão de usuário (RF011) via `AlertDialog` —
+ * `useDeleteUser` chama `DELETE /users/{id}`.
  */
 export function DeleteUserModal({ open, onOpenChange, user }: DeleteUserModalProps) {
     const { mutate, isPending } = useDeleteUser();

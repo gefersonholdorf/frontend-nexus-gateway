@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import { useToggleUserStatus } from "../hooks/use-toggle-user-status";
-import type { CoreUser } from "../mocks/users.mock";
+import type { CoreUser } from "../hooks/use-fetch-users";
 
 interface InactiveUserModalProps {
     open: boolean;
@@ -21,9 +21,9 @@ interface InactiveUserModalProps {
 }
 
 /**
- * Confirmação destrutiva de inativação de usuário (RF008) via `AlertDialog`.
- * Reativar não passa por este modal — é uma ação direta na tabela (não é
- * destrutiva).
+ * Confirmação destrutiva de inativação de usuário (RF012) via `AlertDialog` —
+ * `useToggleUserStatus` chama `PATCH /users/{id}/active`. Reativar não passa
+ * por este modal — é uma ação direta na tabela (não é destrutiva).
  */
 export function InactiveUserModal({ open, onOpenChange, user }: InactiveUserModalProps) {
     const { mutate, isPending } = useToggleUserStatus();

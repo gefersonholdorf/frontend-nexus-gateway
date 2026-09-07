@@ -15,7 +15,7 @@ import {
 import { useAssignRoleToUser } from "../hooks/use-assign-role-to-user";
 import { useFetchRoles } from "../hooks/use-fetch-roles";
 import { useUnassignRoleFromUser } from "../hooks/use-unassign-role-from-user";
-import type { CoreUser } from "../mocks/users.mock";
+import type { CoreUser } from "../hooks/use-fetch-users";
 import { StatusDot } from "./core-status-dot";
 
 interface UserRolesDrawerProps {
@@ -25,9 +25,14 @@ interface UserRolesDrawerProps {
 }
 
 /**
- * "Página de detalhe" do usuário (RF007) e vínculo/desvínculo de roles (RF009)
- * — como não existe rota `/core/users/:id`, ambos são resolvidos aqui, num
- * `Drawer` aberto a partir da linha da tabela.
+ * "Página de detalhe" do usuário e vínculo/desvínculo de roles (RF014) — como
+ * não existe rota `/core/users/:id`, ambos são resolvidos aqui, num `Drawer`
+ * aberto a partir da linha da tabela.
+ *
+ * `useAssignRoleToUser`/`useUnassignRoleFromUser` chamam a API real
+ * (`POST`/`DELETE /users/{id}/roles`), mas `useFetchRoles` (lista de roles
+ * disponíveis para vincular) ainda é mockado — a entidade Roles é migrada em
+ * etapa própria.
  */
 export function UserRolesDrawer({ open, onOpenChange, user }: UserRolesDrawerProps) {
     const { data: roles, isLoading } = useFetchRoles();
@@ -58,7 +63,7 @@ export function UserRolesDrawer({ open, onOpenChange, user }: UserRolesDrawerPro
                     </DrawerTitle>
                     <DrawerDescription>
                         Vincule ou desvincule roles deste usuário. Alterações são aplicadas
-                        imediatamente (mock, sem persistência real).
+                        imediatamente.
                     </DrawerDescription>
 
                     {user && (

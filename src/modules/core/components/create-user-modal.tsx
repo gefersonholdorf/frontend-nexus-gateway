@@ -29,8 +29,7 @@ const DEFAULT_VALUES: UserFormValues = {
 };
 
 /**
- * Modal de criação de usuário (RF008) — mutation mockada via `useCreateUser`,
- * sem persistência real. Ver docs/architecture/core-module-roadmap.md.
+ * Modal de criação de usuário (RF011) — `useCreateUser` chama `POST /users`.
  */
 export function CreateUserModal({ open, onOpenChange }: CreateUserModalProps) {
     const { mutateAsync, isPending } = useCreateUser();
@@ -71,8 +70,7 @@ export function CreateUserModal({ open, onOpenChange }: CreateUserModalProps) {
                 <DialogHeader>
                     <DialogTitle>Novo usuário</DialogTitle>
                     <DialogDescription>
-                        Cadastre um novo usuário administrado pelo módulo Core. Dado mockado, sem
-                        persistência real.
+                        Cadastre um novo usuário administrado pelo módulo Core.
                     </DialogDescription>
                 </DialogHeader>
 

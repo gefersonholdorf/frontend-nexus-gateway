@@ -1,6 +1,5 @@
 import { HeaderPage } from "@/components/header-page";
 import { TableComponentV2, type Column } from "@/components/table-component-v2";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
     Breadcrumb,
@@ -22,6 +21,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { formatDate } from "date-fns";
 import {
     Calendar,
+    KeyRound,
     Mail,
     Pencil,
     Plus,
@@ -38,6 +38,7 @@ import { useMemo, useState } from "react";
 
 import { Can } from "@/modules/auth/components/can";
 
+import { ChangeUserPasswordModal } from "../components/change-user-password-modal";
 import { CreateUserModal } from "../components/create-user-modal";
 import { StatusDot } from "../components/core-status-dot";
 import { DeleteUserModal } from "../components/delete-user-modal";
@@ -45,9 +46,8 @@ import { EditUserModal } from "../components/edit-user-modal";
 import { InactiveUserModal } from "../components/inactive-user-modal";
 import { UserRolesDrawer } from "../components/user-roles-drawer";
 import { useFetchRoles } from "../hooks/use-fetch-roles";
-import { useFetchUsers } from "../hooks/use-fetch-users";
+import { useFetchUsers, type CoreUser } from "../hooks/use-fetch-users";
 import { useToggleUserStatus } from "../hooks/use-toggle-user-status";
-import type { CoreUser } from "../mocks/users.mock";
 
 type StatusFilter = "all" | "active" | "inactive";
 
@@ -76,12 +76,7 @@ export function CoreUsersPage() {
     const [inactiveUser, setInactiveUser] = useState<CoreUser | null>(null);
     const [deleteUser, setDeleteUser] = useState<CoreUser | null>(null);
     const [rolesUser, setRolesUser] = useState<CoreUser | null>(null);
-
-    const roleNameById = useMemo(() => {
-        const map = new Map<number, string>();
-        (roles ?? []).forEach((role) => map.set(role.cd_id, role.ds_name));
-        return map;
-    }, [roles]);
+    const [passwordUser, setPasswordUser] = useState<CoreUser | null>(null);
 
     const allUsers = useMemo(() => users ?? [], [users]);
 
@@ -190,22 +185,15 @@ export function CoreUsersPage() {
         },
         {
             key: "cd_roles",
-            title: "Roles vinculadas",
+            title: "Perfis Vinculados",
             render: (value) => {
                 const roleIds = (value as number[]) ?? [];
-
-                if (roleIds.length === 0) {
-                    return <span className="text-sm text-muted-foreground">Nenhuma</span>;
-                }
+                const totalRoles = roles?.length ?? 0;
 
                 return (
-                    <div className="flex flex-wrap gap-1">
-                        {roleIds.map((roleId) => (
-                            <Badge key={roleId} variant="outline">
-                                {roleNameById.get(roleId) ?? `#${roleId}`}
-                            </Badge>
-                        ))}
-                    </div>
+                    <span className="text-sm">
+                        {roleIds.length} / {totalRoles} perfis vinculados
+                    </span>
                 );
             },
         },
@@ -215,7 +203,7 @@ export function CoreUsersPage() {
         <>
             <HeaderPage
                 title="Usuários"
-                description="Cadastro, status e vínculo de roles dos usuários do sistema. Dados mockados, sem persistência real."
+                description="Cadastro, status e vínculo de roles dos usuários do sistema."
                 icon={Users}
                 breadcrumb={
                     <Breadcrumb>
@@ -321,6 +309,20 @@ export function CoreUsersPage() {
                                 <TooltipContent>Editar usuário</TooltipContent>
                             </Tooltip>
 
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="size-8"
+                                        onClick={() => setPasswordUser(user)}
+                                    >
+                                        <KeyRound className="size-4" />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>Alterar senha</TooltipContent>
+                            </Tooltip>
+
                             {user.fl_active ? (
                                 <Tooltip>
                                     <TooltipTrigger asChild>
@@ -393,6 +395,12 @@ export function CoreUsersPage() {
                 open={Boolean(rolesUser)}
                 onOpenChange={(next) => !next && setRolesUser(null)}
                 user={rolesUser}
+            />
+
+            <ChangeUserPasswordModal
+                open={Boolean(passwordUser)}
+                onOpenChange={(next) => !next && setPasswordUser(null)}
+                user={passwordUser}
             />
         </>
     );
