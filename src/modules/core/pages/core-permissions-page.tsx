@@ -11,6 +11,8 @@ import {
 import { KeyRound, Text } from "lucide-react";
 import { useMemo } from "react";
 
+import { Can } from "@/modules/auth/components/can";
+
 import { MonoValue } from "../components/core-mono-value";
 import { useFetchPermissions } from "../hooks/use-fetch-permissions";
 import type { CorePermission } from "../mocks/permissions.mock";
@@ -52,7 +54,9 @@ export function CorePermissionsPage() {
     );
 
     return (
-        <>
+        // Catálogo de permissões só é alcançado a partir de Roles (RF015); o
+        // acesso à tela inteira exige rbac.manage, mesmo padrão de audit-page.tsx.
+        <Can permission="rbac.manage">
             <HeaderPage
                 title="Permissões"
                 description="Catálogo fixo de permissões do sistema. Somente leitura — a atribuição é feita a partir da tela de Roles."
@@ -93,6 +97,6 @@ export function CorePermissionsPage() {
                     cardsQuantity={{ summarys, isLoading }}
                 />
             </div>
-        </>
+        </Can>
     );
 }

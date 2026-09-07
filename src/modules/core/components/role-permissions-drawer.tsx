@@ -20,6 +20,7 @@ import {
     DrawerHeader,
     DrawerTitle,
 } from "@/components/ui/drawer";
+import { useHasPermission } from "@/modules/providers/permission-provider";
 
 import { useAssignPermissionToRole } from "../hooks/use-assign-permission-to-role";
 import { useFetchPermissions } from "../hooks/use-fetch-permissions";
@@ -71,6 +72,10 @@ export function RolePermissionsDrawer({ open, onOpenChange, role }: RolePermissi
     const { mutate: unassignPermission, isPending: isUnassigning } =
         useUnassignPermissionFromRole();
     const navigate = useNavigate();
+
+    // Atribuir/remover permissão exige rbac.assign (RF014) — desabilita os
+    // checkboxes quando o perfil mockado atual não tem essa permissão.
+    const canAssign = useHasPermission("rbac.assign");
 
     const isMutating = isAssigning || isUnassigning;
 
@@ -188,7 +193,11 @@ export function RolePermissionsDrawer({ open, onOpenChange, role }: RolePermissi
                                                         >
                                                             <Checkbox
                                                                 checked={checked}
-                                                                disabled={!role || isMutating}
+                                                                disabled={
+                                                                    !role ||
+                                                                    isMutating ||
+                                                                    !canAssign
+                                                                }
                                                                 onCheckedChange={(value) =>
                                                                     handleTogglePermission(
                                                                         permission.cd_id,

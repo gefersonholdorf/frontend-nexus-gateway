@@ -36,6 +36,8 @@ import {
 } from "lucide-react";
 import { useMemo, useState } from "react";
 
+import { Can } from "@/modules/auth/components/can";
+
 import { CreateUserModal } from "../components/create-user-modal";
 import { StatusDot } from "../components/core-status-dot";
 import { DeleteUserModal } from "../components/delete-user-modal";
@@ -233,10 +235,13 @@ export function CoreUsersPage() {
                     </Breadcrumb>
                 }
                 actions={
-                    <Button size="sm" onClick={() => setCreateOpen(true)}>
-                        <Plus className="size-4" />
-                        Novo usuário
-                    </Button>
+                    // Criação de usuário é ação administrativa (RF008), gated por users.manage.
+                    <Can permission="users.manage" fallback={null}>
+                        <Button size="sm" onClick={() => setCreateOpen(true)}>
+                            <Plus className="size-4" />
+                            Novo usuário
+                        </Button>
+                    </Can>
                 }
             />
 
@@ -286,7 +291,8 @@ export function CoreUsersPage() {
                         </div>
                     }
                     actions={(user) => (
-                        <>
+                        // Todas as ações de escrita sobre usuário exigem users.manage (RF008/RF009).
+                        <Can permission="users.manage" fallback={null}>
                             <Tooltip>
                                 <TooltipTrigger asChild>
                                     <Button
@@ -358,7 +364,7 @@ export function CoreUsersPage() {
                                 </TooltipTrigger>
                                 <TooltipContent>Excluir usuário</TooltipContent>
                             </Tooltip>
-                        </>
+                        </Can>
                     )}
                 />
             </div>

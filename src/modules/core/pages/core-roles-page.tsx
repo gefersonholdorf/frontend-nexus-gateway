@@ -35,6 +35,8 @@ import {
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 
+import { Can } from "@/modules/auth/components/can";
+
 import { CreateRoleModal } from "../components/create-role-modal";
 import { StatusDot } from "../components/core-status-dot";
 import { DeleteRoleModal } from "../components/delete-role-modal";
@@ -224,10 +226,13 @@ export function CoreRolesPage() {
                             <KeyRound className="size-4" />
                             Ver catálogo de permissões
                         </Button>
-                        <Button size="sm" onClick={() => setCreateOpen(true)}>
-                            <Plus className="size-4" />
-                            Nova role
-                        </Button>
+                        {/* Criação de role é CRUD (RF010), gated por rbac.manage. */}
+                        <Can permission="rbac.manage" fallback={null}>
+                            <Button size="sm" onClick={() => setCreateOpen(true)}>
+                                <Plus className="size-4" />
+                                Nova role
+                            </Button>
+                        </Can>
                     </div>
                 }
             />
@@ -272,77 +277,84 @@ export function CoreRolesPage() {
                     }
                     actions={(role) => (
                         <>
-                            <Tooltip>
-                                <TooltipTrigger asChild>
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        className="size-8"
-                                        onClick={() => setPermissionsRole(role)}
-                                    >
-                                        <KeySquare className="size-4" />
-                                    </Button>
-                                </TooltipTrigger>
-                                <TooltipContent>Gerenciar permissões</TooltipContent>
-                            </Tooltip>
-
-                            <Tooltip>
-                                <TooltipTrigger asChild>
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        className="size-8"
-                                        onClick={() => setEditRole(role)}
-                                    >
-                                        <Pencil className="size-4" />
-                                    </Button>
-                                </TooltipTrigger>
-                                <TooltipContent>Editar role</TooltipContent>
-                            </Tooltip>
-
-                            {role.fl_active ? (
+                            {/* Atribuir/remover permissões da role (RF014) exige rbac.assign,
+                                separado do CRUD de role em si. */}
+                            <Can permission="rbac.assign" fallback={null}>
                                 <Tooltip>
                                     <TooltipTrigger asChild>
                                         <Button
                                             variant="ghost"
                                             size="icon"
                                             className="size-8"
-                                            onClick={() => setInactiveRole(role)}
+                                            onClick={() => setPermissionsRole(role)}
                                         >
-                                            <PowerOff className="size-4" />
+                                            <KeySquare className="size-4" />
                                         </Button>
                                     </TooltipTrigger>
-                                    <TooltipContent>Inativar role</TooltipContent>
+                                    <TooltipContent>Gerenciar permissões</TooltipContent>
                                 </Tooltip>
-                            ) : (
+                            </Can>
+
+                            {/* Editar/ativar/inativar/excluir role é CRUD (RF010), gated por rbac.manage. */}
+                            <Can permission="rbac.manage" fallback={null}>
                                 <Tooltip>
                                     <TooltipTrigger asChild>
                                         <Button
                                             variant="ghost"
                                             size="icon"
                                             className="size-8"
-                                            onClick={() => handleActivate(role)}
+                                            onClick={() => setEditRole(role)}
                                         >
-                                            <Power className="size-4" />
+                                            <Pencil className="size-4" />
                                         </Button>
                                     </TooltipTrigger>
-                                    <TooltipContent>Ativar role</TooltipContent>
+                                    <TooltipContent>Editar role</TooltipContent>
                                 </Tooltip>
-                            )}
 
-                            <Tooltip>
-                                <TooltipTrigger asChild>
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        className="size-8 text-core-fail hover:text-core-fail"
-                                        onClick={() => setDeleteRole(role)}
-                                    >
-                                        <Trash2 className="size-4" />
-                                    </Button>
-                                </TooltipTrigger>
-                                <TooltipContent>Excluir role</TooltipContent>
-                            </Tooltip>
+                                {role.fl_active ? (
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                className="size-8"
+                                                onClick={() => setInactiveRole(role)}
+                                            >
+                                                <PowerOff className="size-4" />
+                                            </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent>Inativar role</TooltipContent>
+                                    </Tooltip>
+                                ) : (
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                className="size-8"
+                                                onClick={() => handleActivate(role)}
+                                            >
+                                                <Power className="size-4" />
+                                            </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent>Ativar role</TooltipContent>
+                                    </Tooltip>
+                                )}
+
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className="size-8 text-core-fail hover:text-core-fail"
+                                            onClick={() => setDeleteRole(role)}
+                                        >
+                                            <Trash2 className="size-4" />
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>Excluir role</TooltipContent>
+                                </Tooltip>
+                            </Can>
                         </>
                     )}
                 />
