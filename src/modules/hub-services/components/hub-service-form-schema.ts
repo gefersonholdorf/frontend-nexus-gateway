@@ -12,11 +12,13 @@ import { z } from "zod";
  * Isolado de `hub-service-form-fields.tsx` para não misturar export de
  * componente (Fast Refresh) com export de constante no mesmo arquivo.
  */
+// Os três campos abaixo vêm sempre de um <Input> (string, nunca null no DOM);
+// o `.nullable()` só existe no lado de saída, via `transform`, para enviar
+// `null` ao backend em vez de string vazia quando o campo opcional está em branco.
 const nullableHttpUrl = z
     .string()
     .trim()
-    .nullable()
-    .transform((value) => (value === "" || value == null ? null : value))
+    .transform((value) => (value === "" ? null : value))
     .refine(
         (value) => value === null || z.url({ protocol: /^https?$/ }).safeParse(value).success,
         { message: "Informe uma URL http/https válida." },
@@ -25,14 +27,12 @@ const nullableHttpUrl = z
 const nullableText = z
     .string()
     .trim()
-    .nullable()
-    .transform((value) => (value === "" || value == null ? null : value));
+    .transform((value) => (value === "" ? null : value));
 
 const nullablePort = z
     .string()
     .trim()
-    .nullable()
-    .transform((value) => (value === "" || value == null ? null : Number(value)))
+    .transform((value) => (value === "" ? null : Number(value)))
     .refine(
         (value) => value === null || (Number.isInteger(value) && value > 0 && value <= 65535),
         { message: "Informe uma porta válida (1-65535)." },
@@ -67,4 +67,8 @@ export const hubServiceFormSchema = z
         }
     });
 
+/** Formato bruto dos campos, como preenchidos no formulário (antes do parse). */
+export type HubServiceFormInput = z.input<typeof hubServiceFormSchema>;
+
+/** Formato após validação/transform do zod — o que chega em `onSubmit`. */
 export type HubServiceFormValues = z.infer<typeof hubServiceFormSchema>;
