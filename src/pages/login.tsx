@@ -4,6 +4,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { useCampaignActive } from "@/contexts/campaign-active";
 import { useTheme } from "@/contexts/theme-context";
 import { useUser } from "@/contexts/user-context";
+import { isApiError } from "@/lib/api/api-error";
 import { useLogin } from "@/modules/auth/hooks/use-login";
 import { Loader2Icon, Lock, LogIn, Mail, Moon, Sun } from "lucide-react";
 import { useState } from "react";
@@ -81,36 +82,58 @@ export function LoginPage() {
             password: "",
         })
 
+        let response: Awaited<ReturnType<typeof mutation.mutateAsync>>
+
         try {
-            const { token, user } = await mutation.mutateAsync({
+            response = await mutation.mutateAsync({
                 ds_email: email,
                 senha: password,
             })
-
-            setUser({
-                email: user.ds_email,
-                name: user.ds_name,
-                roleDescription: user.ds_role_description ?? "",
-                logo: user.ds_avatar_url,
-                roles: [],
-                permissions: [],
-                token,
-            })
-
-            toast.success("Login realizado com sucesso.", {
-                position: "top-center",
-                richColors: true,
-            })
-
-            navigate("/welcome")
-
-            onLoginCompleted(true)
         } catch (error) {
-            toast.error("Erro ao realizar login, verifique suas credenciais.", {
+            if (isApiError(error) && (error.status === 401 || error.status === 400)) {
+                toast.error("Erro ao realizar login, verifique suas credenciais.", {
+                    position: "top-center",
+                    richColors: true,
+                })
+            } else {
+                console.error(error)
+                toast.error("Não foi possível concluir o login. Tente novamente ou contate o suporte.", {
+                    position: "top-center",
+                    richColors: true,
+                })
+            }
+            return
+        }
+
+        if (!response?.token || !response.user?.ds_email) {
+            console.error("Resposta de login em formato inesperado:", response)
+            toast.error("Não foi possível concluir o login. Tente novamente ou contate o suporte.", {
                 position: "top-center",
                 richColors: true,
             })
+            return
         }
+
+        const { token, user } = response
+
+        setUser({
+            email: user.ds_email,
+            name: user.ds_name,
+            roleDescription: user.ds_role_description ?? "",
+            logo: user.ds_avatar_url,
+            roles: [],
+            permissions: [],
+            token,
+        })
+
+        toast.success("Login realizado com sucesso.", {
+            position: "top-center",
+            richColors: true,
+        })
+
+        navigate("/core")
+
+        onLoginCompleted(true)
     }
 
     return (
