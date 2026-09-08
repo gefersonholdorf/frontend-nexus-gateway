@@ -7,7 +7,7 @@ import type { CoreRole } from "./use-fetch-roles";
 
 export interface ToggleRoleStatusInput {
     cd_id: number;
-    fl_active: boolean;
+    st_status: 'ACTIVE' | 'INACTIVE';
 }
 
 /**
@@ -18,16 +18,16 @@ export function useToggleRoleStatus() {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: ({ cd_id, fl_active }: ToggleRoleStatusInput) =>
+        mutationFn: ({ cd_id, st_status }: ToggleRoleStatusInput) =>
             api.patch<CoreRole>(`/roles/${cd_id}/status`, {
-                body: { fl_active },
+                body: { st_status },
                 errorMessage: "Erro ao atualizar status da role",
             }),
         onSuccess: (role, variables) => {
             queryClient.invalidateQueries({ queryKey: queryKeys.roles.all() });
             queryClient.invalidateQueries({ queryKey: queryKeys.roles.detail(variables.cd_id) });
             toast.success(
-                (role?.fl_active ?? variables.fl_active)
+                (role?.st_status ?? variables.st_status)
                     ? "Role ativada com sucesso."
                     : "Role inativada com sucesso.",
                 { position: "top-center", richColors: true },

@@ -41,7 +41,6 @@ export function EditRoleModal({ open, onOpenChange, role }: EditRoleModalProps) 
         defaultValues: {
             ds_name: "",
             ds_description: "",
-            fl_active: "true",
         },
     });
 
@@ -50,7 +49,6 @@ export function EditRoleModal({ open, onOpenChange, role }: EditRoleModalProps) 
             reset({
                 ds_name: role.ds_name,
                 ds_description: role.ds_description,
-                fl_active: role.fl_active ? "true" : "false",
             });
         }
     }, [role, reset]);
@@ -64,7 +62,6 @@ export function EditRoleModal({ open, onOpenChange, role }: EditRoleModalProps) 
             cd_id: role.cd_id,
             ds_name: values.ds_name,
             ds_description: values.ds_description,
-            fl_active: values.fl_active === "true",
         });
 
         onOpenChange(false);

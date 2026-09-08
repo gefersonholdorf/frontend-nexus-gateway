@@ -34,7 +34,7 @@ export function InactiveRoleModal({ open, onOpenChange, role }: InactiveRoleModa
         }
 
         mutate(
-            { cd_id: role.cd_id, fl_active: false },
+            { cd_id: role.cd_id, st_status: 'INACTIVE' },
             { onSettled: () => onOpenChange(false) },
         );
     }

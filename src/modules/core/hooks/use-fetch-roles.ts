@@ -20,9 +20,10 @@ export interface CoreRole {
     cd_id: number;
     ds_name: string;
     ds_description: string;
-    fl_active: boolean;
+    st_status: string;
     cd_permissions: number[];
     dt_created_at: string;
+    qt_permissions: number
 }
 
 /**

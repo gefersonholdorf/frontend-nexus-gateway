@@ -11,7 +11,6 @@ import { z } from "zod";
 export const roleFormSchema = z.object({
     ds_name: z.string().trim().min(3, "Informe um nome válido."),
     ds_description: z.string().trim().min(3, "Informe uma descrição válida."),
-    fl_active: z.enum(["true", "false"], { message: "Selecione o status." }),
 });
 
 export type RoleFormValues = z.infer<typeof roleFormSchema>;

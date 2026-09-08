@@ -73,7 +73,7 @@ export function RolePermissionsDrawer({ open, onOpenChange, role }: RolePermissi
     // JSDoc de `useFetchRoleById`. `role` (prop) é usado como fallback
     // enquanto o detalhe ainda não chegou.
     const { data: roleDetail } = useFetchRoleById(role?.cd_id);
-    const effectiveRole = roleDetail ?? role;
+    const effectiveRole = roleDetail?.cd_permissions;
     const { mutate: assignPermission, isPending: isAssigning } = useAssignPermissionToRole();
     const { mutate: unassignPermission, isPending: isUnassigning } =
         useUnassignPermissionFromRole();

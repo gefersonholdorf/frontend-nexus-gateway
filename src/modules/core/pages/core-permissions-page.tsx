@@ -55,7 +55,7 @@ export function CorePermissionsPage() {
     return (
         // Catálogo de permissões só é alcançado a partir de Roles (RF015); o
         // acesso à tela inteira exige rbac.manage, mesmo padrão de audit-page.tsx.
-        <Can permission="rbac.manage">
+        <Can permission="rbac.permissions.manage">
             <HeaderPage
                 title="Permissões"
                 description="Catálogo fixo de permissões do sistema. Somente leitura — a atribuição é feita a partir da tela de Roles."

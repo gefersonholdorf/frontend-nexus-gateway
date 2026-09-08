@@ -179,7 +179,7 @@ export const sidebarModules: SidebarModule[] = [
                 path: "/core/roles",
                 icon: Shield,
                 profiles: ['Administrador'],
-                permission: 'rbac.manage'
+                permission: 'rbac.roles.manage'
             },
         ]
     }

@@ -1,14 +1,7 @@
-import { Controller, type Control, type FieldErrors, type UseFormRegister } from "react-hook-form";
+import { type Control, type FieldErrors, type UseFormRegister } from "react-hook-form";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 
 import type { RoleFormValues } from "./role-form-schema";
@@ -19,7 +12,7 @@ interface RoleFormFieldsProps {
     control: Control<RoleFormValues>;
 }
 
-export function RoleFormFields({ register, errors, control }: RoleFormFieldsProps) {
+export function RoleFormFields({ register, errors }: RoleFormFieldsProps) {
     return (
         <div className="space-y-4">
             <div className="space-y-2">
@@ -41,28 +34,6 @@ export function RoleFormFields({ register, errors, control }: RoleFormFieldsProp
                     <span className="text-sm text-destructive">
                         {errors.ds_description.message}
                     </span>
-                )}
-            </div>
-
-            <div className="space-y-2">
-                <Label htmlFor="fl_active">Status</Label>
-                <Controller
-                    control={control}
-                    name="fl_active"
-                    render={({ field }) => (
-                        <Select value={field.value} onValueChange={field.onChange}>
-                            <SelectTrigger id="fl_active" className="w-full">
-                                <SelectValue placeholder="Selecione o status" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="true">Ativo</SelectItem>
-                                <SelectItem value="false">Inativo</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    )}
-                />
-                {errors.fl_active && (
-                    <span className="text-sm text-destructive">{errors.fl_active.message}</span>
                 )}
             </div>
         </div>

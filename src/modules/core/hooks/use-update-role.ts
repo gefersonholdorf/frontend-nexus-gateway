@@ -9,7 +9,6 @@ export interface UpdateRoleInput {
     cd_id: number;
     ds_name: string;
     ds_description: string;
-    fl_active: boolean;
 }
 
 /**

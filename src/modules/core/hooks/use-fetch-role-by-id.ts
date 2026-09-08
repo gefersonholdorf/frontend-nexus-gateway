@@ -26,6 +26,6 @@ export function useFetchRoleById(cd_id: number | undefined) {
             api.get<CoreRole>(`/roles/${cd_id}`, {
                 errorMessage: "Erro ao consultar role",
             }),
-        enabled: cd_id !== undefined,
+        enabled: !!cd_id,
     });
 }

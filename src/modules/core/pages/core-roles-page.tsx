@@ -84,7 +84,7 @@ export function CoreRolesPage() {
             const matchesName = name === "" || role.ds_name.toLowerCase().includes(name);
             const matchesStatus =
                 filters.status === "all" ||
-                (filters.status === "active" ? role.fl_active : !role.fl_active);
+                (filters.status === "active" ? role.st_status : !role.st_status);
 
             return matchesName && matchesStatus;
         });
@@ -120,14 +120,14 @@ export function CoreRolesPage() {
             },
             {
                 title: "Ativas",
-                value: allRoles.filter((role) => role.fl_active).length,
+                value: allRoles.filter((role) => role.st_status).length,
                 icon: ShieldCheck,
                 colorText: "text-core-ok",
                 borderColor: "hover:border-core-ok",
             },
             {
                 title: "Inativas",
-                value: allRoles.filter((role) => !role.fl_active).length,
+                value: allRoles.filter((role) => !role.st_status).length,
                 icon: ShieldOff,
                 colorText: "text-core-neutral",
                 borderColor: "hover:border-core-neutral",
@@ -157,10 +157,10 @@ export function CoreRolesPage() {
             icon: Text,
         },
         {
-            key: "fl_active",
+            key: "st_status",
             title: "Status",
             render: (value) =>
-                value ? (
+                value === "ACTIVE" ? (
                     <StatusDot tone="ok" label="Ativo" />
                 ) : (
                     <StatusDot tone="off" label="Inativo" />
@@ -169,12 +169,10 @@ export function CoreRolesPage() {
         {
             key: "cd_permissions",
             title: "Permissões",
-            render: (value) => {
-                const permissionIds = (value as number[]) ?? [];
-
+            render: (_, row) => {
                 return (
                     <span className="text-sm">
-                        {permissionIds.length}/{totalPermissionsCount}
+                        {row.qt_permissions}/{totalPermissionsCount}
                     </span>
                 );
             },
@@ -284,7 +282,7 @@ export function CoreRolesPage() {
                             </Can>
 
                             {/* Editar/ativar/inativar/excluir role é CRUD (RF010), gated por rbac.manage. */}
-                            <Can permission="rbac.manage" fallback={null}>
+                            <Can permission="rbac.roles.manage" fallback={null}>
                                 <Tooltip>
                                     <TooltipTrigger asChild>
                                         <Button
@@ -299,7 +297,7 @@ export function CoreRolesPage() {
                                     <TooltipContent>Editar role</TooltipContent>
                                 </Tooltip>
 
-                                {role.fl_active ? (
+                                {role.st_status ? (
                                     <Tooltip>
                                         <TooltipTrigger asChild>
                                             <Button
