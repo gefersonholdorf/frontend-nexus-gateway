@@ -115,7 +115,7 @@ export function CoreRolesPage() {
     const summarys = useMemo(
         () => [
             {
-                title: "Total de roles",
+                title: "Total de Perfis",
                 value: allRoles.length,
                 icon: Shield,
                 colorText: "text-core-signal",
@@ -170,7 +170,7 @@ export function CoreRolesPage() {
                 ),
         },
         {
-            key: "cd_permissions",
+            key: "qt_permissions",
             title: "Permissões",
             render: (_, row) => {
                 const percentage =
@@ -193,7 +193,7 @@ export function CoreRolesPage() {
     return (
         <>
             <HeaderPage
-                title="Roles"
+                title="Perfis"
                 description="Perfis de acesso e atribuição de permissões do catálogo fixo."
                 icon={Shield}
                 breadcrumb={
@@ -208,7 +208,7 @@ export function CoreRolesPage() {
                             </BreadcrumbItem>
                             <BreadcrumbSeparator />
                             <BreadcrumbItem>
-                                <BreadcrumbPage>Roles</BreadcrumbPage>
+                                <BreadcrumbPage>Perfis</BreadcrumbPage>
                             </BreadcrumbItem>
                         </BreadcrumbList>
                     </Breadcrumb>
@@ -224,10 +224,10 @@ export function CoreRolesPage() {
                             Ver catálogo de permissões
                         </Button>
                         {/* Criação de role é CRUD (RF010), gated por rbac.manage. */}
-                        <Can permission="rbac.manage" fallback={null}>
+                        <Can permission="rbac.roles.manage" fallback={null}>
                             <Button size="sm" onClick={() => setCreateOpen(true)}>
                                 <Plus className="size-4" />
-                                Nova role
+                                Novo Perfil
                             </Button>
                         </Can>
                     </div>
@@ -238,7 +238,7 @@ export function CoreRolesPage() {
                 <TableComponentV2
                     data={pagedRoles}
                     columns={columns}
-                    registerName="Roles"
+                    registerName="Perfis"
                     isLoading={isLoading}
                     isError={isError}
                     onRetry={refetch}
@@ -288,7 +288,7 @@ export function CoreRolesPage() {
                                             <KeySquare className="size-4" />
                                         </Button>
                                     </TooltipTrigger>
-                                    <TooltipContent>Gerenciar permissões</TooltipContent>
+                                    <TooltipContent>Gerenciar Permissões</TooltipContent>
                                 </Tooltip>
                             </Can>
 
@@ -305,7 +305,7 @@ export function CoreRolesPage() {
                                             <Pencil className="size-4" />
                                         </Button>
                                     </TooltipTrigger>
-                                    <TooltipContent>Editar role</TooltipContent>
+                                    <TooltipContent>Editar Perfil</TooltipContent>
                                 </Tooltip>
 
                                 {role.st_status === "ACTIVE" ? (
@@ -320,7 +320,7 @@ export function CoreRolesPage() {
                                                 <PowerOff className="size-4" />
                                             </Button>
                                         </TooltipTrigger>
-                                        <TooltipContent>Inativar role</TooltipContent>
+                                        <TooltipContent>Inativar Perfil</TooltipContent>
                                     </Tooltip>
                                 ) : (
                                     <Tooltip>
@@ -334,7 +334,7 @@ export function CoreRolesPage() {
                                                 <Power className="size-4" />
                                             </Button>
                                         </TooltipTrigger>
-                                        <TooltipContent>Ativar role</TooltipContent>
+                                        <TooltipContent>Ativar Perfil</TooltipContent>
                                     </Tooltip>
                                 )}
 
@@ -349,7 +349,7 @@ export function CoreRolesPage() {
                                             <Trash2 className="size-4" />
                                         </Button>
                                     </TooltipTrigger>
-                                    <TooltipContent>Excluir role</TooltipContent>
+                                    <TooltipContent>Excluir Perfil</TooltipContent>
                                 </Tooltip>
                             </Can>
                         </>

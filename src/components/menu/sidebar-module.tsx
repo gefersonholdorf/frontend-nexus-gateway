@@ -154,6 +154,13 @@ export const sidebarModules: SidebarModule[] = [
                 permission: 'users.manage'
             },
             {
+                label: "Perfis",
+                path: "/core/roles",
+                icon: Shield,
+                profiles: ['Administrador'],
+                permission: 'rbac.roles.manage'
+            },
+            {
                 label: "Módulos",
                 path: "/core/modules",
                 icon: Boxes,
@@ -173,13 +180,6 @@ export const sidebarModules: SidebarModule[] = [
                 icon: History,
                 profiles: ['Administrador'],
                 permission: 'audit.read'
-            },
-            {
-                label: "Perfis",
-                path: "/core/roles",
-                icon: Shield,
-                profiles: ['Administrador'],
-                permission: 'rbac.roles.manage'
             },
         ]
     }

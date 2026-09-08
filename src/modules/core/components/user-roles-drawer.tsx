@@ -66,7 +66,7 @@ export function UserRolesDrawer({ open, onOpenChange, user }: UserRolesDrawerPro
                 <DrawerHeader className="border-b border-border/60 text-left">
                     <DrawerTitle className="flex items-center gap-2">
                         <Shield className="size-4 text-core-signal" aria-hidden="true" />
-                        Roles de {user?.ds_name ?? "usuário"}
+                        Perfis de {user?.ds_name ?? "usuário"}
                     </DrawerTitle>
                     <DrawerDescription>
                         Vincule ou desvincule roles deste usuário. Alterações são aplicadas
@@ -122,7 +122,7 @@ export function UserRolesDrawer({ open, onOpenChange, user }: UserRolesDrawerPro
                                                 handleToggleRole(role.cd_id, Boolean(value))
                                             }
                                             className="mt-0.5"
-                                            aria-label={`Vincular role ${role.ds_name}`}
+                                            aria-label={`Vincular perfil ${role.ds_name}`}
                                         />
                                         <div className="min-w-0 flex-1">
                                             <div className="flex flex-wrap items-center gap-2">

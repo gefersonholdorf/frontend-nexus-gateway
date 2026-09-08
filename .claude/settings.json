@@ -6,7 +6,10 @@
       "Bash(tee \"C:\\\\Users\\\\GEFERS~2\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--ws-projetos-ws-nexus-gateway-frontend-nexus-gateway\\\\4ebff40a-c630-489c-96eb-e36f5452d20b\\\\scratchpad\\\\tsc-out.txt\")",
       "Bash(echo \"EXIT:$?\")",
       "Bash(tee \"C:\\\\Users\\\\GEFERS~2\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--ws-projetos-ws-nexus-gateway-frontend-nexus-gateway\\\\4ebff40a-c630-489c-96eb-e36f5452d20b\\\\scratchpad\\\\lint-out.txt\")",
-      "Bash(grep -n \"modules[\\\\\\\\\\\\\\\\/]core\" \"C:\\\\Users\\\\GefersonHoldorf\\\\.claude\\\\projects\\\\c--ws-projetos-ws-nexus-gateway-frontend-nexus-gateway\\\\4ebff40a-c630-489c-96eb-e36f5452d20b\\\\tool-results\\\\b01y8ilbk.txt\")"
+      "Bash(grep -n \"modules[\\\\\\\\\\\\\\\\/]core\" \"C:\\\\Users\\\\GefersonHoldorf\\\\.claude\\\\projects\\\\c--ws-projetos-ws-nexus-gateway-frontend-nexus-gateway\\\\4ebff40a-c630-489c-96eb-e36f5452d20b\\\\tool-results\\\\b01y8ilbk.txt\")",
+      "Bash(git diff *)",
+      "Bash(git reset *)",
+      "Bash(tasklist)"
     ]
   }
 }

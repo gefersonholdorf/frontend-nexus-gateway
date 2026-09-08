@@ -64,9 +64,9 @@ export function CreateRoleModal({ open, onOpenChange }: CreateRoleModalProps) {
         <Dialog open={open} onOpenChange={handleOpenChange}>
             <DialogContent className="sm:max-w-lg">
                 <DialogHeader>
-                    <DialogTitle>Nova role</DialogTitle>
+                    <DialogTitle>Novo Perfil</DialogTitle>
                     <DialogDescription>
-                        Cadastre uma nova role (perfil de acesso) administrada pelo módulo Core.
+                        Cadastre um novo Perfil.
                     </DialogDescription>
                 </DialogHeader>
 
@@ -79,7 +79,7 @@ export function CreateRoleModal({ open, onOpenChange }: CreateRoleModalProps) {
                         </Button>
                         <Button type="submit" disabled={isPending}>
                             <ShieldPlus className="size-4" />
-                            {isPending ? "Salvando..." : "Criar role"}
+                            {isPending ? "Salvando..." : "Criar Perfil"}
                         </Button>
                     </DialogFooter>
                 </form>

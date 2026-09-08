@@ -8,6 +8,7 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
@@ -17,7 +18,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { Boxes, Plug, ShieldCheck, ShieldOff } from "lucide-react";
+import { ArrowRight, Boxes, Plug, ShieldCheck, ShieldOff } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 
@@ -172,11 +173,27 @@ export function CoreModulesPage() {
                                 )
                             }
                             footer={
-                                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                                    <Plug className="size-3.5" aria-hidden="true" />
-                                    <MonoValue>{module.qt_integrations}</MonoValue>
-                                    <span>integração(ões) vinculada(s)</span>
-                                </div>
+                                <>
+                                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                                        <Plug className="size-3.5" aria-hidden="true" />
+                                        <MonoValue>{module.qt_integrations}</MonoValue>
+                                        <span>integração(ões) vinculada(s)</span>
+                                    </div>
+
+                                    <Button
+                                        type="button"
+                                        variant="ghost"
+                                        size="sm"
+                                        className="gap-1 text-core-signal hover:text-core-signal"
+                                        onClick={(event) => {
+                                            event.stopPropagation();
+                                            navigate(`/core/modules/${module.cd_id}`);
+                                        }}
+                                    >
+                                        Acessar módulo
+                                        <ArrowRight className="size-3.5" aria-hidden="true" />
+                                    </Button>
+                                </>
                             }
                         />
                     ))}

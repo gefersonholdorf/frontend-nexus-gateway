@@ -285,7 +285,7 @@ export function TableComponentV2<T>({
 
                         <TableHeader
                             className="
-                                bg-muted/35
+                                bg-gray-100
                                 dark:bg-muted/20
                             "
                         >

@@ -1,6 +1,5 @@
 import { HeaderPage } from "@/components/header-page";
 import { TableComponentV2, type Column } from "@/components/table-component-v2";
-import { Button } from "@/components/ui/button";
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -9,6 +8,7 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import {
@@ -30,19 +30,19 @@ import {
     Power,
     PowerOff,
     Shield,
-    ShieldCheck,
     Trash2,
-    User as UserIcon,
     UserCheck,
-    Users,
+    User as UserIcon,
+    Users
 } from "lucide-react";
 import { useMemo, useState } from "react";
 
 import { Can } from "@/modules/auth/components/can";
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ChangeUserPasswordModal } from "../components/change-user-password-modal";
-import { CreateUserModal } from "../components/create-user-modal";
 import { StatusDot } from "../components/core-status-dot";
+import { CreateUserModal } from "../components/create-user-modal";
 import { DeleteUserModal } from "../components/delete-user-modal";
 import { EditUserModal } from "../components/edit-user-modal";
 import { InactiveUserModal } from "../components/inactive-user-modal";
@@ -164,19 +164,74 @@ export function CoreUsersPage() {
 
     const columns: Column<CoreUser>[] = [
         {
-            key: "ds_name",
-            title: "Nome",
+            key: "cd_id",
+            title: "Usuário",
             icon: UserIcon,
+            render: (_, row) => {
+                if (!row) {
+                    return (
+                        <span className="text-sm text-muted-foreground">
+                            ---
+                        </span>
+                    );
+                }
+
+                const initials = row.ds_name
+                    .split(" ")
+                    .filter(Boolean)
+                    .slice(0, 2)
+                    .map((name) => name[0])
+                    .join("")
+                    .toUpperCase();
+
+                return (
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <div className="flex max-w-35 items-center gap-2 min-w-0">
+                                <Avatar className="h-9 w-9 shrink-0">
+                                    <AvatarImage
+                                        src={row.ds_avatar_url ?? ""}
+                                        alt={row.ds_name}
+                                    />
+
+                                    <AvatarFallback className="bg-primary/90 text-white">
+                                        {initials}
+                                    </AvatarFallback>
+                                </Avatar>
+
+                                <div className="flex flex-col min-w-0">
+                                    <span className="truncate font-medium">
+                                        {row.ds_name}
+                                    </span>
+
+                                    {row.ds_role_description && (
+                                        <span className="truncate text-[.8rem] text-muted-foreground">
+                                            {row.ds_role_description}
+                                        </span>
+                                    )}
+                                </div>
+                            </div>
+                        </TooltipTrigger>
+
+                        <TooltipContent>
+                            <div className="flex flex-col">
+                                <span className="font-medium">{row.ds_name}</span>
+
+                                {row.ds_role_description && (
+                                    <span className="text-xs">
+                                        {row.ds_role_description}
+                                    </span>
+                                )}
+                            </div>
+                        </TooltipContent>
+                    </Tooltip>
+                )
+            }
         },
         {
             key: "ds_email",
             title: "E-mail",
             icon: Mail,
-        },
-        {
-            key: "ds_role_description",
-            title: "Cargo",
-            icon: ShieldCheck,
         },
         {
             key: "fl_active",

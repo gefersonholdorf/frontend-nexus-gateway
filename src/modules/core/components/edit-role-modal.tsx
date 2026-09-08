@@ -71,7 +71,7 @@ export function EditRoleModal({ open, onOpenChange, role }: EditRoleModalProps) 
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-lg">
                 <DialogHeader>
-                    <DialogTitle>Editar role</DialogTitle>
+                    <DialogTitle>Editar Perfil</DialogTitle>
                     <DialogDescription>
                         Atualize os dados de {role?.ds_name ?? "role"}.
                     </DialogDescription>
