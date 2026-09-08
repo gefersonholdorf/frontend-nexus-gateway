@@ -8,7 +8,6 @@ import type { CoreRole } from "./use-fetch-roles";
 export interface CreateRoleInput {
     ds_name: string;
     ds_description: string;
-    fl_active: boolean;
 }
 
 /**

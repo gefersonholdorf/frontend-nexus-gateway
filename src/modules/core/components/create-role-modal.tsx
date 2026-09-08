@@ -24,7 +24,6 @@ interface CreateRoleModalProps {
 const DEFAULT_VALUES: RoleFormValues = {
     ds_name: "",
     ds_description: "",
-    fl_active: "true",
 };
 
 /**
@@ -48,7 +47,6 @@ export function CreateRoleModal({ open, onOpenChange }: CreateRoleModalProps) {
         await mutateAsync({
             ds_name: values.ds_name,
             ds_description: values.ds_description,
-            fl_active: values.fl_active === "true",
         });
 
         reset(DEFAULT_VALUES);
