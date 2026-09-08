@@ -7,17 +7,8 @@ export interface LoginRequest {
   senha: string;
 }
 
-export interface LoginUser {
-  cd_id: number;
-  ds_name: string;
-  ds_email: string;
-  ds_role_description: string | null;
-  ds_avatar_url: string | null;
-}
-
 export interface LoginResponse {
   token: string;
-  user: LoginUser;
 }
 
 export function useLogin() {

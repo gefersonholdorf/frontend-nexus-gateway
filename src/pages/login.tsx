@@ -4,8 +4,12 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { useCampaignActive } from "@/contexts/campaign-active";
 import { useTheme } from "@/contexts/theme-context";
 import { useUser } from "@/contexts/user-context";
+import { ApiClient } from "@/lib/api/api-client";
 import { isApiError } from "@/lib/api/api-error";
+import { queryKeys } from "@/lib/api/query-keys";
 import { useLogin } from "@/modules/auth/hooks/use-login";
+import type { MeResponse } from "@/modules/auth/hooks/use-me";
+import { useQueryClient } from "@tanstack/react-query";
 import { Loader2Icon, Lock, LogIn, Mail, Moon, Sun } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
@@ -19,6 +23,7 @@ const SUPPORT_URL = "https://wa.me/554896366798"
 export function LoginPage() {
     const { onLoginCompleted } = useCampaignActive()
     const mutation = useLogin()
+    const queryClient = useQueryClient()
 
     const { setUser } = useUser();
 
@@ -29,6 +34,8 @@ export function LoginPage() {
         email: "",
         password: "",
     })
+
+    const [isFinalizingLogin, setIsFinalizingLogin] = useState(false)
 
     const navigate = useNavigate()
 
@@ -105,7 +112,7 @@ export function LoginPage() {
             return
         }
 
-        if (!response?.token || !response.user?.ds_email) {
+        if (!response?.token) {
             console.error("Resposta de login em formato inesperado:", response)
             toast.error("Não foi possível concluir o login. Tente novamente ou contate o suporte.", {
                 position: "top-center",
@@ -114,17 +121,44 @@ export function LoginPage() {
             return
         }
 
-        const { token, user } = response
+        setIsFinalizingLogin(true)
+
+        const token = response.token
+
+        let meResponse: MeResponse
+
+        try {
+            const meApi = new ApiClient({
+                getToken: () => token,
+                onUnauthorized: () => { },
+            })
+
+            meResponse = await meApi.get<MeResponse>("/me", {
+                errorMessage: "Erro ao carregar dados do usuário",
+            })
+        } catch (error) {
+            console.error(error)
+            setIsFinalizingLogin(false)
+            toast.error("Não foi possível carregar os dados do usuário. Tente novamente.", {
+                position: "top-center",
+                richColors: true,
+            })
+            return
+        }
+
+        queryClient.setQueryData(queryKeys.me(), meResponse)
 
         setUser({
-            email: user.ds_email,
-            name: user.ds_name,
-            roleDescription: user.ds_role_description ?? "",
-            logo: user.ds_avatar_url,
-            roles: [],
-            permissions: [],
+            email: meResponse.user.ds_email,
+            name: meResponse.user.ds_name,
+            roleDescription: meResponse.user.ds_role_description ?? "",
+            logo: meResponse.user.ds_avatar_url,
+            roles: meResponse.roles.map((role) => role.ds_name),
+            permissions: meResponse.permissions,
             token,
         })
+
+        setIsFinalizingLogin(false)
 
         toast.success("Login realizado com sucesso.", {
             position: "top-center",
@@ -256,8 +290,9 @@ export function LoginPage() {
                     </div>
                     <Button
                         className="w-full shadow-sm shadow-background p-5 font-bold cursor-pointer bg-primary text-secondary hover:text-primary-text"
+                        disabled={mutation.isPending || isFinalizingLogin}
                         onClick={handleLogin}>
-                        {mutation.isPending ? <Loader2Icon className="animate-spin" /> : <LogIn />}
+                        {mutation.isPending || isFinalizingLogin ? <Loader2Icon className="animate-spin" /> : <LogIn />}
                         Entrar na plataforma
                     </Button>
                 </form>
