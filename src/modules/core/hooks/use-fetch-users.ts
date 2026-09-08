@@ -4,25 +4,32 @@ import { queryKeys } from "@/lib/api/query-keys";
 import { useApiClient } from "@/lib/api/use-api-client";
 
 /**
- * Usuário administrado pelo módulo Core (RF009/RF010).
- *
- * `cd_roles` mantém o formato de lista de ids (`number[]`) usado no mock
- * anterior. O contrato exato do vínculo de roles no payload de `GET /users`
- * não está confirmado no Swagger no momento desta migração (Etapa 1 — apenas
- * Usuários); se a API realmente retornar um array de objetos (ex.:
- * `{ cd_id, ds_name }[]`) em vez de ids, este tipo e os pontos que o consomem
- * (`user-roles-drawer.tsx`, coluna "Perfis Vinculados" de
- * `core-users-page.tsx`) precisam ser ajustados — confirmar contra o
- * Swagger/backend real antes de mudar o formato.
+ * Role vinculada a um usuário, como retornada dentro de `CoreUser.roles`
+ * (formato confirmado contra a API real — `GET /users`).
+ */
+export interface CoreUserRole {
+    cd_id: number;
+    ds_name: string;
+    ds_description: string;
+}
+
+/**
+ * Usuário administrado pelo módulo Core (RF009/RF010). Formato confirmado
+ * contra a API real (`GET /users`).
  */
 export interface CoreUser {
     cd_id: number;
     ds_name: string;
     ds_email: string;
-    ds_role_description: string;
     fl_active: boolean;
-    cd_roles: number[];
+    roles: CoreUserRole[];
+    ds_role_description: string;
+    ds_vpn_name: string;
+    ds_avatar_url: string;
     dt_created_at: string;
+    dt_updated_at: string;
+    dt_last_login: string;
+    qt_roles: number;
 }
 
 /**

@@ -10,6 +10,7 @@ import {
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Input } from "@/components/ui/input";
+import { Progress } from "@/components/ui/progress";
 import {
     Select,
     SelectContent,
@@ -18,6 +19,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { formatLastLogin } from "@/lib/format-last-login";
 import { formatDate } from "date-fns";
 import {
     Calendar,
@@ -75,10 +77,19 @@ export function CoreUsersPage() {
     const [editUser, setEditUser] = useState<CoreUser | null>(null);
     const [inactiveUser, setInactiveUser] = useState<CoreUser | null>(null);
     const [deleteUser, setDeleteUser] = useState<CoreUser | null>(null);
-    const [rolesUser, setRolesUser] = useState<CoreUser | null>(null);
+    const [rolesUserId, setRolesUserId] = useState<number | null>(null);
     const [passwordUser, setPasswordUser] = useState<CoreUser | null>(null);
 
     const allUsers = useMemo(() => users ?? [], [users]);
+
+    // Deriva o usuário do drawer "Gerenciar roles" a partir da lista sempre
+    // atualizada (em vez de um snapshot capturado no clique) — assim, quando
+    // assign/unassign de role invalida `users.all()` e a lista é refeita, o
+    // drawer aberto reflete o vínculo atual sem precisar fechar/reabrir.
+    const rolesUser = useMemo(
+        () => allUsers.find((user) => user.cd_id === rolesUserId) ?? null,
+        [allUsers, rolesUserId],
+    );
 
     // Filtros client-side (RF006): nome, e-mail e status — aceitável, pois é mock em memória.
     const filteredUsers = useMemo(() => {
@@ -184,16 +195,29 @@ export function CoreUsersPage() {
             render: (value) => <span>{formatDate(value as string, "dd/MM/yyyy")}</span>,
         },
         {
-            key: "cd_roles",
+            key: "dt_last_login",
+            title: "Último Login",
+            icon: Calendar,
+            render: (value) => (
+                <span className="text-sm">
+                    {value ? formatLastLogin(value as string) : "---"}
+                </span>
+            ),
+        },
+        {
+            key: "qt_roles",
             title: "Perfis Vinculados",
-            render: (value) => {
-                const roleIds = (value as number[]) ?? [];
+            render: (_, row) => {
                 const totalRoles = roles?.length ?? 0;
+                const percentage = totalRoles > 0 ? (row.qt_roles / totalRoles) * 100 : 0;
 
                 return (
-                    <span className="text-sm">
-                        {roleIds.length} / {totalRoles} perfis vinculados
-                    </span>
+                    <div className="flex w-32 flex-col gap-1">
+                        <span className="text-sm">
+                            {row.qt_roles}/{totalRoles}
+                        </span>
+                        <Progress value={percentage} />
+                    </div>
                 );
             },
         },
@@ -287,7 +311,7 @@ export function CoreUsersPage() {
                                         variant="ghost"
                                         size="icon"
                                         className="size-8"
-                                        onClick={() => setRolesUser(user)}
+                                        onClick={() => setRolesUserId(user.cd_id)}
                                     >
                                         <Shield className="size-4" />
                                     </Button>
@@ -393,7 +417,7 @@ export function CoreUsersPage() {
 
             <UserRolesDrawer
                 open={Boolean(rolesUser)}
-                onOpenChange={(next) => !next && setRolesUser(null)}
+                onOpenChange={(next) => !next && setRolesUserId(null)}
                 user={rolesUser}
             />
 

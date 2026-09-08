@@ -1,5 +1,6 @@
 import { formatDate } from "date-fns";
 import { Loader2, Shield } from "lucide-react";
+import { useMemo } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -39,6 +40,13 @@ export function UserRolesDrawer({ open, onOpenChange, user }: UserRolesDrawerPro
     const { mutate: unassignRole, isPending: isUnassigning } = useUnassignRoleFromUser();
 
     const isMutating = isAssigning || isUnassigning;
+
+    // `roles` do usuário vêm como objetos completos (não ids) — reduz para
+    // um Set de cd_id para checagem O(1) nos checkboxes.
+    const assignedRoleIds = useMemo(
+        () => new Set((user?.roles ?? []).map((role) => role.cd_id)),
+        [user],
+    );
 
     function handleToggleRole(roleId: number, checked: boolean) {
         if (!user) {
@@ -100,7 +108,7 @@ export function UserRolesDrawer({ open, onOpenChange, user }: UserRolesDrawerPro
                     ) : (
                         <ul className="space-y-2">
                             {(roles ?? []).map((role) => {
-                                const checked = Boolean(user?.cd_roles.includes(role.cd_id));
+                                const checked = assignedRoleIds.has(role.cd_id);
 
                                 return (
                                     <li
