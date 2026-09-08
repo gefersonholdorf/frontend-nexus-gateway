@@ -63,6 +63,13 @@ export interface TableComponentProps<T> {
 
     actions?: (row: T) => ReactNode
 
+    /**
+     * Quando fornecido, a linha inteira fica clicável (cursor-pointer) e
+     * dispara este callback. Cliques em `actions` não devem propagar até a
+     * linha — use `event.stopPropagation()` nos botões passados a `actions`.
+     */
+    onRowClick?: (row: T) => void
+
     pagination?: {
         page: number
         perPage: number
@@ -194,6 +201,7 @@ export function TableComponentV2<T>({
     columns,
     caption,
     actions,
+    onRowClick,
     pagination,
     onPageChange,
     filteringComponent,
@@ -470,7 +478,12 @@ export function TableComponentV2<T>({
                                                 ) ??
                                                 rowIndex
                                             }
-                                            className="
+                                            onClick={
+                                                onRowClick
+                                                    ? () => onRowClick(row)
+                                                    : undefined
+                                            }
+                                            className={`
                                                 h-13.5
                                                 border-b
                                                 border-border/55
@@ -479,7 +492,8 @@ export function TableComponentV2<T>({
                                                 hover:bg-muted/35
                                                 dark:border-border/70
                                                 dark:hover:bg-muted/20
-                                            "
+                                                ${onRowClick ? "cursor-pointer" : ""}
+                                            `}
                                         >
                                             {columns.map(
                                                 (
