@@ -67,13 +67,15 @@ function groupPermissionsByDomain(
  * agrupadas por domínio (prefixo de `ds_key`) em `Accordion` + `Checkbox`.
  */
 export function RolePermissionsDrawer({ open, onOpenChange, role }: RolePermissionsDrawerProps) {
-    const { data: permissions, isLoading } = useFetchPermissions();
+    const { data: permissions, isLoading: isLoadingPermissions } = useFetchPermissions();
     // Refetch pontual da role (RF015/RF018) para manter os checkboxes em
     // sincronia com o servidor enquanto o drawer permanece aberto — ver
-    // JSDoc de `useFetchRoleById`. `role` (prop) é usado como fallback
-    // enquanto o detalhe ainda não chegou.
-    const { data: roleDetail } = useFetchRoleById(role?.cd_id);
-    const effectiveRole = roleDetail;
+    // JSDoc de `useFetchRoleById`. Enquanto `roleDetail` não chega (ou falha),
+    // `effectiveRole` cai no snapshot da listagem (`role`, via props) para não
+    // deixar os checkboxes sem estado.
+    const { data: roleDetail, isLoading: isLoadingRoleDetail } = useFetchRoleById(role?.cd_id);
+    const isLoading = isLoadingPermissions || isLoadingRoleDetail;
+    const effectiveRole = roleDetail ?? role ?? undefined;
     const { mutate: assignPermission, isPending: isAssigning } = useAssignPermissionToRole();
     const { mutate: unassignPermission, isPending: isUnassigning } =
         useUnassignPermissionFromRole();
@@ -142,7 +144,7 @@ export function RolePermissionsDrawer({ open, onOpenChange, role }: RolePermissi
                             <span className="text-muted-foreground">
                                 Permissões vinculadas:{" "}
                                 <span className="text-foreground">
-                                    {effectiveRole.cd_permissions.length}
+                                    {(effectiveRole.cd_permissions ?? []).length}
                                 </span>
                             </span>
                         </div>
@@ -170,7 +172,7 @@ export function RolePermissionsDrawer({ open, onOpenChange, role }: RolePermissi
                             {domains.map((domain) => {
                                 const domainPermissions = groupedPermissions.get(domain) ?? [];
                                 const assignedCount = domainPermissions.filter((permission) =>
-                                    effectiveRole?.cd_permissions.includes(permission.cd_id),
+                                    effectiveRole?.cd_permissions?.includes(permission.cd_id),
                                 ).length;
 
                                 return (
@@ -189,7 +191,7 @@ export function RolePermissionsDrawer({ open, onOpenChange, role }: RolePermissi
                                             <ul className="space-y-2">
                                                 {domainPermissions.map((permission) => {
                                                     const checked = Boolean(
-                                                        effectiveRole?.cd_permissions.includes(
+                                                        effectiveRole?.cd_permissions?.includes(
                                                             permission.cd_id,
                                                         ),
                                                     );
