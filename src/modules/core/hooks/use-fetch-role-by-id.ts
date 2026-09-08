@@ -2,7 +2,23 @@ import { useQuery } from "@tanstack/react-query";
 
 import { queryKeys } from "@/lib/api/query-keys";
 import { useApiClient } from "@/lib/api/use-api-client";
-import type { CoreRole } from "./use-fetch-roles";
+import type { CorePermission } from "./use-fetch-permissions";
+
+/**
+ * Detalhe de role (`GET /roles/{id}`, RF015) — formato confirmado contra a
+ * API real: diferente da listagem (`CoreRole`, que só traz `qt_permissions`),
+ * o detalhe traz `permissions` como objetos completos do catálogo, não uma
+ * lista de ids.
+ */
+export interface CoreRoleDetail {
+    cd_id: number;
+    ds_name: string;
+    ds_description: string;
+    st_status: string;
+    permissions: CorePermission[];
+    dt_created_at: string;
+    dt_updated_at?: string;
+}
 
 /**
  * `GET /roles/{id}` (RF015) — detalhe da role com permissões vinculadas.
@@ -23,7 +39,7 @@ export function useFetchRoleById(cd_id: number | undefined) {
     return useQuery({
         queryKey: queryKeys.roles.detail(cd_id ?? 0),
         queryFn: () =>
-            api.get<CoreRole>(`/roles/${cd_id}`, {
+            api.get<CoreRoleDetail>(`/roles/${cd_id}`, {
                 errorMessage: "Erro ao consultar role",
             }),
         enabled: !!cd_id,

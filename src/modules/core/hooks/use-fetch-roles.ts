@@ -6,22 +6,17 @@ import { useApiClient } from "@/lib/api/use-api-client";
 /**
  * Role (perfil de acesso) administrada pelo módulo Core (RF015).
  *
- * `cd_permissions` mantém o formato de lista de ids (`number[]`) usado no mock
- * anterior. O contrato exato do vínculo de permissões no payload de
- * `GET /roles` não está confirmado no Swagger no momento desta migração
- * (Etapa 2 — Roles e Permissões); se a API realmente retornar um array de
- * objetos (ex.: `{ cd_id, ds_key }[]`) em vez de ids, este tipo e os pontos
- * que o consomem (`role-permissions-drawer.tsx`, coluna "Permissões" de
- * `core-roles-page.tsx`, coluna "Perfis Vinculados" de `core-users-page.tsx`
- * via `user-roles-drawer.tsx`) precisam ser ajustados — confirmar contra o
- * Swagger/backend real antes de mudar o formato.
+ * A listagem (`GET /roles`) só traz `qt_permissions` (contagem) — não inclui
+ * os ids/objetos das permissões vinculadas. Para isso, use o detalhe
+ * (`GET /roles/{id}`, `useFetchRoleById`/`CoreRoleDetail`), que retorna
+ * `permissions` como objetos completos do catálogo (confirmado contra a API
+ * real).
  */
 export interface CoreRole {
     cd_id: number;
     ds_name: string;
     ds_description: string;
     st_status: string;
-    cd_permissions: number[];
     dt_created_at: string;
     qt_permissions: number
 }
