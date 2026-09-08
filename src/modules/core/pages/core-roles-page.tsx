@@ -10,6 +10,7 @@ import {
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Input } from "@/components/ui/input";
+import { Progress } from "@/components/ui/progress";
 import {
     Select,
     SelectContent,
@@ -170,10 +171,18 @@ export function CoreRolesPage() {
             key: "cd_permissions",
             title: "Permissões",
             render: (_, row) => {
+                const percentage =
+                    totalPermissionsCount > 0
+                        ? (row.qt_permissions / totalPermissionsCount) * 100
+                        : 0;
+
                 return (
-                    <span className="text-sm">
-                        {row.qt_permissions}/{totalPermissionsCount}
-                    </span>
+                    <div className="flex w-32 flex-col gap-1">
+                        <span className="text-sm">
+                            {row.qt_permissions}/{totalPermissionsCount}
+                        </span>
+                        <Progress value={percentage} />
+                    </div>
                 );
             },
         },
