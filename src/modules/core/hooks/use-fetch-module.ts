@@ -5,25 +5,29 @@ import { useApiClient } from "@/lib/api/use-api-client";
 import type { CoreModule } from "./use-fetch-modules";
 
 /**
- * Detalhe de módulo (RF021), com os ids das integrações e permissões
- * vinculadas.
+ * Integração vinculada a um módulo, no formato resumido embutido pelo
+ * `GET /modules/{id}` (subconjunto de `CoreIntegration` — sem `st_status`,
+ * `ds_config` etc.). Para exibir status de conexão, cruzar por `cd_id` com o
+ * catálogo completo de `useFetchIntegrations`.
+ */
+export interface CoreModuleIntegrationSummary {
+    cd_id: number;
+    ds_type: string;
+    ds_name: string;
+    fl_active: boolean;
+}
+
+/**
+ * Detalhe de módulo (RF021), com as integrações e permissões vinculadas.
  *
- * O contrato exato do formato de `cd_integrations`/`cd_permissions` (lista de
- * ids vs. lista de objetos) não está confirmado no Swagger no momento desta
- * migração (Etapa 3 — Módulos); assumido como `number[]`, espelhando o
- * padrão já usado por `CoreRole.cd_permissions` (Etapa 2 — ver
- * `use-fetch-roles.ts`). Se a API retornar objetos, ajustar este tipo e os
- * pontos que o consomem (`core-module-detail-page.tsx`).
- *
- * `cd_integrations` referencia integrações do catálogo AINDA MOCKADO
- * (`useFetchIntegrations`, migração prevista para a próxima etapa) — os ids
- * reais retornados por esta rota podem não corresponder aos ids do mock de
- * integrações. É uma mistura temporária esperada entre etapas, assim como o
- * módulo `audit` real já convive com o restante do Core mockado hoje.
+ * Confirmado no contrato real: a API retorna os objetos embutidos em
+ * `integrations`/`permissions`, não listas de ids (`cd_integrations`/
+ * `cd_permissions`, como assumido anteriormente por analogia a
+ * `CoreRole.cd_permissions`).
  */
 export interface CoreModuleDetail extends CoreModule {
-    cd_integrations: number[];
-    cd_permissions: number[];
+    integrations?: CoreModuleIntegrationSummary[];
+    permissions: unknown[];
 }
 
 /**

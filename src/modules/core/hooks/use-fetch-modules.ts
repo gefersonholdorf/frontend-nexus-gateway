@@ -10,7 +10,7 @@ import { useApiClient } from "@/lib/api/use-api-client";
  * API (não mais derivada no cliente a partir de uma lista de ids, como no
  * mock anterior — `CoreModule` em `mocks/modules.mock.ts` tinha
  * `cd_integrations: number[]`). O detalhe (`GET /modules/{id}`, RF021)
- * retorna os ids das integrações e permissões vinculadas — ver
+ * retorna os objetos de integrações e permissões vinculadas — ver
  * `CoreModuleDetail` em `use-fetch-module.ts`.
  */
 export interface CoreModule {

@@ -34,14 +34,6 @@ import { useLinkModuleIntegration } from "../hooks/use-link-module-integration";
 import { useToggleModuleStatus } from "../hooks/use-toggle-module-status";
 import { useUnlinkModuleIntegration } from "../hooks/use-unlink-module-integration";
 
-/**
- * Única rota de detalhe real do módulo Core (`/core/modules/:id`). Identidade
- * do módulo, toggle de status (bloqueado para o módulo Core, RF022) e
- * conectar/desconectar integrações (RF023, ainda contra o catálogo mockado de
- * integrações). Ações gated por `modules.manage`. Sem edição de nome/
- * descrição — não há `PUT /modules/{id}` na spec real (ver
- * `core-modules-page.tsx`).
- */
 export default function CoreModuleDetailPage() {
     const { id } = useParams<{ id: string }>();
     const moduleId = id ? Number(id) : undefined;
@@ -57,20 +49,19 @@ export default function CoreModuleDetailPage() {
     const [inactiveOpen, setInactiveOpen] = useState(false);
     const [selectedIntegrationId, setSelectedIntegrationId] = useState<string>("");
 
+    const linkedIntegrationIds = useMemo(
+        () => new Set((moduleItem?.integrations ?? []).map((integration) => integration.cd_id)),
+        [moduleItem],
+    );
+
     const linkedIntegrations = useMemo(
-        () =>
-            (integrations ?? []).filter((integration) =>
-                moduleItem?.cd_integrations.includes(integration.cd_id),
-            ),
-        [integrations, moduleItem],
+        () => (integrations ?? []).filter((integration) => linkedIntegrationIds.has(integration.cd_id)),
+        [integrations, linkedIntegrationIds],
     );
 
     const availableIntegrations = useMemo(
-        () =>
-            (integrations ?? []).filter(
-                (integration) => !moduleItem?.cd_integrations.includes(integration.cd_id),
-            ),
-        [integrations, moduleItem],
+        () => (integrations ?? []).filter((integration) => !linkedIntegrationIds.has(integration.cd_id)),
+        [integrations, linkedIntegrationIds],
     );
 
     const isCoreModule = moduleItem?.ds_key === "core";
