@@ -8,7 +8,6 @@ import {
     History,
     LayoutDashboard,
     Megaphone,
-    MonitorCloud,
     MonitorCog,
     Plug,
     Shield,
@@ -73,16 +72,11 @@ export const sidebarModules: SidebarModule[] = [
         title: "Infraestrutura",
         items: [
             {
-                label: "Sistemas",
-                path: "/systems",
+                label: "Painel de Sistemas",
+                path: "/hub-services",
                 icon: AppWindow,
-                profiles: ['Administrador', 'Suporte', 'Desenvolvedor', 'Infraestrutura']
-            },
-            {
-                label: "Serviços",
-                path: "/services",
-                icon: MonitorCloud,
-                profiles: ['Administrador', 'Suporte', 'Desenvolvedor', 'Infraestrutura']
+                profiles: ['Administrador', 'Suporte', 'Desenvolvedor', 'Infraestrutura'],
+                permission: 'hub_services_manage'
             },
             // {
             //     label: "Servidores",

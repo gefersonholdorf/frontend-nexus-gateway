@@ -18,8 +18,6 @@ import { ProfilesUpdatedPage } from './pages/profile-updated-page.tsx'
 import { ProfilePage } from './pages/profiles-page.tsx'
 import { SecurityCenterPage } from './pages/security-center.tsx'
 import { ServersPage } from './pages/servers-page.tsx'
-import { ServicesPage } from './pages/services-page.tsx'
-import { SystemsPage } from './pages/systems.tsx'
 import { WelcomePage } from './pages/welcome.tsx'
 import { ProtectedRoute } from './protected-router.tsx'
 import { ScrollToTop } from "./scroll-to-top.tsx"
@@ -49,6 +47,7 @@ import CoreModuleDetailPage from "./modules/core/pages/core-module-detail-page.t
 import { CorePermissionsPage } from "./modules/core/pages/core-permissions-page.tsx"
 import { CoreRolesPage } from "./modules/core/pages/core-roles-page.tsx"
 import { CoreUsersPage } from "./modules/core/pages/core-users-page.tsx"
+import { HubServicesPage } from "./modules/hub-services/pages/hub-services-page.tsx"
 
 const queryClient = new QueryClient()
 
@@ -72,8 +71,7 @@ createRoot(document.getElementById('root')!).render(
                           <Route path="/welcome" element={<WelcomePage />} />
                           <Route path="/ipmap" element={<IpMapPage />} />
                           <Route path="/security-center" element={<SecurityCenterPage />} />
-                          <Route path="/systems" element={<SystemsPage />} />
-                          <Route path="/services" element={<ServicesPage />} />
+                          <Route path="/hub-services" element={<HubServicesPage />} />
                           <Route path="/calendar" element={<CalendarPage />} />
                           <Route path="/servers" element={<ServersPage />} />
                           <Route path="/comunications" element={<CommunicationsPage />} />
