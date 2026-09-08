@@ -10,6 +10,7 @@ export interface CreateUserInput {
     ds_email: string;
     ds_role_description: string;
     fl_active: boolean;
+    senha: string;
 }
 
 /**
