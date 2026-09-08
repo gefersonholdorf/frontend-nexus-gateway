@@ -40,4 +40,9 @@ export const queryKeys = {
     all: () => ["audit"] as const,
     list: (params: AuditQueryParams) => ["audit", params] as const,
   },
+
+  hubServices: {
+    all: () => ["hub-services"] as const,
+    detail: (id: number) => ["hub-services", id] as const,
+  },
 } as const;
