@@ -27,7 +27,7 @@ export function useToggleRoleStatus() {
             queryClient.invalidateQueries({ queryKey: queryKeys.roles.all() });
             queryClient.invalidateQueries({ queryKey: queryKeys.roles.detail(variables.cd_id) });
             toast.success(
-                (role?.st_status ?? variables.st_status)
+                (role?.st_status ?? variables.st_status) === "ACTIVE"
                     ? "Role ativada com sucesso."
                     : "Role inativada com sucesso.",
                 { position: "top-center", richColors: true },

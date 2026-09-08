@@ -121,7 +121,7 @@ export function UserRolesDrawer({ open, onOpenChange, user }: UserRolesDrawerPro
                                                 <span className="text-sm font-medium text-foreground">
                                                     {role.ds_name}
                                                 </span>
-                                                {role.fl_active ? (
+                                                {role.st_status === "ACTIVE" ? (
                                                     <StatusDot tone="ok" label="Ativa" />
                                                 ) : (
                                                     <StatusDot tone="off" label="Inativa" />

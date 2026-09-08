@@ -85,7 +85,9 @@ export function CoreRolesPage() {
             const matchesName = name === "" || role.ds_name.toLowerCase().includes(name);
             const matchesStatus =
                 filters.status === "all" ||
-                (filters.status === "active" ? role.st_status : !role.st_status);
+                (filters.status === "active"
+                    ? role.st_status === "ACTIVE"
+                    : role.st_status !== "ACTIVE");
 
             return matchesName && matchesStatus;
         });
@@ -121,14 +123,14 @@ export function CoreRolesPage() {
             },
             {
                 title: "Ativas",
-                value: allRoles.filter((role) => role.st_status).length,
+                value: allRoles.filter((role) => role.st_status === "ACTIVE").length,
                 icon: ShieldCheck,
                 colorText: "text-core-ok",
                 borderColor: "hover:border-core-ok",
             },
             {
                 title: "Inativas",
-                value: allRoles.filter((role) => !role.st_status).length,
+                value: allRoles.filter((role) => role.st_status !== "ACTIVE").length,
                 icon: ShieldOff,
                 colorText: "text-core-neutral",
                 borderColor: "hover:border-core-neutral",
@@ -143,7 +145,7 @@ export function CoreRolesPage() {
     }
 
     function handleActivate(role: CoreRole) {
-        toggleStatus({ cd_id: role.cd_id, fl_active: true });
+        toggleStatus({ cd_id: role.cd_id, st_status: "ACTIVE" });
     }
 
     const columns: Column<CoreRole>[] = [
@@ -306,7 +308,7 @@ export function CoreRolesPage() {
                                     <TooltipContent>Editar role</TooltipContent>
                                 </Tooltip>
 
-                                {role.st_status ? (
+                                {role.st_status === "ACTIVE" ? (
                                     <Tooltip>
                                         <TooltipTrigger asChild>
                                             <Button
