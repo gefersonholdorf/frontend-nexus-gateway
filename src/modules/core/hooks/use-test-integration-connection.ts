@@ -3,6 +3,7 @@ import { toast } from "sonner";
 
 import { queryKeys } from "@/lib/api/query-keys";
 import { useApiClient } from "@/lib/api/use-api-client";
+import type { CoreIntegration } from "./use-fetch-integrations";
 
 export interface TestIntegrationConnectionInput {
     cd_id: number;
@@ -19,16 +20,17 @@ export interface TestIntegrationConnectionResult {
 }
 
 /**
- * `POST /integrations/{id}/test` (RF027). O backend é responsável por
- * persistir o novo `st_status`/`dt_last_tested_at` da integração testada; o
- * frontend não deriva esse valor localmente — após a resposta, invalida
- * `integrations.all()`/`.detail(id)` para que a UI reflita o `st_status`
- * atualizado (RN006) vindo do `GET /integrations` seguinte.
+ * `POST /integrations/{id}/test` (RF027): "atualizando st_status na UI após
+ * a resposta" — a UI é quem decide o `st_status` exibido a partir de `ok`,
+ * não um refetch de `GET /integrations`. Escrevemos o resultado diretamente
+ * no cache (`setQueryData`) em vez de `invalidateQueries`: se o endpoint de
+ * teste não persistir o status no backend (comum em endpoints de "ping"),
+ * invalidar/refazer o fetch traria de volta o `st_status` antigo e a tela
+ * voltaria a mostrar "Falha na conexão" mesmo após um teste `ok: true`.
  *
- * Cenário de Exceção 5 — se `ok` vier `false`, a mutation ainda é tratada como
- * sucesso (não lança erro): exibe a `message` retornada num toast de erro e
- * deixa a atualização de `st_status` a cargo do refetch disparado pela
- * invalidação.
+ * Cenário de Exceção 5 — se `ok` vier `false`, a mutation ainda é tratada
+ * como sucesso (não lança erro): atualiza `st_status` para "fail" e exibe a
+ * `message` retornada num toast de erro.
  */
 export function useTestIntegrationConnection() {
     const api = useApiClient();
@@ -36,12 +38,21 @@ export function useTestIntegrationConnection() {
 
     return useMutation({
         mutationFn: ({ cd_id }: TestIntegrationConnectionInput) =>
-            api.post<TestIntegrationConnectionResult>(`/integrations/${cd_id}/test`, {
-                errorMessage: "Erro ao testar conexão",
-            }),
+            api.post<TestIntegrationConnectionResult>(
+                `/integrations/${cd_id}/test`
+            ),
         onSuccess: (result, variables) => {
-            queryClient.invalidateQueries({ queryKey: queryKeys.integrations.all() });
-            queryClient.invalidateQueries({ queryKey: queryKeys.integrations.detail(variables.cd_id) });
+            queryClient.setQueryData<CoreIntegration[]>(queryKeys.integrations.all(), (integrations) =>
+                integrations?.map((integration) =>
+                    integration.cd_id === variables.cd_id
+                        ? {
+                            ...integration,
+                            st_status: result.ok ? "ok" : "fail",
+                            dt_last_tested_at: new Date().toISOString(),
+                        }
+                        : integration,
+                ),
+            );
 
             if (result.ok) {
                 toast.success(result.message ?? "Conexão estabelecida com sucesso.", {
