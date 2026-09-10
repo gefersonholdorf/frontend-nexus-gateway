@@ -35,6 +35,8 @@ import { Can } from "@/modules/auth/components/can";
 
 import { MonoValue } from "../components/core-mono-value";
 import { useFetchAudit, type AuditItem } from "@/modules/audit/hooks/use-fetch-audit";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 type AuditAction = "all" | "CREATE" | "UPDATE" | "DELETE";
 
@@ -100,12 +102,66 @@ const columns: Column<AuditItem>[] = [
         icon: UserIcon,
         // Sem cd_user, a ação foi executada pelo próprio sistema; com cd_user
         // mas sem ds_user_name, mostramos o ID como fallback.
-        render: (_value, row) => {
-            if (row.cd_user === null || row.cd_user === undefined) {
-                return <span className="text-sm text-muted-foreground">Sistema</span>;
+        render: (_, row) => {
+            if (!row.ds_user_name) {
+                return (
+                    <span className="text-sm text-muted-foreground">
+                        ---
+                    </span>
+                );
             }
-            return <span>{row.ds_user_name ?? `#${row.cd_user}`}</span>;
-        },
+
+            const initials = row.ds_user_name
+                .split(" ")
+                .filter(Boolean)
+                .slice(0, 2)
+                .map((name) => name[0])
+                .join("")
+                .toUpperCase();
+
+            return (
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <div className="flex max-w-35 items-center gap-2 min-w-0">
+                            <Avatar className="h-9 w-9 shrink-0">
+                                <AvatarImage
+                                    src={row.ds_avatar_url ?? ""}
+                                    alt={row.ds_user_name}
+                                />
+
+                                <AvatarFallback className="bg-primary/90 text-white">
+                                    {initials}
+                                </AvatarFallback>
+                            </Avatar>
+
+                            <div className="flex flex-col min-w-0">
+                                <span className="truncate font-medium">
+                                    {row.ds_user_name}
+                                </span>
+
+                                {row.ds_role_description && (
+                                    <span className="truncate text-[.8rem] text-muted-foreground">
+                                        {row.ds_role_description}
+                                    </span>
+                                )}
+                            </div>
+                        </div>
+                    </TooltipTrigger>
+
+                    <TooltipContent>
+                        <div className="flex flex-col">
+                            <span className="font-medium">{row.ds_user_name}</span>
+
+                            {row.ds_role_description && (
+                                <span className="text-xs">
+                                    {row.ds_role_description}
+                                </span>
+                            )}
+                        </div>
+                    </TooltipContent>
+                </Tooltip>
+            )
+        }
     },
     {
         key: "dt_created_at",
@@ -135,9 +191,9 @@ const columns: Column<AuditItem>[] = [
         icon: Laptop,
         render: (value) => {
             if (!value) {
-                return <span className="text-sm text-muted-foreground">---</span>;
+                return <span className="max-w-3 text-sm text-muted-foreground">---</span>;
             }
-            return <span>{value.toString()}</span>;
+            return <span className="max-w-3 truncate">{value.toString()}</span>;
         },
     },
 ];

@@ -113,9 +113,9 @@ export function IntegrationDetailsDrawer({
                             <p className="text-xs text-muted-foreground">Status da conexão</p>
                             {integration && (
                                 <StatusDot
-                                    tone={integration.st_status === "ok" ? "ok" : "fail"}
+                                    tone={integration.st_status === "ACTIVE" ? "ACTIVE" : "INACTIVE"}
                                     label={
-                                        integration.st_status === "ok"
+                                        integration.st_status === "ACTIVE"
                                             ? "Conectado"
                                             : "Falha na conexão"
                                     }

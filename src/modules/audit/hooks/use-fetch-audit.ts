@@ -29,7 +29,9 @@ export interface FetchAuditRequest {
 export interface AuditItem {
   cd_id: number;
   cd_user?: number;
-  ds_user_name?: string;
+  ds_user_name?: string
+  ds_avatar_url: string | null
+  ds_role_description: string | null
   ds_entity?: string;
   ds_action?: string;
   ds_details?: string;
