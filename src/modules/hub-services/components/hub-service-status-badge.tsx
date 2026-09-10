@@ -2,7 +2,7 @@ import { Loader2 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
-export type HubServiceStatusState = "idle" | "checking" | "up" | "down";
+export type HubServiceStatusState = "idle" | "checking" | "up" | "down" | "not_monitored";
 
 interface HubServiceStatusBadgeProps {
     state: HubServiceStatusState;
@@ -15,6 +15,9 @@ const TONE_STYLES: Record<Exclude<HubServiceStatusState, "checking">, { dot: str
     idle: { dot: "bg-core-neutral", text: "text-core-neutral" },
     up: { dot: "bg-core-ok", text: "text-core-ok" },
     down: { dot: "bg-core-fail", text: "text-core-fail" },
+    // RF012: item sem `ds_status_url` — distinto de "idle" (que tem URL mas
+    // ainda não foi verificado).
+    not_monitored: { dot: "bg-core-neutral", text: "text-core-neutral" },
 };
 
 /**
@@ -42,7 +45,13 @@ export function HubServiceStatusBadge({
     }
 
     const label =
-        state === "idle" ? "Ainda não verificado" : state === "up" ? "Disponível" : "Indisponível";
+        state === "idle"
+            ? "Ainda não verificado"
+            : state === "not_monitored"
+              ? "Não monitorado"
+              : state === "up"
+                ? "Disponível"
+                : "Indisponível";
 
     const styles = TONE_STYLES[state];
 

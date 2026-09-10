@@ -49,6 +49,12 @@ A interface deve oferecer **busca, filtros (por Tipo e por Ambiente), ordenaçã
 ### RF009
 A interface deve refletir o **carregamento por item** durante a verificação de status, sem travar a tela.
 
+### RF010
+No formulário de criação/edição, a interface deve permitir configurar o **método HTTP** (GET, POST, PUT, PATCH, HEAD, DELETE), **headers customizados** (lista dinâmica de pares chave/valor), **autenticação** (Nenhuma, Bearer Token, API Key em Header, Basic Auth, com subcampos condicionais por tipo) e **corpo (body)** da verificação de status, com o campo body habilitado apenas quando o método é POST, PUT ou PATCH.
+
+### RF011
+Quando o registro **não possuir `ds_status_url`**, a interface deve exibir o indicador de status como **"Não monitorado"**, distinto do estado "Ainda não verificado" (usado quando há URL de status, mas a verificação ainda não foi executada).
+
 ---
 
 ## Regras de Negócio
@@ -63,7 +69,7 @@ Os campos **`ds_title`, `ds_description`, `st_type` e `st_environment`** são **
 `st_type` aceita apenas **SYSTEM** ou **SERVICE**; `st_environment` aceita apenas **PROD** ou **HOM**. A interface deve apresentar esses valores em opções controladas.
 
 ### RN004
-**IP e Porta são interdependentes**: ambos são opcionais, mas **se um for preenchido, o outro passa a ser obrigatório**. A validação deve ocorrer **antes do envio**, bloqueando o submit e sinalizando os campos.
+**IP e Porta são campos independentes**: ambos são opcionais e cada um pode ser preenchido isoladamente, sem exigir o outro. (Regra alterada: a interdependência que existia anteriormente — exigir o outro campo quando um dos dois fosse preenchido, bloqueando o submit — foi removida por decisão de negócio.)
 
 ### RN005
 Quando informadas, `ds_access_url` e `ds_status_url` devem ter formato válido e protocolo **http** ou **https**. A validação deve ocorrer no frontend antes do envio.
@@ -72,7 +78,7 @@ Quando informadas, `ds_access_url` e `ds_status_url` devem ter formato válido e
 Quando o registro **não possuir `ds_access_url`**, a **ação de acesso deve ficar desabilitada** (linha/card não clicável para acesso), com indicação visual.
 
 ### RN007
-Quando o registro **não possuir `ds_status_url`**, o botão **"Verificar status" deve ficar desabilitado**, evitando a chamada que retornaria HTTP 400.
+Quando o registro **não possuir `ds_status_url`**, o botão **"Verificar status" deve ficar desabilitado**, evitando a chamada que retornaria HTTP 400, e o indicador de status deve exibir **"Não monitorado"** em vez do estado padrão "Ainda não verificado" (RF011).
 
 ### RN008
 A **exclusão** deve exigir **confirmação explícita** do usuário em diálogo antes de acionar o `DELETE`, dado que a remoção é física e definitiva.
@@ -87,6 +93,9 @@ A verificação **"Verificar todos"** dispara **N chamadas individuais** (não h
 
 ### RN011
 Busca, filtros, ordenação e paginação operam **client-side**, pois `GET /hub-services` não recebe parâmetros e retorna a coleção completa.
+
+### RN012
+Ao editar um registro que já possui autenticação configurada, a credencial não é reexibida no formulário — o backend nunca retorna o segredo em texto puro. Para manter ou alterar a autenticação, o usuário precisa reinformar a credencial completa, mesmo que não queira alterar o restante do formulário; esse trade-off de segurança é indicado ao usuário diretamente no formulário.
 
 ---
 
@@ -103,7 +112,7 @@ Busca, filtros, ordenação e paginação operam **client-side**, pois `GET /hub
 1. O usuário aciona "Novo" (ou "Editar" em um registro).
 2. A interface exibe o formulário com os campos e opções controladas.
 3. O usuário preenche os dados.
-4. A interface valida obrigatoriedade, domínios (tipo/ambiente), interdependência IP/Porta e formato das URLs.
+4. A interface valida obrigatoriedade, domínios (tipo/ambiente), formato das URLs e, na configuração da verificação de status, que o body só está preenchido para um método que o aceita (POST/PUT/PATCH) e que os subcampos de autenticação exigidos pelo tipo selecionado estão preenchidos.
 5. A interface envia `POST /hub-services` (criação) ou `PUT /hub-services/{id}` (edição).
 6. Em sucesso, a interface atualiza a listagem e informa o resultado.
 
@@ -151,12 +160,16 @@ Busca, filtros, ordenação e paginação operam **client-side**, pois `GET /hub
 - **ds_title**: texto. Obrigatório (mínimo 1 caractere).
 - **ds_description**: texto. Obrigatório (mínimo 1 caractere).
 - **ds_access_url**: texto. Opcional. Formato http/https válido.
-- **ds_ip**: texto. Opcional. Interdependente com a porta.
-- **ds_port**: número. Opcional. Interdependente com o IP.
+- **ds_ip**: texto. Opcional. Independente da porta.
+- **ds_port**: número. Opcional. Independente do IP.
 - **ds_status_url**: texto. Opcional. Formato http/https válido.
+- **st_status_check_method**: GET, POST, PUT, PATCH, HEAD ou DELETE. Opcional (padrão GET).
+- **ds_status_check_headers**: lista de pares chave/valor. Opcional.
+- **status_check_auth**: tipo (Nenhuma, Bearer Token, API Key em Header, Basic Auth) e credencial correspondente. Opcional; ao editar, a credencial não vem preenchida (RN012).
+- **ds_status_check_body**: texto. Opcional; habilitado só para POST, PUT ou PATCH.
 
 ### Saída (exibição)
-- **Listagem**: `cd_id`, `st_type`, `st_environment`, `ds_title`, `ds_description`, `ds_access_url`, `ds_ip`, `ds_port`, `ds_status_url`, `dt_created_at`, `dt_updated_at`.
+- **Listagem**: `cd_id`, `st_type`, `st_environment`, `ds_title`, `ds_description`, `ds_access_url`, `ds_ip`, `ds_port`, `ds_status_url`, `st_status_check_method`, `ds_status_check_headers`, `st_status_check_auth_type` (sem a credencial), `ds_status_check_body`, `dt_created_at`, `dt_updated_at`.
 - **Resultado de status**: `status` (UP/DOWN), `httpStatus`, `message`.
 
 ---
@@ -169,8 +182,11 @@ Busca, filtros, ordenação e paginação operam **client-side**, pois `GET /hub
 - [ ] É possível editar um registro existente via formulário (`PUT /hub-services/{id}`).
 - [ ] O formulário bloqueia o envio quando falta título, descrição, tipo ou ambiente.
 - [ ] O formulário só permite SYSTEM/SERVICE para tipo e PROD/HOM para ambiente.
-- [ ] Ao preencher IP sem porta (ou porta sem IP), o envio é bloqueado e os campos são sinalizados.
+- [ ] É possível preencher apenas IP ou apenas Porta — nenhum dos dois exige o outro para o envio.
 - [ ] URLs com formato inválido ou protocolo diferente de http/https bloqueiam o envio.
+- [ ] É possível selecionar método HTTP, adicionar headers customizados, configurar autenticação (Nenhuma/Bearer/API Key em Header/Basic Auth) e informar body no formulário; o campo body fica oculto/desabilitado quando o método não é POST/PUT/PATCH.
+- [ ] Um item sem `ds_status_url` exibe o indicador "Não monitorado" e o botão "Verificar status" permanece desabilitado.
+- [ ] Ao editar um item com autenticação já configurada, a credencial não vem preenchida no formulário.
 - [ ] Clicar na linha/título (datatable) ou no corpo do card abre `ds_access_url` em nova aba.
 - [ ] Quando não há `ds_access_url`, a ação de acesso fica desabilitada com indicação visual.
 - [ ] Os botões de ação (Editar, Excluir, Verificar status) não disparam o acesso à URL.
@@ -188,8 +204,10 @@ Busca, filtros, ordenação e paginação operam **client-side**, pois `GET /hub
 ### Cenário 1 — Campos obrigatórios ausentes
 Condição: envio do formulário sem título, descrição, tipo ou ambiente. Comportamento: o envio é bloqueado e os campos obrigatórios são sinalizados.
 
-### Cenário 2 — IP e Porta inconsistentes
-Condição: apenas IP ou apenas porta preenchido. Comportamento: o envio é bloqueado; ambos os campos são sinalizados como obrigatórios em conjunto.
+### Cenário 2 — Corpo (body) informado para método que não aceita corpo
+Condição: o método selecionado é GET, HEAD ou DELETE e há valor no campo body. Comportamento: o campo body fica oculto/desabilitado e seu valor é limpo automaticamente ao trocar para um desses métodos, não sendo enviado ao backend.
+
+> Cenário antigo removido nesta revisão: "IP e Porta inconsistentes" deixou de se aplicar — IP e Porta são campos independentes (RN004), preencher apenas um deles não bloqueia mais o envio.
 
 ### Cenário 3 — URL inválida
 Condição: `ds_access_url` ou `ds_status_url` com formato inválido ou protocolo diferente de http/https. Comportamento: o envio é bloqueado e o campo é sinalizado.
@@ -244,5 +262,6 @@ Após a implementação, usuários com a permissão `hub_services_manage` conseg
 
 - **Paginação client-side (risco registrado)**: como `GET /hub-services` retorna a coleção completa sem parâmetros, busca/filtros/ordenação/paginação ocorrem no frontend. Se o volume de registros crescer significativamente, o desempenho da tela pode ser impactado; nesse cenário, recomenda-se evoluir o backend para paginação/filtragem no servidor.
 - **"Verificar todos" sem limite**: dispara N chamadas individuais. Sem limite definido, um volume alto de registros pode gerar muitas requisições simultâneas; recomenda-se avaliar controle de concorrência/execução em blocos na etapa técnica (não bloqueante).
-- **IP e Porta**: permanecem opcionais em conjunto — é válido cadastrar apenas por URL, sem IP/porta.
+- **IP e Porta**: são independentes entre si — é válido cadastrar só um dos dois, ou nenhum (apenas por URL).
 - Detalhes técnicos (framework, componentes, biblioteca de tabela, estratégia de estado) serão definidos na documentação técnica do frontend.
+- **Revisão pós-entrega "Correção e Refatoração do Módulo Painel de Sistemas"**: esta especificação foi atualizada para refletir o estado real do módulo após essa entrega — RN004 (interdependência IP/Porta removida) e RF010/RF011/RN012 (método HTTP, headers, autenticação e body configuráveis no formulário; estado "Não monitorado" do indicador de status; credencial de autenticação não reexibida ao editar), todos greenfield ou alterados nesta entrega.

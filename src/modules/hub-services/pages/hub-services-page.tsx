@@ -1,5 +1,5 @@
 import { HeaderPage } from "@/components/header-page";
-import { TableComponentV2, type Column } from "@/components/table-component-v2";
+import { CardQuantityComponent, TableComponentV2, type Column } from "@/components/table-component-v2";
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -27,10 +27,12 @@ import {
     ChevronLeft,
     ChevronRight,
     ExternalLink,
+    MonitorCheck,
     Network,
     Pencil,
     Plus,
     RefreshCw,
+    ShieldCheck,
     Trash2,
 } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -119,6 +121,44 @@ export function HubServicesPage() {
         return sorted;
     }, [allItems, filters]);
 
+    // Cards quantitativos (RF001-003) — deliberadamente calculados sobre
+    // `filteredItems`, não sobre `allItems`: aqui o pedido explícito é
+    // reagir ao filtro ativo (diferente do padrão em core-modules-page.tsx,
+    // que reflete o catálogo completo).
+    const cardCounts = useMemo(
+        () => [
+            {
+                title: "Sistemas",
+                value: filteredItems.filter((item) => item.st_type === "SYSTEM").length,
+                icon: AppWindow,
+                colorText: "text-core-signal",
+                borderColor: "hover:border-core-signal",
+            },
+            {
+                title: "Serviços",
+                value: filteredItems.filter((item) => item.st_type === "SERVICE").length,
+                icon: MonitorCheck,
+                colorText: "text-core-ink",
+                borderColor: "hover:border-core-ink",
+            },
+            {
+                title: "Produção",
+                value: filteredItems.filter((item) => item.st_environment === "PROD").length,
+                icon: ShieldCheck,
+                colorText: "text-core-ok",
+                borderColor: "hover:border-core-ok",
+            },
+            {
+                title: "Homologação",
+                value: filteredItems.filter((item) => item.st_environment === "HOM").length,
+                icon: Network,
+                colorText: "text-core-neutral",
+                borderColor: "hover:border-core-neutral",
+            },
+        ],
+        [filteredItems],
+    );
+
     const totalItems = filteredItems.length;
     const totalPages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE));
     const currentPage = Math.min(page, totalPages);
@@ -171,6 +211,11 @@ export function HubServicesPage() {
     function statusStateFor(item: HubService): HubServiceStatusState {
         if (checkingIds.has(item.cd_id)) {
             return "checking";
+        }
+        // RF012: sem URL de status, o item nunca pode ser verificado — estado
+        // próprio, distinto de "idle" (que tem URL mas ainda não foi checado).
+        if (!item.ds_status_url) {
+            return "not_monitored";
         }
         const result = statusById[item.cd_id];
         if (!result) {
@@ -362,6 +407,12 @@ export function HubServicesPage() {
             />
 
             <div className="flex-1 space-y-6 px-16 pb-8">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                    {cardCounts.map((summary) => (
+                        <CardQuantityComponent key={summary.title} summary={summary} isLoading={isLoading} />
+                    ))}
+                </div>
+
                 {viewMode === "cards" ? (
                     <div className="flex flex-col gap-4">
                         <Card className="gap-0 overflow-hidden rounded-sm border border-border/10 bg-(image:--background-gradient) p-0 shadow-sm dark:border-border/80">

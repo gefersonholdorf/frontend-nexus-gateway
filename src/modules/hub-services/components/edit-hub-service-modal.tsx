@@ -37,6 +37,15 @@ const EMPTY_VALUES: HubServiceFormInput = {
     ds_ip: "",
     ds_port: "",
     ds_status_url: "",
+    st_status_check_method: "GET",
+    ds_status_check_headers: [],
+    st_status_check_auth_type: "NONE",
+    status_check_auth_token: "",
+    status_check_auth_header_name: "",
+    status_check_auth_header_value: "",
+    status_check_auth_username: "",
+    status_check_auth_password: "",
+    ds_status_check_body: "",
 };
 
 /**
@@ -51,6 +60,7 @@ export function EditHubServiceModal({ open, onOpenChange, hubService }: EditHubS
         handleSubmit,
         control,
         reset,
+        setValue,
         formState: { errors },
     } = useForm<HubServiceFormInput, unknown, HubServiceFormValues>({
         resolver: zodResolver(hubServiceFormSchema),
@@ -68,6 +78,19 @@ export function EditHubServiceModal({ open, onOpenChange, hubService }: EditHubS
                 ds_ip: hubService.ds_ip ?? "",
                 ds_port: hubService.ds_port != null ? String(hubService.ds_port) : "",
                 ds_status_url: hubService.ds_status_url ?? "",
+                st_status_check_method: hubService.st_status_check_method ?? "GET",
+                ds_status_check_headers: hubService.ds_status_check_headers ?? [],
+                // O backend nunca retorna o segredo em texto puro (mascarado) —
+                // só o tipo de autenticação configurado é reaproveitado aqui.
+                // As credenciais precisam ser reinformadas para serem mantidas
+                // ou alteradas (ver aviso exibido junto ao campo no formulário).
+                st_status_check_auth_type: hubService.st_status_check_auth_type ?? "NONE",
+                status_check_auth_token: "",
+                status_check_auth_header_name: "",
+                status_check_auth_header_value: "",
+                status_check_auth_username: "",
+                status_check_auth_password: "",
+                ds_status_check_body: hubService.ds_status_check_body ?? "",
             });
         }
     }, [hubService, reset]);
@@ -83,18 +106,25 @@ export function EditHubServiceModal({ open, onOpenChange, hubService }: EditHubS
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-lg">
-                <DialogHeader>
+            <DialogContent className="flex max-h-[92vh] w-[calc(100%-2rem)] flex-col gap-0 overflow-hidden p-0 sm:max-w-lg">
+                <DialogHeader className="border-b p-6">
                     <DialogTitle>Editar sistema/serviço</DialogTitle>
                     <DialogDescription>
                         Atualize os dados de {hubService?.ds_title ?? "sistema/serviço"}.
                     </DialogDescription>
                 </DialogHeader>
 
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                    <HubServiceFormFields register={register} errors={errors} control={control} />
+                <form onSubmit={handleSubmit(onSubmit)} className="flex min-h-0 flex-1 flex-col">
+                    <div className="min-h-0 flex-1 space-y-6 overflow-y-auto p-6">
+                        <HubServiceFormFields
+                            register={register}
+                            errors={errors}
+                            control={control}
+                            setValue={setValue}
+                        />
+                    </div>
 
-                    <DialogFooter>
+                    <DialogFooter className="border-t p-6">
                         <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
                             Cancelar
                         </Button>

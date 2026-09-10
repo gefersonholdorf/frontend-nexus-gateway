@@ -3,7 +3,24 @@ import { toast } from "sonner";
 
 import { queryKeys } from "@/lib/api/query-keys";
 import { useApiClient } from "@/lib/api/use-api-client";
-import type { HubService, HubServiceEnvironment, HubServiceType } from "./use-fetch-hub-services";
+import type {
+    HubService,
+    HubServiceEnvironment,
+    HubServiceStatusCheckHeader,
+    HubServiceStatusCheckMethod,
+    HubServiceType,
+} from "./use-fetch-hub-services";
+
+/**
+ * Formato de **entrada** da autenticação do teste de status (união
+ * discriminada por `type`) — só existe em create/update, nunca vem no GET
+ * (o backend cifra o segredo e nunca o retorna em texto puro).
+ */
+export type StatusCheckAuthInput =
+    | { type: "NONE" }
+    | { type: "BEARER"; token: string }
+    | { type: "API_KEY_HEADER"; headerName: string; value: string }
+    | { type: "BASIC"; username: string; password: string };
 
 export interface CreateHubServiceInput {
     st_type: HubServiceType;
@@ -14,6 +31,10 @@ export interface CreateHubServiceInput {
     ds_ip: string | null;
     ds_port: number | null;
     ds_status_url: string | null;
+    st_status_check_method: HubServiceStatusCheckMethod;
+    ds_status_check_headers: HubServiceStatusCheckHeader[] | null;
+    status_check_auth: StatusCheckAuthInput;
+    ds_status_check_body: string | null;
 }
 
 /**
