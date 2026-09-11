@@ -2,15 +2,21 @@ import {
     AppWindow,
     Boxes,
     Building2,
+    CalendarClock,
     Cctv,
     EyeOff,
+    FileClock,
+    FileStack,
     FileText,
+    Gavel,
+    GitBranch,
     History,
     LayoutDashboard,
     Megaphone,
     MonitorCog,
     Plug,
     Shield,
+    Tags,
     Users,
     type LucideIcon
 } from "lucide-react";
@@ -68,6 +74,67 @@ export const sidebarModules: SidebarModule[] = [
             },
         ]
     },
+    {
+        // Grupo próprio — não misturar com "Governança" (onde está o legado
+        // "Documentos ISO", intocado e sem relação com este módulo).
+        title: "Gestão de Documentos",
+        items: [
+            {
+                label: "Documentos",
+                path: "/gestao-documentos",
+                icon: FileText,
+                profiles: ['Administrador', 'Suporte', 'Desenvolvedor', 'Infraestrutura']
+            },
+            {
+                label: "Revisões",
+                path: "/gestao-documentos/revisoes",
+                icon: FileClock,
+                profiles: ['Administrador', 'Suporte', 'Desenvolvedor', 'Infraestrutura']
+            },
+            {
+                label: "Versões",
+                path: "/gestao-documentos/versoes",
+                icon: FileStack,
+                profiles: ['Administrador', 'Suporte', 'Desenvolvedor', 'Infraestrutura']
+            },
+            {
+                label: "Aprovações Pendentes",
+                path: "/gestao-documentos/aprovacoes-pendentes",
+                icon: Gavel,
+                profiles: ['Administrador', 'Suporte', 'Desenvolvedor', 'Infraestrutura'],
+                permission: 'aprovacao.avaliar'
+            },
+            {
+                label: "Categorias",
+                path: "/gestao-documentos/configuracoes/categorias",
+                icon: Tags,
+                profiles: ['Administrador'],
+                permission: 'configuracoes.gerenciar'
+            },
+            {
+                label: "Áreas",
+                path: "/gestao-documentos/configuracoes/areas",
+                icon: Building2,
+                profiles: ['Administrador'],
+                permission: 'configuracoes.gerenciar'
+            },
+            {
+                label: "Fluxos de Aprovação",
+                path: "/gestao-documentos/configuracoes/fluxos",
+                icon: GitBranch,
+                profiles: ['Administrador'],
+                permission: 'configuracoes.gerenciar'
+            },
+            {
+                label: "Período de Revisão",
+                path: "/gestao-documentos/configuracoes/periodo-revisao",
+                icon: CalendarClock,
+                profiles: ['Administrador'],
+                permission: 'configuracoes.gerenciar'
+            },
+        ],
+    },
+
     {
         title: "Infraestrutura",
         items: [

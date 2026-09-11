@@ -34,6 +34,16 @@ Referência real: `src/modules/audit/hooks/use-fetch-audit.ts`.
 
 Padrão observado no módulo `auth` (`use-login.ts`) e na spec do módulo Core: `useMutation` com `mutationFn` chamando `api.post/put/patch/delete`, e `onSuccess` invalidando a(s) query key(s) afetada(s) via `queryClient.invalidateQueries(queryKeys.<dominio>.all())` (ou `.detail(id)` quando aplicável). Sempre passe `errorMessage` contextual.
 
+## Paginação
+
+Nenhum endpoint V2 paginado retorna `totalPages` pronto — cada tela precisa calculá-lo no client, e a forma varia conforme o que o backend efetivamente devolve. Três situações já observadas no código real:
+
+1. **Envelope `{page, pageSize, total, items}`, sem `totalPages`** — `GET /documentos` (`src/modules/documentos/hooks/use-fetch-documentos.ts`), `GET /aprovacoes/pendentes` (`use-fetch-aprovacoes-pendentes.ts`). A página calcula `totalPages = Math.max(1, Math.ceil(total / pageSize))` (ver `src/modules/documentos/pages/documentos-page.tsx`, `aprovacoes-pendentes-page.tsx`).
+2. **Envelope sem `total` nem `totalPages`, só `{page, pageSize, items}`** — `GET /audit` (`src/modules/audit/hooks/use-fetch-audit.ts`, consumido também por `src/modules/core/pages/core-audit-page.tsx`). Sem `total` não dá para usar `Math.ceil`; o padrão observado é uma heurística baseada em página cheia: `totalPages = page + (items.length === pageSize ? 1 : 0)`.
+3. **Sem paginação no servidor — o endpoint devolve o array completo** — `GET /users`, `GET /roles` (`src/modules/core/hooks/use-fetch-users.ts`, `use-fetch-roles.ts`) e `GET /hub-services` (`src/modules/hub-services/hooks/use-fetch-hub-services.ts`). Filtro, ordenação e paginação são inteiramente client-side (ver `core-users-page.tsx`, `core-roles-page.tsx`, `hub-services-page.tsx`), com o mesmo cálculo `Math.ceil` aplicado sobre o total já filtrado no client, não sobre um `total` vindo da API.
+
+Ao consumir um endpoint paginado novo, confirme no contrato real do backend (schema da rota, não suposição) qual dos três casos se aplica antes de escrever o cálculo de `totalPages` — não assuma que o backend vai passar a devolver esse campo.
+
 ## Regras
 
 - Uma responsabilidade por hook/arquivo — não junte fetch de lista e mutação de create no mesmo arquivo.

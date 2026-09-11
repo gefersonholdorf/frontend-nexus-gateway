@@ -7,9 +7,11 @@ Observado de forma consistente em `src/modules/audit/pages/audit-page.tsx` e nas
 1. `HeaderPage` no topo — título, descrição, ícone, breadcrumb.
 2. Cards quantitativos (resumo estatístico) logo abaixo do header.
 3. Filtros acima da tabela (texto, status, data, seleção).
-4. Tabela paginada (`TableComponentV2` no legado; a spec do Core define um `DataTable` reutilizável equivalente para `src/modules/core`) com ações por linha.
+4. Tabela paginada com ações por linha.
 5. Ações primárias (criar, exportar) em botão no topo/direita da página.
 6. Feedback via `Badge` (status), `Tooltip`, `Alert` e `toast` (`sonner`) — nunca `alert()`/`window.confirm()`.
+
+**Componente de tabela**: apesar do nome, `TableComponentV2` (`src/components/table-component-v2.tsx`) não é exclusivo do padrão legado — é reaproveitado tal como está por todos os módulos novos também: `src/modules/audit`, `src/modules/core` (`core-users-page.tsx`, `core-roles-page.tsx`, `core-permissions-page.tsx`, `core-audit-page.tsx`), `src/modules/hub-services` e `src/modules/documentos` (listagem e telas de configuração) importam o mesmo componente. Não existe hoje um `DataTable` separado para `src/modules/*` — se algum outro documento mencionar um "`DataTable` do Core", está desatualizado; continue usando `TableComponentV2`.
 
 Para telas de card-grid (não tabela) — como Módulos e Integrações na spec do Core — mantenha os mesmos blocos 1–3 e 5–6, trocando o bloco 4 por um grid de cards.
 
@@ -26,6 +28,10 @@ Padrão de campos: `Input`/`Textarea` com label visível, `Select` para status/c
 ## Controle de acesso dentro da página
 
 Ações administrativas (criar, editar, excluir, alternar status) são condicionadas com `Can`/`useHasPermission` (ver [docs/architecture/auth-and-rbac.md](../architecture/auth-and-rbac.md)), não com checagem manual de `roles`/`profiles` dentro do componente.
+
+## Select de referência (lista pequena e completa, sem busca assíncrona)
+
+Para campos de formulário/filtro que referenciam outra entidade com poucos registros (categoria, área, responsável, role, fluxo de aprovação), o padrão do projeto é um componente `Select` simples que busca a lista inteira de uma vez via hook (`useFetch<Entidade>`/`useGet<Entidade>Select`) e filtra no client — **não** um combobox assíncrono com busca no servidor. Referência original: `src/components/forms/select-profiles.tsx`. Seguido por `src/modules/documentos/components/{select-doc-categoria,select-doc-area,select-doc-fluxo,select-doc-responsavel}.tsx`. Ao adicionar uma referência nova desse tipo, siga o mesmo padrão; só introduza busca assíncrona/paginada se a lista de referência crescer a ponto de inviabilizar carregar tudo de uma vez (decisão a confirmar com o usuário, não automática).
 
 ## Reuso — antes de criar um componente novo
 

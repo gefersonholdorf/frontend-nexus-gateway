@@ -38,11 +38,11 @@ Não misture os dois em uma mesma feature nova. Módulos novos usam `ApiClient`/
 
 ## Arquitetura (resumo — detalhes em docs/architecture/)
 
-Híbrida em migração ativa: módulos novos em `src/modules/<dominio>/{hooks,components,pages}` (hoje só `audit` e `auth` existem) convivem com páginas legado em `src/pages` e chamadas antigas em `src/api/<dominio>`. Código novo segue o padrão de `src/modules`.
+Híbrida em migração ativa: módulos novos em `src/modules/<dominio>/{hooks,components,pages}` convivem com páginas legado em `src/pages` e chamadas antigas em `src/api/<dominio>`. Código novo segue o padrão de `src/modules`. Hoje existem `audit`, `auth`, `core`, `hub-services` e `documentos` (verificado em disco — não confie em contagens antigas deste arquivo sem checar `src/modules/*`); `documentos` ("Gestão de Documentos") é o mais recente, com rotas em `/gestao-documentos/*`.
 
 Shell em [src/main.tsx](src/main.tsx): `QueryClientProvider` → `BrowserRouter` → `ThemeProvider` → `UserProvider` → `LoginExpiredProvider` → `PermissionProvider` → `CampaignActiveProvider` → `RootLayout` → `<Routes>`. Alias `@/*` → `src/*`.
 
-**Estado atual do módulo Core**: `src/main.tsx` já importa páginas de `src/modules/core/*`, mas esse diretório **não existe no disco** — a implementação antiga (`src/modules/{users,rbac,modules,integrations,providers}`) foi removida para reconstrução seguindo a spec de 7 etapas mockadas. Ver [docs/architecture/core-module-roadmap.md](docs/architecture/core-module-roadmap.md) antes de tocar em qualquer rota `/core/*`. Build está quebrado até essas páginas serem recriadas.
+**Estado atual do módulo Core**: `src/modules/core` está implementado e em produção sob `/core/*` (usuários, roles, permissões, módulos, integrações; a tela de auditoria reaproveita o hook de `src/modules/audit`). `PermissionProvider` (`src/modules/providers/permission-provider.tsx`) existe, é funcional e consome `GET /me` real — não está ausente do disco nem é mock. Ver [docs/architecture/core-module-roadmap.md](docs/architecture/core-module-roadmap.md) para o histórico da spec de 7 etapas e o estado real de integração com a API.
 
 Documentação completa:
 - [docs/architecture/overview.md](docs/architecture/overview.md) — estrutura de diretórios, fluxo de providers

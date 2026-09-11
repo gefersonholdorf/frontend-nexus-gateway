@@ -48,6 +48,16 @@ import { CorePermissionsPage } from "./modules/core/pages/core-permissions-page.
 import { CoreRolesPage } from "./modules/core/pages/core-roles-page.tsx"
 import { CoreUsersPage } from "./modules/core/pages/core-users-page.tsx"
 import { HubServicesPage } from "./modules/hub-services/pages/hub-services-page.tsx"
+import { RouteGuard } from "./modules/auth/components/route-guard.tsx"
+import { DocumentosPage } from "./modules/documentos/pages/documentos-page.tsx"
+import { DocumentoDetailPage } from "./modules/documentos/pages/documento-detail-page.tsx"
+import { RevisoesPage } from "./modules/documentos/pages/revisoes-page.tsx"
+import { VersoesPage } from "./modules/documentos/pages/versoes-page.tsx"
+import { AprovacoesPendentesPage } from "./modules/documentos/pages/aprovacoes-pendentes-page.tsx"
+import { CategoriasPage } from "./modules/documentos/pages/configuracoes/categorias-page.tsx"
+import { AreasPage } from "./modules/documentos/pages/configuracoes/areas-page.tsx"
+import { FluxosPage } from "./modules/documentos/pages/configuracoes/fluxos-page.tsx"
+import { PeriodoRevisaoPage } from "./modules/documentos/pages/configuracoes/periodo-revisao-page.tsx"
 
 const queryClient = new QueryClient()
 
@@ -91,6 +101,57 @@ createRoot(document.getElementById('root')!).render(
                           <Route path="/core/modules/:id" element={<CoreModuleDetailPage />} />
                           <Route path="/core/integrations" element={<CoreIntegrationsPage />} />
                           <Route path="/core/audit" element={<CoreAuditPage />} />
+
+                          {/* Gestão de Documentos — módulo novo, independente do legado
+                              "Documentos ISO" em /documents (src/pages/documents, intocado).
+                              Visibilidade de documento/revisão/versão é por role (RF004),
+                              não por permission — por isso estas telas de navegação/leitura
+                              não usam RouteGuard, só ProtectedRoute (autenticação). Ações
+                              sensíveis dentro delas já ficam atrás de <Can permission="...">. */}
+                          <Route path="/gestao-documentos" element={<DocumentosPage />} />
+                          <Route path="/gestao-documentos/revisoes" element={<RevisoesPage />} />
+                          <Route path="/gestao-documentos/versoes" element={<VersoesPage />} />
+                          <Route path="/gestao-documentos/:id" element={<DocumentoDetailPage />} />
+                          <Route
+                            path="/gestao-documentos/aprovacoes-pendentes"
+                            element={
+                              <RouteGuard permission="aprovacao.avaliar">
+                                <AprovacoesPendentesPage />
+                              </RouteGuard>
+                            }
+                          />
+                          <Route
+                            path="/gestao-documentos/configuracoes/categorias"
+                            element={
+                              <RouteGuard permission="configuracoes.gerenciar">
+                                <CategoriasPage />
+                              </RouteGuard>
+                            }
+                          />
+                          <Route
+                            path="/gestao-documentos/configuracoes/areas"
+                            element={
+                              <RouteGuard permission="configuracoes.gerenciar">
+                                <AreasPage />
+                              </RouteGuard>
+                            }
+                          />
+                          <Route
+                            path="/gestao-documentos/configuracoes/fluxos"
+                            element={
+                              <RouteGuard permission="configuracoes.gerenciar">
+                                <FluxosPage />
+                              </RouteGuard>
+                            }
+                          />
+                          <Route
+                            path="/gestao-documentos/configuracoes/periodo-revisao"
+                            element={
+                              <RouteGuard permission="configuracoes.gerenciar">
+                                <PeriodoRevisaoPage />
+                              </RouteGuard>
+                            }
+                          />
 
                           <Route path="/profiles" element={<ProfilePage />} />
                           <Route path="/profiles/:id" element={<ProfilesUpdatedPage />} />

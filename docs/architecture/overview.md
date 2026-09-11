@@ -4,11 +4,11 @@
 
 SPA em React 19 + TypeScript, construída com Vite, em arquitetura **híbrida em migração**:
 
-1. `src/modules/<dominio>/{hooks,components,pages}` — padrão novo, orientado a feature. Hoje existem apenas `audit` e `auth`. É o padrão a seguir para qualquer trabalho novo.
+1. `src/modules/<dominio>/{hooks,components,pages}` — padrão novo, orientado a feature. Hoje existem `audit`, `auth`, `core`, `hub-services` e `documentos` (o mais recente — "Gestão de Documentos", rotas `/gestao-documentos/*`). É o padrão a seguir para qualquer trabalho novo.
 2. `src/pages/` + `src/api/<dominio>/` — padrão legado (páginas monolíticas + hooks com `fetch` direto). Cobre a maior parte das telas hoje em produção (documentos, campanhas, calendário, GLPI, Jira, mascaramento, perfis, backups, reports, servidores).
 3. `src/components/` — biblioteca de UI compartilhada, dividida entre `src/components/ui` (base shadcn-like) e componentes de domínio (`src/components/documents`, `src/components/campaigns`, `src/components/tickets`, etc.), muitos ainda acoplados a um domínio legado específico.
 
-Não existe uma migração automática entre os dois padrões: cada domínio é migrado quando alguém decide reescrevê-lo como módulo (é o que está acontecendo agora com o domínio "Core" — ver [core-module-roadmap.md](core-module-roadmap.md)).
+Não existe uma migração automática entre os dois padrões: cada domínio é migrado quando alguém decide reescrevê-lo como módulo. Já aconteceu com "Core" (ver [core-module-roadmap.md](core-module-roadmap.md)) e, como domínio de produto inteiramente novo (não migração de legado), com "Gestão de Documentos" (`src/modules/documentos`).
 
 ## Estrutura de diretórios (estado atual)
 
@@ -31,10 +31,14 @@ src/
 ├── lib/
 │   ├── api/               # api-client.ts, use-api-client.ts, api-error.ts, query-keys.ts
 │   └── utils.ts, format-*.ts
-├── modules/              # padrão novo — só existem hoje:
+├── modules/              # padrão novo — hoje existem:
 │   ├── audit/{hooks,pages}
-│   └── auth/{components,hooks}
-├── pages/                # telas legado (welcome, systems, services, security-center, ...)
+│   ├── auth/{components,hooks}
+│   ├── core/{components,hooks,pages}       # Usuários, Roles, Permissões, Módulos, Integrações
+│   ├── hub-services/{components,hooks,pages}  # Painel de Sistemas
+│   ├── documentos/{components,hooks,pages}    # Gestão de Documentos (/gestao-documentos/*)
+│   └── providers/         # permission-provider.tsx
+├── pages/                # telas legado (welcome, security-center, servers, masking, ...)
 │   └── documents/         # subconjunto de páginas de documentos
 ├── services/             # websocket.ts
 ├── tours/                # onboarding guiado (react-joyride)
@@ -47,7 +51,7 @@ src/
 └── scroll-to-top.tsx
 ```
 
-> `src/modules/{users,rbac,modules,integrations,providers}` existiram até o commit `863b840` e foram removidos do disco para reconstrução como `src/modules/core`. Não recrie esses diretórios com o nome antigo — a spec vigente usa `core` como domínio único guarda-chuva (ver [core-module-roadmap.md](core-module-roadmap.md)).
+> `src/modules/{users,rbac,modules,integrations}` existiram até o commit `863b840` e foram removidos do disco para reconstrução como `src/modules/core` — hoje implementado e em produção (ver [core-module-roadmap.md](core-module-roadmap.md)). Não recrie esses diretórios com o nome antigo — a spec vigente usa `core` como domínio único guarda-chuva. `src/modules/providers` (o `PermissionProvider`) não foi removido — continua no disco e é a infraestrutura real de autorização (ver abaixo).
 
 ## Fluxo de montagem (`src/main.tsx`)
 
@@ -57,7 +61,7 @@ QueryClientProvider
      └─ ThemeProvider
          └─ UserProvider
              └─ LoginExpiredProvider
-                 └─ PermissionProvider        (hoje ausente do disco, ver nota abaixo)
+                 └─ PermissionProvider
                      └─ CampaignActiveProvider
                          └─ RootLayout (TooltipProvider)
                              └─ <Routes>
@@ -68,7 +72,7 @@ QueryClientProvider
                                          └─ páginas internas
 ```
 
-`PermissionProvider` (`src/modules/providers/permission-provider.tsx`) também foi removido junto com o módulo Core antigo, mas `src/main.tsx`, `Can` e `RouteGuard` ainda importam dele — build está quebrado até ele (ou um equivalente) ser recriado. Ver [core-module-roadmap.md](core-module-roadmap.md).
+`PermissionProvider` (`src/modules/providers/permission-provider.tsx`) está implementado: consome `useMe()` (V2, `GET /me`) e expõe `usePermissions`/`useHasPermission`/`usePermissionsLoading` a `Can`/`RouteGuard` e a qualquer tela do app. Ver [auth-and-rbac.md](auth-and-rbac.md).
 
 ## Gerenciamento de estado
 
@@ -78,7 +82,7 @@ QueryClientProvider
 | Tema claro/escuro | Context API + `localStorage` | `src/contexts/theme-context.tsx` |
 | Sessão expirada (modal 401) | Context API | `src/contexts/login-expired.tsx` |
 | Campanha ativa | Context API | `src/contexts/campaign-active.tsx` |
-| Permissões RBAC | Context API, alimentado por `useMe()` | `src/modules/providers/permission-provider.tsx` (ausente no momento) |
+| Permissões RBAC | Context API, alimentado por `useMe()` | `src/modules/providers/permission-provider.tsx` |
 | Dados de servidor (listas, detalhes, mutações) | TanStack Query | hooks `use-fetch-*`/`use-create-*`/etc. por domínio |
 
 Não há Redux, Zustand ou outra lib de estado global — não introduza uma.

@@ -15,10 +15,11 @@ Um hook por arquivo, dentro de `src/modules/<dominio>/hooks/`:
 - `use-fetch-<entidade>.ts` — `useQuery`
 - `use-create-<entidade>.ts`, `use-update-<entidade>.ts`, `use-delete-<entidade>.ts` — `useMutation`
 - Ações específicas de domínio seguem verbo + entidade: `use-assign-role-to-user.ts`, `use-toggle-module-active.ts`, `use-link-module-integration.ts`.
+- `use-get-<entidade>-select.ts` — variante de `useQuery` usada especificamente para popular um select de referência (ver [component-and-page-patterns.md](component-and-page-patterns.md), seção "Select de referência"), distinguindo do `use-fetch-<entidade>.ts` de listagem paginada da mesma entidade. Ex.: `src/modules/documentos/hooks/{use-get-roles-select,use-get-usuarios-select}.ts`.
 
 ## Permissões (RBAC)
 
-Chaves sempre no formato `dominio.acao`, minúsculo, sem espaços: `users.manage`, `rbac.manage`, `rbac.assign`, `modules.manage`, `integrations.manage`, `audit.read`. Ao adicionar uma permissão nova, siga o mesmo padrão — não use camelCase nem hierarquias com mais de dois níveis.
+Chaves sempre no formato `dominio.acao`, minúsculo, sem espaços: `users.manage`, `rbac.manage`, `rbac.assign`, `modules.manage`, `integrations.manage`, `audit.read`, `documento.criar`, `documento.editar`, `documento.arquivar`, `documento.publicar`, `revisao.solicitar`, `revisao.aprovar`, `versao.criar`, `aprovacao.avaliar`, `configuracoes.gerenciar`. Ao adicionar uma permissão nova, siga o mesmo padrão — não use camelCase nem hierarquias com mais de dois níveis.
 
 ## Campos de payload vindos do backend V2
 
